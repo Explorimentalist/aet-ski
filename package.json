@@ -6,22 +6,39 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest",
+    "test:ci": "jest --ci --coverage",
+    "cypress": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
+    "@sanity/client": "^7.8.1",
+    "@sanity/image-url": "^1.1.0",
+    "autoprefixer": "^10.4.21",
+    "cloudinary": "^2.7.0",
+    "clsx": "^2.1.1",
+    "flag-icons": "^7.5.0",
+    "lucide-react": "^0.533.0",
+    "maptiler-js": "^1.1.3",
+    "next": "15.4.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.4.4"
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
+    "cypress": "^14.5.3",
     "eslint": "^9",
     "eslint-config-next": "15.4.4",
-    "@eslint/eslintrc": "^3"
+    "jest": "^30.0.5",
+    "typescript": "^5"
   }
 }
