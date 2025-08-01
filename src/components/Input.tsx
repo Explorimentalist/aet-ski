@@ -10,6 +10,7 @@ export const Input: React.FC<InputProps> = ({
   placeholder,
   value,
   onChange,
+  onBlur,
   type = 'text',
   className = '',
 }) => {
@@ -17,7 +18,10 @@ export const Input: React.FC<InputProps> = ({
   
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
-      <label htmlFor={inputId} className="text-body text-text-primary font-medium">
+      <label 
+        htmlFor={inputId} 
+        className="text-base text-text-primary font-normal leading-[150%] tracking-[0.0005em]"
+      >
         {label}
         {required && <span className="text-text-error ml-1">*</span>}
       </label>
@@ -27,8 +31,13 @@ export const Input: React.FC<InputProps> = ({
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
         placeholder={placeholder}
-        className={`form-input ${error ? 'error' : ''}`}
+        className={`
+          form-input
+          w-full
+          ${error ? 'border-border-error bg-background-error' : ''}
+        `}
         required={required}
       />
       

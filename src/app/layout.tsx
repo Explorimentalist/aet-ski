@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Geist, Inter } from 'next/font/google';
 import '@/styles/globals.css';
 
+const geist = Geist({ subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -40,7 +41,7 @@ export default function RootLayout({
       <head>
         {/* Custom fonts temporarily disabled - using system fonts */}
       </head>
-      <body className={`${inter.className} antialiased`} suppressHydrationWarning>
+      <body className={`${geist.className} antialiased`} suppressHydrationWarning>
         <div className="min-h-screen bg-background-primary">
           {children}
         </div>

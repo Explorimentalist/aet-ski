@@ -6,6 +6,7 @@ import { Footer } from '@/components/Footer';
 import { Grid } from '@/components/Grid';
 import { CardSmall } from '@/components/CardSmall';
 import { TestimonialCard } from '@/components/CardLarge';
+import { Input } from '@/components/Input';
 
 
 export default function HomePage() {
@@ -113,6 +114,13 @@ export default function HomePage() {
             />
           </Grid>
         </Grid>
+      </section>
+      <section className="py-24">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-heading text-3xl md:text-4xl font-bold text-text-primary mb-8">
+            Ready to book your transfer?
+          </h2>
+        </div>
       </section>
 
       {/* CTA Section */}

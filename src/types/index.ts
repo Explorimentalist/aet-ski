@@ -159,6 +159,7 @@ export interface InputProps {
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
   type?: 'text' | 'email' | 'tel' | 'date' | 'time';
   className?: string;
 }
@@ -229,4 +230,18 @@ export interface NavigationProps {
 // Utility types
 export type Breakpoint = 'mobile' | 'tablet' | 'desktop';
 export type ColorVariant = 'primary' | 'secondary' | 'success' | 'error' | 'warning';
-export type SizeVariant = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'; 
+export type SizeVariant = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
+export interface CategorizedOption {
+  type: 'category' | 'subcategory' | 'option';
+  label: string;
+  value?: string;
+  icon?: 'airport' | 'hotel' | 'train' | 'train-station' | 'ski-resort';
+  children?: CategorizedOption[];
+  disabled?: boolean;
+} 
