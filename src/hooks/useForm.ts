@@ -9,9 +9,10 @@ const initialFormData: BookingFormData = {
     destinationPoint: '',
   },
   dates: {
-    collectionDate: '',
+    collectionDate: null,
     collectionTime: '',
-    isFlexible: false,
+    isCollectionFlexible: false,
+    isReturnFlexible: false,
   },
   people: {
     adults: 1,
@@ -21,6 +22,7 @@ const initialFormData: BookingFormData = {
     skis: 0,
     snowboards: 0,
     suitcases: 0,
+    prams: 0,
     extraItems: [],
   },
   passenger: {
@@ -100,13 +102,13 @@ export function useBookingForm() {
       case 1: // Journey
         return formData.journey.collectionPoint && formData.journey.destinationPoint;
       case 2: // Dates
-        return formData.dates.collectionDate && formData.dates.collectionTime;
+        return formData.dates?.collectionDate && formData.dates?.collectionTime;
       case 3: // People
-        return formData.people.adults > 0;
+        return formData.people?.adults && formData.people.adults > 0;
       case 4: // Luggage
         return true; // Optional step
       case 5: // Passenger details
-        return formData.passenger.name && formData.passenger.email && formData.passenger.phone;
+        return formData.passenger?.name && formData.passenger?.email && formData.passenger?.phone;
       case 6: // Summary
         return true; // Review step
       case 7: // Success
@@ -122,13 +124,13 @@ export function useBookingForm() {
       case 1:
         return formData.journey.collectionPoint && formData.journey.destinationPoint;
       case 2:
-        return formData.dates.collectionDate && formData.dates.collectionTime;
+        return formData.dates?.collectionDate && formData.dates?.collectionTime;
       case 3:
-        return formData.people.adults > 0;
+        return formData.people?.adults && formData.people.adults > 0;
       case 4:
         return true; // Optional step
       case 5:
-        return formData.passenger.name && formData.passenger.email && formData.passenger.phone;
+        return formData.passenger?.name && formData.passenger?.email && formData.passenger?.phone;
       case 6:
         return true; // Review step
       case 7:

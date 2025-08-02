@@ -6,7 +6,7 @@ import { Button } from './Button';
 export interface CalendarProps {
   label?: string;
   placeholder?: string;
-  value?: Date;
+  value?: Date | null;
   onChange: (date: Date | null) => void;
   required?: boolean;
   error?: string;
@@ -129,7 +129,7 @@ export const Calendar: React.FC<CalendarProps> = ({
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       {label && (
-        <label className="text-base text-text-primary font-normal leading-[150%] tracking-[0.0005em]">
+        <label className="text-base text-text-form font-normal leading-[150%] tracking-[0.0005em]">
           {label}
           {required && <span className="text-text-error ml-1">*</span>}
         </label>
@@ -148,7 +148,7 @@ export const Calendar: React.FC<CalendarProps> = ({
           `}
           disabled={disabled}
         >
-          <span className={(value || isNotSure) ? 'text-text-primary' : 'text-text-placeholder'}>
+          <span className={(value || isNotSure) ? 'text-text-form' : 'text-text-placeholder'}>
             {value ? formatDate(value) : isNotSure ? "I'm not sure" : placeholder}
           </span>
           <CalendarIcon className="w-5 h-5 text-text-primary" />
@@ -166,7 +166,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                 <ChevronLeft className="w-4 h-4" />
               </button>
               
-              <h3 className="text-base font-medium text-text-primary">
+              <h3 className="text-base font-medium text-text-form">
                 {currentMonth.toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',

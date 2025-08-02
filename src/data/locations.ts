@@ -408,4 +408,7 @@ export const flattenCategorizedOptions = (options: CategorizedOption[]): Categor
 export const findOptionByValue = (options: CategorizedOption[], value: string): CategorizedOption | null => {
   const flattened = flattenCategorizedOptions(options);
   return flattened.find(option => option.value === value) || null;
-}; 
+};
+
+// Export locations for use in components
+export const locations = collectionPoints; 

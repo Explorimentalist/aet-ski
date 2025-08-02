@@ -35,7 +35,7 @@ export const Textarea: React.FC<TextareaProps> = ({
       {label && (
         <label 
           htmlFor={textareaId} 
-          className="text-base text-text-primary font-normal leading-[150%] tracking-[0.0005em]"
+          className="text-base text-text-form font-normal leading-[150%] tracking-[0.0005em]"
         >
           {label}
           {required && <span className="text-text-error ml-1">*</span>}
@@ -56,7 +56,7 @@ export const Textarea: React.FC<TextareaProps> = ({
             bg-background-secondary
             border border-border-transparent
             rounded-sm
-            text-base text-text-primary
+            text-base text-text-form
             placeholder:text-text-placeholder
             transition-all duration-fast ease-in-out
             focus:border-border-primary focus:outline-none focus:ring-2 focus:ring-brand-primary-focus

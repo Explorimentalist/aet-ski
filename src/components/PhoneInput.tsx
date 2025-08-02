@@ -7,6 +7,7 @@ export interface PhoneInputProps {
   label?: string;
   value: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
   required?: boolean;
   error?: string;
   helper?: string;
@@ -18,6 +19,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   label,
   value,
   onChange,
+  onBlur,
   required = false,
   error,
   helper,
@@ -118,6 +120,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
             type="tel"
             value={getPhoneNumberWithoutCode()}
             onChange={handlePhoneNumberChange}
+            onBlur={onBlur}
             disabled={disabled}
             placeholder="Enter phone number"
             className={`

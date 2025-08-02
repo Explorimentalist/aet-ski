@@ -49,6 +49,8 @@ export const Button: React.FC<ButtonProps> = ({
     sm: 'px-3 py-2 text-sm rounded-lg gap-2', // Custom small size
     md: 'px-4 py-2 rounded-lg gap-2.5', // Figma: padding: 8px 16px
     lg: 'px-6 py-3 rounded-lg gap-2.5', // Figma: padding: 12px 24px
+    'left-icon': 'rounded-lg gap-1', // Custom padding handled in style
+    'right-icon': 'rounded-lg gap-1', // Custom padding handled in style
   };
   
   const combinedClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
@@ -69,8 +71,10 @@ export const Button: React.FC<ButtonProps> = ({
         ...(size === 'lg' && { padding: '12px 24px' }),
         ...(size === 'md' && { padding: '8px 16px' }),
         ...(size === 'sm' && { padding: '6px 12px' }),
-        // Gap for icons (Figma: gap: 10px)
-        gap: '10px',
+        ...(size === 'left-icon' && { padding: '8px 16px 8px 10px' }),
+        ...(size === 'right-icon' && { padding: '8px 10px 8px 16px' }),
+        // Gap for icons - different for icon variations
+        gap: size === 'left-icon' || size === 'right-icon' ? '4px' : '10px',
       }}
     >
       {loading && <Loader2 className="w-6 h-6 animate-spin" />}

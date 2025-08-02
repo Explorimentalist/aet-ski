@@ -32,7 +32,7 @@ export default function TestInputPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Update form data
-  const updateFormData = (field: string, value: any) => {
+  const updateFormData = (field: string, value: string | number | Date | undefined | null) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
     // Clear error when user starts typing
@@ -46,20 +46,20 @@ export default function TestInputPage() {
   };
 
   // Validate specific field
-  const validateField = (field: string, value: any) => {
+  const validateField = (field: string, value: string | number | Date | undefined | null) => {
     let validationResult;
 
     switch (field) {
       case 'email':
-        validationResult = validateEmail(value);
+        validationResult = validateEmail(value as string);
         break;
       case 'phone':
-        validationResult = validatePhoneNumber(value);
+        validationResult = validatePhoneNumber(value as string);
         break;
       case 'collectionPoint':
       case 'destination':
       case 'travelDate':
-        validationResult = validateRequired(value, field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()));
+        validationResult = validateRequired(value as string, field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()));
         break;
       default:
         return;

@@ -61,31 +61,37 @@ export interface DesignTokens {
   components: Record<string, Record<string, { consumes: string[] }>>;
 }
 
-// Booking form types
+// Multi-step form types
+export interface JourneyStepData {
+  type: 'one-way' | 'return';
+  collectionPoint: string;
+  destinationPoint: string;
+}
+
+export interface DatesStepData {
+  collectionDate: Date | null;
+  collectionTime: string;
+  returnDate?: Date | null;
+  returnTime?: string;
+  isCollectionFlexible: boolean;
+  isReturnFlexible: boolean;
+}
+
 export interface BookingFormData {
-  journey: {
-    type: 'one-way' | 'return';
-    collectionPoint: string;
-    destinationPoint: string;
-    returnDate?: string;
-    returnTime?: string;
-  };
-  dates: {
-    collectionDate: string;
-    collectionTime: string;
-    isFlexible: boolean;
-  };
-  people: {
+  journey: JourneyStepData;
+  dates?: DatesStepData;
+  people?: {
     adults: number;
     children: number;
   };
-  luggage: {
+  luggage?: {
     skis: number;
     snowboards: number;
     suitcases: number;
+    prams: number;
     extraItems: string[];
   };
-  passenger: {
+  passenger?: {
     name: string;
     email: string;
     phone: string;
@@ -93,6 +99,40 @@ export interface BookingFormData {
   };
 }
 
+export interface FormStep {
+  id: number;
+  title: string;
+  description: string;
+  isComplete: boolean;
+  isActive: boolean;
+  isDisabled: boolean;
+}
+
+export interface FormValidation {
+  isValid: boolean;
+  errors: Record<string, string>;
+  touched: Record<string, boolean>;
+}
+
+export interface MultiStepFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: BookingFormData) => void;
+}
+
+export interface FormStepProps {
+  data: Partial<BookingFormData>;
+  onUpdate: (data: Partial<BookingFormData>) => void;
+  onNext: () => void;
+  onPrevious: () => void;
+  currentStep: number;
+  totalSteps: number;
+  validation: FormValidation;
+  onEditStep?: (step: number) => void;
+  markFieldAsTouched: (fieldName: string) => void;
+}
+
+// Booking form types (legacy - keeping for backward compatibility)
 export interface BookingStep {
   id: number;
   title: string;
@@ -142,7 +182,7 @@ export interface ApiResponse<T> {
 // Component props types
 export interface ButtonProps {
   variant?: 'primary' | 'secondary';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'left-icon' | 'right-icon';
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;

@@ -1,3 +1,5 @@
+'use client';
+
 // src/app/page.tsx
 import { Button } from '@/components/Button';
 import { Navigation } from '@/components/Navigation';
@@ -6,10 +8,29 @@ import { Footer } from '@/components/Footer';
 import { Grid } from '@/components/Grid';
 import { CardSmall } from '@/components/CardSmall';
 import { TestimonialCard } from '@/components/CardLarge';
-import { Input } from '@/components/Input';
+import { MultiStepForm } from '@/components/MultiStepForm';
+import { useState, useCallback } from 'react';
+import { BookingFormData } from '@/types';
 
 
 export default function HomePage() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleOpenForm = useCallback(() => {
+    setIsFormOpen(true);
+  }, []);
+
+  const handleCloseForm = useCallback(() => {
+    setIsFormOpen(false);
+  }, []);
+
+  const handleFormSubmit = useCallback((data: BookingFormData) => {
+    console.log('Form submitted:', data);
+    // TODO: Handle form submission (API call, etc.)
+    // Don't close modal here - let the success page handle closing
+    // The MultiStepForm will show the success page, and user can close it
+  }, []);
+
   return (
     <main className="min-h-screen">
       {/* Fixed Navigation */}
@@ -36,7 +57,7 @@ export default function HomePage() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button size="lg" className="w-full sm:w-auto">
+            <Button size="lg" className="w-full sm:w-auto" onClick={handleOpenForm}>
               Get a quote
             </Button>
             
@@ -132,11 +153,18 @@ export default function HomePage() {
           <p className="text-body text-lg text-text-secondary mb-12">
             Get a quote in minutes and secure your airport transfer to the French Alps
           </p>
-          <Button size="lg" className="mx-auto">
+          <Button size="lg" className="mx-auto" onClick={handleOpenForm}>
             Get a quote now
           </Button>
         </div>
       </section>
+
+      {/* Multi-Step Form Modal */}
+      <MultiStepForm
+        isOpen={isFormOpen}
+        onClose={handleCloseForm}
+        onSubmit={handleFormSubmit}
+      />
 
       <Footer />
       
