@@ -96,7 +96,7 @@ export const TimeSelector: React.FC<TimeSelectorProps> = ({
           <span className={value ? 'text-text-form' : 'text-text-placeholder'}>
             {value || placeholder}
           </span>
-          <Clock className="w-5 h-5 text-text-primary" /> {/* Using Lucide icon, like Calendar */}
+          <Clock className="w-5 h-5 text-text-form" /> {/* Using Lucide icon, like Calendar */}
         </button>
 
         {isOpen && (

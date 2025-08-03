@@ -85,7 +85,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       {label && (
-        <label className="text-base text-text-primary font-normal leading-[150%] tracking-[0.0005em]">
+                    <label className="text-base text-text-form font-normal leading-[150%] tracking-[0.0005em]">
           {label}
           {required && <span className="text-text-error ml-1">*</span>}
         </label>

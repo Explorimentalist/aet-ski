@@ -113,7 +113,7 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-5xl right-5xl w-5 h-5 tablet:w-7 tablet:h-7 desktop:w-10 desktop:h-10 flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors z-10"
+        className="absolute top-5xl right-5xl w-5 h-5 tablet:w-7 tablet:h-7 desktop:w-10 desktop:h-10 flex items-center justify-center text-text-secondary hover:text-text-brand transition-colors z-10"
         aria-label="Close modal"
       >
         <X className="w-4 h-4 tablet:w-5 tablet:h-5 desktop:w-5 desktop:h-5" />
@@ -164,7 +164,7 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
                 <button
                   type="button"
                   onClick={() => handleEditStep(1)}
-                  className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                  className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-brand transition-colors"
                   aria-label="Edit journey details"
                 >
                   <Edit className="w-6 h-6" />
@@ -185,7 +185,7 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
                 <button
                   type="button"
                   onClick={() => handleEditStep(2)}
-                  className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                  className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-brand transition-colors"
                   aria-label="Edit dates"
                 >
                   <Edit className="w-6 h-6" />
@@ -211,7 +211,7 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
                 <button
                   type="button"
                   onClick={() => handleEditStep(3)}
-                  className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                  className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-brand transition-colors"
                   aria-label="Edit people details"
                 >
                   <Edit className="w-6 h-6" />
@@ -231,7 +231,7 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
                 <button
                   type="button"
                   onClick={() => handleEditStep(4)}
-                  className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                  className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-brand transition-colors"
                   aria-label="Edit luggage details"
                 >
                   <Edit className="w-6 h-6" />
@@ -257,7 +257,7 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
                 <button
                   type="button"
                   onClick={() => handleEditStep(5)}
-                  className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                  className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-brand transition-colors"
                   aria-label="Edit passenger details"
                 >
                   <Edit className="w-6 h-6" />

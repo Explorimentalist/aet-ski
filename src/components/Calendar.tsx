@@ -151,7 +151,7 @@ export const Calendar: React.FC<CalendarProps> = ({
           <span className={(value || isNotSure) ? 'text-text-form' : 'text-text-placeholder'}>
             {value ? formatDate(value) : isNotSure ? "I'm not sure" : placeholder}
           </span>
-          <CalendarIcon className="w-5 h-5 text-text-primary" />
+          <CalendarIcon className="w-5 h-5 text-text-form" />
         </button>
 
         {isOpen && (

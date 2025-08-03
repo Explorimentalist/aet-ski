@@ -1,0 +1,116 @@
+// src/hooks/useStickyNavigation.ts
+'use client';
+
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register ScrollTrigger plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+interface UseStickyNavigationProps {
+  triggerOffset?: number; // Distance from top before becoming sticky (default: 84px)
+  enabled?: boolean; // Whether the sticky behavior is enabled
+}
+
+export const useStickyNavigation = ({
+  triggerOffset = 84,
+  enabled = true
+}: UseStickyNavigationProps = {}) => {
+  const navigationRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Check if we should enable sticky navigation
+    const checkMobile = () => window.innerWidth < 1024; // lg breakpoint
+    const isMobile = checkMobile();
+    
+    if (!enabled || isMobile || !navigationRef.current || !containerRef.current) return;
+
+    const navigation = navigationRef.current;
+    const container = containerRef.current;
+
+    // Get the initial width to maintain consistency
+    const initialWidth = navigation.offsetWidth;
+
+    // Create ScrollTrigger for sticky behavior
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: container,
+      start: `top top+=${triggerOffset}`,
+      end: 'bottom bottom',
+      onUpdate: (self) => {
+        // Calculate the progress (0 to 1)
+        const progress = self.progress;
+        
+        if (progress === 0) {
+          // At the start - navigation should be in normal flow
+          gsap.set(navigation, {
+            position: 'relative',
+            top: 'auto',
+            width: '100%',
+            zIndex: 'auto'
+          });
+        } else if (progress === 1) {
+          // At the end - navigation should stop being sticky and return to normal flow
+          // This prevents the element from disappearing and ensures it stays with the content
+          gsap.set(navigation, {
+            position: 'relative',
+            top: 'auto',
+            width: '100%',
+            zIndex: 'auto'
+          });
+        } else {
+          // In between - navigation should be sticky
+          gsap.set(navigation, {
+            position: 'fixed',
+            top: triggerOffset,
+            width: initialWidth,
+            zIndex: 10
+          });
+        }
+      },
+      onRefresh: () => {
+        // Ensure proper positioning on refresh
+        gsap.set(navigation, {
+          position: 'relative',
+          top: 'auto',
+          width: '100%',
+          zIndex: 'auto'
+        });
+      },
+      // Performance optimizations
+      fastScrollEnd: true,
+      preventOverlaps: true
+    });
+
+    // Handle window resize
+    const handleResize = () => {
+      const newIsMobile = checkMobile();
+      if (newIsMobile !== isMobile) {
+        // Mobile state changed, kill the trigger and reset
+        scrollTrigger.kill();
+        gsap.set(navigation, {
+          position: 'relative',
+          top: 'auto',
+          width: '100%',
+          zIndex: 'auto'
+        });
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup function
+    return () => {
+      scrollTrigger.kill();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [triggerOffset, enabled]);
+
+  return {
+    navigationRef,
+    containerRef
+  };
+}; 

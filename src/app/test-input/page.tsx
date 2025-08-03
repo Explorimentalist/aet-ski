@@ -106,8 +106,8 @@ export default function TestInputPage() {
     <div className="min-h-screen bg-background-primary p-8">
       <div className="max-w-2xl mx-auto space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-text-primary mb-2">Input Components Test</h1>
-          <p className="text-text-secondary">Testing categorized dropdowns, number inputs, phone with country codes, calendar, and validation functionality</p>
+                  <h1 className="text-3xl font-bold text-text-form mb-2">Input Components Test</h1>
+        <p className="text-text-secondary">Testing categorized dropdowns, number inputs, phone with country codes, calendar, and validation functionality</p>
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -249,7 +249,7 @@ export default function TestInputPage() {
 
         {/* Form data display for debugging */}
         <div className="mt-8 p-4 bg-background-secondary rounded-sm border border-border-secondary">
-          <h3 className="text-lg font-medium text-text-primary mb-2">Form Data (Debug)</h3>
+                      <h3 className="text-lg font-medium text-text-form mb-2">Form Data (Debug)</h3>
           <pre className="text-sm text-text-secondary overflow-auto">
             {JSON.stringify(formData, null, 2)}
           </pre>

@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { Button } from './Button';
 import { Logo } from './Logo';
@@ -10,7 +11,7 @@ import { NavigationProps, NavigationItem } from '@/types';
 
 // Default navigation items matching Figma
 const defaultNavItems: NavigationItem[] = [
-  { id: 'home', label: 'Home', href: '/', isActive: true },
+  { id: 'home', label: 'Home', href: '/' },
   { id: 'routes', label: 'Routes', href: '/routes' },
   { id: 'contact', label: 'Contact', href: '/contact' },
 ];
@@ -24,6 +25,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const [internalMobileMenuOpen, setInternalMobileMenuOpen] = useState(false);
   const isMobileMenuOpen = externalMobileMenuOpen ?? internalMobileMenuOpen;
+  const pathname = usePathname();
 
   const handleMenuToggle = () => {
     if (onMenuToggle) {
@@ -31,6 +33,23 @@ export const Navigation: React.FC<NavigationProps> = ({
     } else {
       setInternalMobileMenuOpen(!internalMobileMenuOpen);
     }
+  };
+
+  // Function to determine if a navigation item is active
+  const isItemActive = (item: NavigationItem): boolean => {
+    // If the item has an explicit isActive prop, use it
+    if (item.isActive !== undefined) {
+      return item.isActive;
+    }
+    
+    // Otherwise, determine based on current pathname
+    if (item.href === '/') {
+      // Home is active only if we're exactly on the home page
+      return pathname === '/';
+    }
+    
+    // For other pages, check if the pathname starts with the href
+    return pathname.startsWith(item.href);
   };
 
   return (
@@ -121,29 +140,32 @@ export const Navigation: React.FC<NavigationProps> = ({
 
           {/* Navigation Links */}
           <div className="flex items-center gap-[60px]">
-            {items.map((item) => (
-              <Link
-                key={item.id}
-                href={item.href}
-                className={`
-                  font-medium text-base leading-[150%] tracking-[-0.011em] transition-colors
-                  ${
-                    item.isActive
-                      ? 'text-[#1E1E1E] underline'
-                      : 'text-text-primary hover:text-[#1E1E1E] hover:underline'
-                  }
-                `}
-                style={{
-                  fontFamily: 'Geist',
-                  fontSize: '16px',
-                  fontWeight: '500',
-                  lineHeight: '150%',
-                  letterSpacing: '-0.011em',
-                }}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {items.map((item) => {
+              const isActive = isItemActive(item);
+              return (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className={`
+                    font-medium text-base leading-[150%] tracking-[-0.011em] transition-colors
+                    ${
+                      isActive
+                        ? 'text-[#1E1E1E] underline'
+                        : 'text-text-form hover:text-text-brand hover:underline'
+                    }
+                  `}
+                  style={{
+                    fontFamily: 'Geist',
+                    fontSize: '16px',
+                    fontWeight: '500',
+                    lineHeight: '150%',
+                    letterSpacing: '-0.011em',
+                  }}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
 
           {/* CTA Button */}
@@ -181,9 +203,9 @@ export const Navigation: React.FC<NavigationProps> = ({
             aria-label="Toggle navigation menu"
           >
             {isMobileMenuOpen ? (
-              <X className="w-6 h-6 text-text-primary" />
+              <X className="w-6 h-6 text-text-form" />
             ) : (
-              <Menu className="w-6 h-6 text-text-primary" />
+                              <Menu className="w-6 h-6 text-text-form" />
             )}
           </button>
         </div>
@@ -196,31 +218,34 @@ export const Navigation: React.FC<NavigationProps> = ({
           <div className="flex flex-col items-center w-full px-6">
             {/* Mobile Navigation Links */}
             <nav className="flex flex-col items-center space-y-12" role="navigation" aria-label="Mobile navigation">
-              {items.map((item, index) => (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  className={`
-                    block font-geist font-medium text-lg transition-all duration-300 ease-out
-                    transform translate-y-4 opacity-0
-                    focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-[#F5F5F5]
-                    hover:scale-105 hover:text-brand-primary
-                    ${
-                      item.isActive
-                        ? 'text-brand-primary'
-                        : 'text-text-primary'
-                    }
-                    ${index === 0 ? 'animate-slide-in' : ''}
-                    ${index === 1 ? 'animate-slide-in-1' : ''}
-                    ${index === 2 ? 'animate-slide-in-2' : ''}
-                    ${index === 3 ? 'animate-slide-in-3' : ''}
-                  `}
-                  onClick={handleMenuToggle}
-                  aria-label={`Navigate to ${item.label}`}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {items.map((item, index) => {
+                const isActive = isItemActive(item);
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    className={`
+                      block font-geist font-medium text-lg transition-all duration-300 ease-out
+                      transform translate-y-4 opacity-0
+                      focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-[#F5F5F5]
+                      hover:scale-105 hover:text-brand-primary
+                      ${
+                        isActive
+                          ? 'text-brand-primary'
+                          : 'text-text-form'
+                      }
+                      ${index === 0 ? 'animate-slide-in' : ''}
+                      ${index === 1 ? 'animate-slide-in-1' : ''}
+                      ${index === 2 ? 'animate-slide-in-2' : ''}
+                      ${index === 3 ? 'animate-slide-in-3' : ''}
+                    `}
+                    onClick={handleMenuToggle}
+                    aria-label={`Navigate to ${item.label}`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </nav>
             
             {/* Mobile CTA Button */}

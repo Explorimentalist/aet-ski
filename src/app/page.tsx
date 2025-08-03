@@ -3,12 +3,13 @@
 // src/app/page.tsx
 import { Button } from '@/components/Button';
 import { Navigation } from '@/components/Navigation';
-import { Clock, Users, Shield } from 'lucide-react';
+import { Clock, Users, Shield, MapPin, CheckCircle } from 'lucide-react';
 import { Footer } from '@/components/Footer';
 import { Grid } from '@/components/Grid';
 import { CardSmall } from '@/components/CardSmall';
 import { TestimonialCard } from '@/components/CardLarge';
 import { MultiStepForm } from '@/components/MultiStepForm';
+import { ImageWithGradient } from '@/components/ImageWithGradient';
 import { useState, useCallback } from 'react';
 import { BookingFormData } from '@/types';
 
@@ -61,52 +62,160 @@ export default function HomePage() {
               Get a quote
             </Button>
             
-            {/* <div className="flex items-center gap-8 text-text-inverse">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-6 h-6" />
-                <span className="text-sm">Geneva, Lyon, Chambery, Grenoble</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-6 h-6" />
-                <span className="text-sm">7 days a week</span>
-              </div>
-            </div> */}
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* The Transfers Section */}
       <section className="py-24">
         <Grid container className="gap-grid-mobile tablet:gap-grid-tablet desktop:gap-grid-desktop">
-          {/* Feature Card 1 */}
-          <CardSmall
-            icon={Users}
-            title="Over 1850 journeys"
-            description="Checked regularly, our vans have what it takes to make your journey."
-          />
+          {/* Left Column - Content (3/3/4 columns) */}
+          <div className="col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3">
+            <div className="flex flex-col gap-5">
+              {/* Heading */}
+              <h2 
+                className="text-heading text-3xl font-bold text-text-primary leading-[100%] tracking-[-0.019em]"
+                style={{
+                  fontFamily: 'GT Walsheim Trial, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+                }}
+              >
+                The transfers
+              </h2>
+              
+              {/* Bullet Points List */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-text-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
+                    We offer private transfers from Geneva, Lyon, Chambery and Grenoble airports
+                  </p>
+                </div>
+                
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-text-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.001em]">
+                    We cover all the resorts of Les 3 Vallées as well as Val d&apos;Isère, Tignes, Les Arcs, La Plagne and others in their surrounding areas.
+                  </p>
+                </div>
+                
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-text-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
+                    7 days a week
+                  </p>
+                </div>
+                
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-text-primary rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
+                    Door to door throughout the winter
+                  </p>
+                </div>
+              </div>
+              
+              {/* Button */}
+              <Button
+                variant="secondary"
+                size="md"
+                className="w-fit"
+                style={{
+                  background: '#FFFFFF',
+                  border: '2px solid #1D4747',
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                  width: '119px',
+                  height: '40px',
+                }}
+              >
+                View routes
+              </Button>
+            </div>
+          </div>
+          
+          {/* Right Column - Image (9/5/4 columns) */}
+          <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9">
+            <ImageWithGradient
+              alt="Map showing transfer routes from various airports to ski resorts in the French Alps"
+              placeholder={true}
+              height="h-[528px]"
+            />
+          </div>
+        </Grid>
+      </section>
 
-          {/* Feature Card 2 */}
-          <CardSmall
-            icon={Shield}
-            title="Safe & Reliable"
-            description="Professional drivers with extensive experience in alpine conditions."
-          />
+      {/* Why Choose Us Section */}
+      <section className="py-24 bg-background-primary">
+        <Grid container className="gap-grid-mobile tablet:gap-grid-tablet desktop:gap-grid-desktop">
+          {/* Section Heading - spans 3 columns */}
+          <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-3 mb-16">
+            <h2 
+              className="text-heading text-3xl font-bold text-text-primary leading-[120%] tracking-[-0.011em]"
+              style={{
+                fontFamily: 'GT Walsheim Trial, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+              }}
+            >
+              Why choose us
+            </h2>
+          </div>
+          
+          {/* Cards Container - spans 9 columns */}
+          <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-9">
+            <div className="flex flex-wrap gap-4 md:gap-5 lg:gap-6 justify-start">
+              {/* Card 1: Well equipped vehicles */}
+              <CardSmall
+                icon={Shield}
+                title="Well equipped vehicles"
+                description="Checked regularly, our vans have what it takes to make your journey."
+                className="flex-shrink-0"
+                variant="flex"
+              />
 
-          {/* Feature Card 3 */}
-          <CardSmall
-            icon={Clock}
-            title="Punctual Service"
-            description="Always on time, ensuring you never miss your flight or ski session."
-          />
+              {/* Card 2: Local knowledge */}
+              <CardSmall
+                icon={MapPin}
+                title="Local knowledge"
+                description="Our local business advantages get you faster and affordably to your destination."
+                className="flex-shrink-0"
+                variant="flex"
+              />
+
+              {/* Card 3: Always on time */}
+              <CardSmall
+                icon={Clock}
+                title="Always on time"
+                description="We value your time and for that reason punctuality is paramount."
+                className="flex-shrink-0"
+                variant="flex"
+              />
+
+              {/* Card 4: Reliable service */}
+              <CardSmall
+                icon={CheckCircle}
+                title="Reliable service"
+                description="We value your time and for that reason punctuality is paramount."
+                className="flex-shrink-0"
+                variant="flex"
+              />
+
+              {/* Card 5: Your quote within a day */}
+              <CardSmall
+                icon={Users}
+                title="Your quote within a day"
+                description="We sent you a quote back within 24h"
+                className="flex-shrink-0"
+                variant="flex"
+              />
+            </div>
+          </div>
         </Grid>
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-24 bg-gradient-to-br from-yellow-200 via-blue-500 to-blue-700">
+      <section className="py-24">
         <Grid container>
           {/* Section heading */}
           <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-12 mb-16">
-            <h2 className="text-heading text-3xl md:text-4xl font-bold text-text-inverse text-center">
+            <h2 className="text-heading text-3xl">
               What our customers say
             </h2>
           </div>
@@ -136,18 +245,12 @@ export default function HomePage() {
           </Grid>
         </Grid>
       </section>
-      <section className="py-24">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-heading text-3xl md:text-4xl font-bold text-text-primary mb-8">
-            Ready to book your transfer?
-          </h2>
-        </div>
-      </section>
+
 
       {/* CTA Section */}
       <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-heading text-3xl md:text-4xl font-bold text-text-primary mb-8">
+          <h2 className="text-heading text-3xl font-bold text-text-form mb-8">
             Ready to book your transfer?
           </h2>
           <p className="text-body text-lg text-text-secondary mb-12">

@@ -1,0 +1,137 @@
+// src/hooks/useStickyNavigation.ts
+'use client';
+
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register ScrollTrigger plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+interface UseStickyNavigationProps {
+  triggerOffset?: number; // Distance from top before becoming sticky (default: 84px)
+  enabled?: boolean; // Whether the sticky behavior is enabled
+  endTrigger?: string; // Optional end trigger element (e.g., download button)
+}
+
+export const useStickyNavigation = ({
+  triggerOffset = 84,
+  enabled = true,
+  endTrigger
+}: UseStickyNavigationProps = {}) => {
+  const navigationRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Check if we should enable sticky navigation
+    const checkMobile = () => window.innerWidth < 1024; // lg breakpoint
+    const isMobile = checkMobile();
+    
+    if (!enabled || isMobile || !navigationRef.current || !containerRef.current) return;
+
+    const navigation = navigationRef.current;
+    const container = containerRef.current;
+
+    // Get the initial width to maintain consistency
+    const initialWidth = navigation.offsetWidth;
+
+    // Find the end trigger element (download button)
+    const endTriggerElement = endTrigger ? document.querySelector(endTrigger) as HTMLElement : null;
+
+    // Create ScrollTrigger for sticky behavior
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: container,
+      start: `top top+=${triggerOffset}`,
+      end: endTriggerElement ? () => `bottom bottom-=${endTriggerElement.offsetHeight + 20}` : 'bottom bottom',
+      onUpdate: (self) => {
+        // Calculate the progress (0 to 1)
+        const progress = self.progress;
+        
+        if (progress === 0) {
+          // At the start - navigation should be in normal flow
+          gsap.set(navigation, {
+            position: 'relative',
+            top: 'auto',
+            width: '100%',
+            zIndex: 'auto'
+          });
+        } else if (progress === 1) {
+          // At the end - navigation should stay fixed but positioned to align with the end trigger
+          if (endTriggerElement) {
+            // Calculate position to align with the download button
+            const endTriggerRect = endTriggerElement.getBoundingClientRect();
+            const navigationHeight = navigation.offsetHeight;
+            
+            // Position the navigation so it ends at the same level as the download button
+            const finalTop = Math.max(triggerOffset, endTriggerRect.top - navigationHeight - 20);
+            
+            gsap.set(navigation, {
+              position: 'fixed',
+              top: finalTop,
+              width: initialWidth,
+              zIndex: 10
+            });
+          } else {
+            // Fallback: stay fixed at trigger offset
+            gsap.set(navigation, {
+              position: 'fixed',
+              top: triggerOffset,
+              width: initialWidth,
+              zIndex: 10
+            });
+          }
+        } else {
+          // In between - navigation should be sticky
+          gsap.set(navigation, {
+            position: 'fixed',
+            top: triggerOffset,
+            width: initialWidth,
+            zIndex: 10
+          });
+        }
+      },
+      onRefresh: () => {
+        // Ensure proper positioning on refresh
+        gsap.set(navigation, {
+          position: 'relative',
+          top: 'auto',
+          width: '100%',
+          zIndex: 'auto'
+        });
+      },
+      // Performance optimizations
+      fastScrollEnd: true,
+      preventOverlaps: true
+    });
+
+    // Handle window resize
+    const handleResize = () => {
+      const newIsMobile = checkMobile();
+      if (newIsMobile !== isMobile) {
+        // Mobile state changed, kill the trigger and reset
+        scrollTrigger.kill();
+        gsap.set(navigation, {
+          position: 'relative',
+          top: 'auto',
+          width: '100%',
+          zIndex: 'auto'
+        });
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup function
+    return () => {
+      scrollTrigger.kill();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [triggerOffset, enabled, endTrigger]);
+
+  return {
+    navigationRef,
+    containerRef
+  };
+};

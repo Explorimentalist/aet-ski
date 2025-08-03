@@ -298,7 +298,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
       default:
         return (
           <div className="p-6 text-center">
-            <h3 className="text-lg font-semibold text-text-primary mb-2">
+            <h3 className="text-lg font-semibold text-text-form mb-2">
               Step {currentStep}
             </h3>
             <p className="text-text-secondary">

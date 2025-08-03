@@ -28,13 +28,14 @@ const config: Config = {
           error: '#FFF8F8',
         },
         text: {
-          primary: '#1D4747',
+          primary: '#4F5B62',
           form: '#4F5B62',
           secondary: '#757575',
           placeholder: '#B3B7BB',
           disabled: '#B3B7BB',
           inverse: '#FFFFFF',
           error: '#E53935',
+          brand: '#1D4747',
         },
         border: {
           primary: '#4F5B62',
@@ -133,16 +134,6 @@ const config: Config = {
         'slide-in-2': 'slide-in 0.5s ease-out 200ms forwards',
         'slide-in-3': 'slide-in 0.5s ease-out 300ms forwards',
         'slide-in-4': 'slide-in 0.5s ease-out 400ms forwards',
-      },
-      // Button size variations
-      extend: {
-        padding: {
-          'button-left-icon': '8px 16px 8px 10px',
-          'button-right-icon': '8px 10px 8px 16px',
-        },
-        gap: {
-          'button-icon': '4px',
-        },
       },
       // Custom breakpoints matching design system
       screens: {

@@ -43,7 +43,7 @@ export const GridLayouts = {
   
   // Page hero layout
   heroHeading: 'col-mobile-4 tablet:col-tablet-4 desktop:col-desktop-4',
-  heroBody: 'col-mobile-4 tablet:col-tablet-4 tablet:col-start-tablet-4 desktop:col-desktop-6 desktop:col-start-desktop-6',
+  heroBody: 'col-mobile-4 tablet:col-tablet-4 tablet:col-start-tablet-5 desktop:col-desktop-6 desktop:col-start-desktop-7',
   heroImage: 'col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-12',
   
   // Cards
