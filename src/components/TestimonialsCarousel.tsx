@@ -26,6 +26,24 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
   const [isPlaying, setIsPlaying] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // Calculate responsive transform values
+  const getTransformValue = () => {
+    const offset = testimonials.length; // Start from middle set for infinite scrolling
+    const position = currentIndex + offset;
+    
+    // Return different values for different breakpoints
+    // Mobile: 280px + 24px gap = 304px per card
+    // Tablet: 360px + 20px gap = 380px per card  
+    // Desktop: 408px + 24px gap = 432px per card
+    return {
+      mobile: -position * 304,
+      tablet: -position * 380, 
+      desktop: -position * 432,
+    };
+  };
+
+  const transformValues = getTransformValue();
+
   const nextSlide = useCallback(() => {
     if (isAnimating) return;
     setIsAnimating(true);
@@ -107,32 +125,35 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
             <div 
               className="flex items-center gap-6 tablet:gap-5 desktop:gap-6 transition-transform duration-[400ms] ease-out motion-reduce:transition-none"
               style={{
-                transform: `translateX(calc(-${currentIndex} * (100% / 3) - ${currentIndex} * (1.5rem / 3)))`,
+                transform: `translateX(${transformValues.mobile}px)`,
               }}
             >
-              {testimonials.map((testimonial, index) => {
-                // Calculate position relative to current index for visual effects
-                let relativePosition = index - currentIndex;
-                if (relativePosition < 0) relativePosition += testimonials.length;
-                if (relativePosition >= 3) relativePosition = 3; // Cap at 3 for performance
+              {/* Render testimonials with infinite loop logic */}
+              {[...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => {
+                const originalIndex = index % testimonials.length;
+                
+                // Calculate position relative to current focused testimonial
+                // We start from the middle set (testimonials.length offset), so adjust accordingly
+                const positionFromCurrent = index - (currentIndex + testimonials.length);
                 
                 let opacity = 1;
                 let blur = 0;
                 
-                if (relativePosition === 1) {
+                // Apply visual effects based on distance from current item
+                if (positionFromCurrent === 1) {
                   opacity = 0.48;
                   blur = 5;
-                } else if (relativePosition === 2) {
+                } else if (positionFromCurrent === 2) {
                   opacity = 0.24;
                   blur = 12;
-                } else if (relativePosition >= 3) {
+                } else if (positionFromCurrent < 0 || positionFromCurrent > 2) {
                   opacity = 0;
                   blur = 12;
                 }
 
                 return (
                   <div
-                    key={index}
+                    key={`${originalIndex}-${Math.floor(index / testimonials.length)}`}
                     className="flex-shrink-0 transition-all duration-[400ms] ease-out motion-reduce:transition-none"
                     style={{
                       opacity,
