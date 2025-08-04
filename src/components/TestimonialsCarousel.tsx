@@ -24,26 +24,27 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const nextSlide = useCallback(() => {
-    if (isTransitioning && !prefersReducedMotion) return;
-    setIsTransitioning(true);
+    if (isAnimating) return;
+    setIsAnimating(true);
     setCurrentIndex((prevIndex) => 
       prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
     );
-    setTimeout(() => setIsTransitioning(false), prefersReducedMotion ? 100 : 400);
-  }, [testimonials.length, isTransitioning, prefersReducedMotion]);
+    // Reset animation state after transition completes
+    setTimeout(() => setIsAnimating(false), 400);
+  }, [testimonials.length, isAnimating]);
 
   const prevSlide = useCallback(() => {
-    if (isTransitioning && !prefersReducedMotion) return;
-    setIsTransitioning(true);
+    if (isAnimating) return;
+    setIsAnimating(true);
     setCurrentIndex((prevIndex) => 
       prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
     );
-    setTimeout(() => setIsTransitioning(false), prefersReducedMotion ? 100 : 400);
-  }, [testimonials.length, isTransitioning, prefersReducedMotion]);
+    // Reset animation state after transition completes
+    setTimeout(() => setIsAnimating(false), 400);
+  }, [testimonials.length, isAnimating]);
 
   // Auto-play functionality
   useEffect(() => {
@@ -55,19 +56,6 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
 
     return () => clearInterval(interval);
   }, [isPlaying, nextSlide]);
-
-  // Check for reduced motion preference
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-    
-    const handleChange = (e: MediaQueryListEvent) => {
-      setPrefersReducedMotion(e.matches);
-    };
-    
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
 
   // Keyboard navigation
   useEffect(() => {
@@ -85,18 +73,6 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
 
   const handleMouseEnter = () => setIsPlaying(false);
   const handleMouseLeave = () => setIsPlaying(true);
-
-  // Get three visible testimonials (current, next, and the one after)
-  const getVisibleTestimonials = () => {
-    const visible = [];
-    for (let i = 0; i < 3; i++) {
-      const index = (currentIndex + i) % testimonials.length;
-      visible.push({ ...testimonials[index], index });
-    }
-    return visible;
-  };
-
-  const visibleTestimonials = getVisibleTestimonials();
 
   return (
     <section 
@@ -122,50 +98,57 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
         {/* Testimonials Cards Container - responsive column spans */}
         <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9">
           <div 
-            className="flex items-center gap-6 tablet:gap-5 desktop:gap-6 overflow-hidden"
+            className="relative overflow-hidden"
             role="group"
             aria-label="Testimonials"
             aria-live="polite"
             aria-atomic="true"
-            style={{
-              transform: `translateX(${isTransitioning && !prefersReducedMotion ? '-2px' : '0px'})`,
-              transition: prefersReducedMotion ? 'none' : 'transform 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            }}
           >
-            {visibleTestimonials.map((testimonial, index) => {
-              // Apply visual effects based on position
-              let opacity = 1;
-              let blur = 0;
-              
-              if (index === 1) {
-                opacity = 0.48;
-                blur = 5; // Updated to match desktop CSS: filter: blur(5px)
-              } else if (index === 2) {
-                opacity = 0.24;
-                blur = 12; // Updated to match desktop CSS: filter: blur(12px)
-              }
+            <div 
+              className="flex items-center gap-6 tablet:gap-5 desktop:gap-6 transition-transform duration-[400ms] ease-out motion-reduce:transition-none"
+              style={{
+                transform: `translateX(calc(-${currentIndex} * (100% / 3) - ${currentIndex} * (1.5rem / 3)))`,
+              }}
+            >
+              {testimonials.map((testimonial, index) => {
+                // Calculate position relative to current index for visual effects
+                let relativePosition = index - currentIndex;
+                if (relativePosition < 0) relativePosition += testimonials.length;
+                if (relativePosition >= 3) relativePosition = 3; // Cap at 3 for performance
+                
+                let opacity = 1;
+                let blur = 0;
+                
+                if (relativePosition === 1) {
+                  opacity = 0.48;
+                  blur = 5;
+                } else if (relativePosition === 2) {
+                  opacity = 0.24;
+                  blur = 12;
+                } else if (relativePosition >= 3) {
+                  opacity = 0;
+                  blur = 12;
+                }
 
-              return (
-                <div
-                  key={`${testimonial.index}-${currentIndex}`}
-                  className="flex-shrink-0"
-                  style={{
-                    opacity,
-                    filter: blur > 0 ? `blur(${blur}px)` : 'none',
-                    transform: `translateY(${isTransitioning && !prefersReducedMotion ? (index * 2) + 'px' : '0px'}) scale(${isTransitioning && !prefersReducedMotion ? 0.98 : 1})`,
-                    transition: prefersReducedMotion ? 'none' : 'all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                    transitionDelay: prefersReducedMotion ? '0ms' : `${index * 50}ms`,
-                  }}
-                >
-                  <TestimonialCard
-                    rating={testimonial.rating}
-                    quote={testimonial.quote}
-                    author={testimonial.author}
-                    className="w-[280px] tablet:w-[360px] desktop:w-[408px]"
-                  />
-                </div>
-              );
-            })}
+                return (
+                  <div
+                    key={index}
+                    className="flex-shrink-0 transition-all duration-[400ms] ease-out motion-reduce:transition-none"
+                    style={{
+                      opacity,
+                      filter: blur > 0 ? `blur(${blur}px)` : 'none',
+                    }}
+                  >
+                    <TestimonialCard
+                      rating={testimonial.rating}
+                      quote={testimonial.quote}
+                      author={testimonial.author}
+                      className="w-[280px] tablet:w-[360px] desktop:w-[408px]"
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -179,18 +162,28 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
             <div className="flex justify-between items-center">
               <button
                 onClick={prevSlide}
-                className="w-8 h-8 tablet:w-6 tablet:h-6 flex items-center justify-center text-text-primary hover:text-[#0C2626] tablet:hover:bg-background-hover hover:bg-[#0C2626] hover:text-white tablet:hover:text-[#0C2626] transition-all duration-200 ease-in-out tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none hover:scale-105 active:scale-95"
+                disabled={isAnimating}
+                className={`w-8 h-8 tablet:w-6 tablet:h-6 flex items-center justify-center transition-all duration-200 ease-in-out tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none tablet:hover:bg-transparent tablet:focus:bg-transparent focus:outline-none focus:ring-2 focus:ring-[rgba(29,71,71,0.1)] ${
+                  isAnimating 
+                    ? 'text-text-disabled cursor-not-allowed' 
+                    : 'text-text-primary hover:text-[#0C2626] hover:bg-background-hover cursor-pointer'
+                }`}
                 aria-label="Previous testimonial"
               >
-                <ArrowLeft className="w-5 h-5 tablet:w-4 tablet:h-4 transition-transform duration-200" />
+                <ArrowLeft className="w-5 h-5 tablet:w-4 tablet:h-4" />
               </button>
               
               <button
                 onClick={nextSlide}
-                className="w-8 h-8 tablet:w-6 tablet:h-6 flex items-center justify-center text-text-primary hover:text-[#0C2626] tablet:hover:bg-background-hover hover:bg-[#0C2626] hover:text-white tablet:hover:text-[#0C2626] transition-all duration-200 ease-in-out tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none hover:scale-105 active:scale-95"
+                disabled={isAnimating}
+                className={`w-8 h-8 tablet:w-6 tablet:h-6 flex items-center justify-center transition-all duration-200 ease-in-out tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none tablet:hover:bg-transparent tablet:focus:bg-transparent focus:outline-none focus:ring-2 focus:ring-[rgba(29,71,71,0.1)] ${
+                  isAnimating 
+                    ? 'text-text-disabled cursor-not-allowed' 
+                    : 'text-text-primary hover:text-[#0C2626] hover:bg-background-hover cursor-pointer'
+                }`}
                 aria-label="Next testimonial"
               >
-                <ArrowRight className="w-5 h-5 tablet:w-4 tablet:h-4 transition-transform duration-200" />
+                <ArrowRight className="w-5 h-5 tablet:w-4 tablet:h-4" />
               </button>
             </div>
           </div>
