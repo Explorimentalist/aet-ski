@@ -22,45 +22,83 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
   testimonials,
   className,
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // Start from the middle set for true infinite scrolling
+  const [currentIndex, setCurrentIndex] = useState(testimonials.length);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [screenSize, setScreenSize] = useState<'mobile' | 'tablet' | 'desktop'>('mobile');
 
-  // Calculate responsive transform values
+  // Calculate exact transform values for pixel-perfect positioning
   const getTransformValue = () => {
-    const offset = testimonials.length; // Start from middle set for infinite scrolling
-    const position = currentIndex + offset;
+    // Card widths: Mobile: 280px, Tablet: 360px, Desktop: 408px
+    // Gaps: Mobile: 24px, Tablet: 20px, Desktop: 24px
+    const cardWithGap = {
+      mobile: 280 + 24,   // 304px per card
+      tablet: 360 + 20,   // 380px per card  
+      desktop: 408 + 24,  // 432px per card
+    };
     
-    // Return different values for different breakpoints
-    // Mobile: 280px + 24px gap = 304px per card
-    // Tablet: 360px + 20px gap = 380px per card  
-    // Desktop: 408px + 24px gap = 432px per card
     return {
-      mobile: -position * 304,
-      tablet: -position * 380, 
-      desktop: -position * 432,
+      mobile: -currentIndex * cardWithGap.mobile,
+      tablet: -currentIndex * cardWithGap.tablet,
+      desktop: -currentIndex * cardWithGap.desktop,
     };
   };
 
   const transformValues = getTransformValue();
 
+  // Detect screen size for responsive transforms
+  useEffect(() => {
+    const updateScreenSize = () => {
+      if (window.innerWidth >= 1024) {
+        setScreenSize('desktop');
+      } else if (window.innerWidth >= 768) {
+        setScreenSize('tablet');
+      } else {
+        setScreenSize('mobile');
+      }
+    };
+
+    updateScreenSize();
+    window.addEventListener('resize', updateScreenSize);
+    return () => window.removeEventListener('resize', updateScreenSize);
+  }, []);
+
   const nextSlide = useCallback(() => {
     if (isAnimating) return;
     setIsAnimating(true);
-    setCurrentIndex((prevIndex) => 
-      prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
-    );
-    // Reset animation state after transition completes
+    
+    setCurrentIndex((prevIndex) => {
+      const newIndex = prevIndex + 1;
+      // If we've moved past the middle set, reset to beginning of middle set
+      if (newIndex >= testimonials.length * 2) {
+        setTimeout(() => {
+          setCurrentIndex(testimonials.length);
+        }, 400);
+        return testimonials.length * 2 - 1;
+      }
+      return newIndex;
+    });
+    
     setTimeout(() => setIsAnimating(false), 400);
   }, [testimonials.length, isAnimating]);
 
   const prevSlide = useCallback(() => {
     if (isAnimating) return;
     setIsAnimating(true);
-    setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
-    );
-    // Reset animation state after transition completes
+    
+    setCurrentIndex((prevIndex) => {
+      const newIndex = prevIndex - 1;
+      // If we've moved before the middle set, reset to end of middle set
+      if (newIndex < testimonials.length) {
+        setTimeout(() => {
+          setCurrentIndex(testimonials.length * 2 - 1);
+        }, 400);
+        return testimonials.length;
+      }
+      return newIndex;
+    });
+    
     setTimeout(() => setIsAnimating(false), 400);
   }, [testimonials.length, isAnimating]);
 
@@ -125,16 +163,15 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
             <div 
               className="flex items-center gap-6 tablet:gap-5 desktop:gap-6 transition-transform duration-[400ms] ease-out motion-reduce:transition-none"
               style={{
-                transform: `translateX(${transformValues.mobile}px)`,
+                transform: `translateX(${transformValues[screenSize]}px)`,
               }}
             >
-              {/* Render testimonials with infinite loop logic */}
+              {/* Render testimonials 3 times for infinite scrolling */}
               {[...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => {
                 const originalIndex = index % testimonials.length;
                 
                 // Calculate position relative to current focused testimonial
-                // We start from the middle set (testimonials.length offset), so adjust accordingly
-                const positionFromCurrent = index - (currentIndex + testimonials.length);
+                const positionFromCurrent = index - currentIndex;
                 
                 let opacity = 1;
                 let blur = 0;
