@@ -87,41 +87,34 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
     >
       <Grid container className="gap-grid-mobile tablet:gap-grid-tablet desktop:gap-grid-desktop">
         {/* Section Heading and Navigation - 3 columns desktop/tablet, 4 columns mobile */}
-        <div className="col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3 mb-16">
-          <div className="flex flex-col gap-8">
-            {/* Heading */}
-            <h2 
-              className="text-heading text-3xl font-bold text-text-primary leading-[150%] tracking-button"
-              style={{
-                fontFamily: 'GT Walsheim Trial, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-              }}
-            >
-              Testimonials
-            </h2>
-            
-            {/* Navigation controls below heading */}
-            <div className="flex flex-col gap-2">
-              {/* Separator line */}
-              <div className="w-full h-px bg-text-primary" />
-              
-              {/* Navigation controls */}
-              <div className="flex justify-between items-center">
-                <button
-                  onClick={prevSlide}
-                  className="w-6 h-6 flex items-center justify-center text-text-primary hover:text-text-brand transition-colors"
-                  aria-label="Previous testimonial"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                
-                <button
-                  onClick={nextSlide}
-                  className="w-6 h-6 flex items-center justify-center text-text-primary hover:text-text-brand transition-colors"
-                  aria-label="Next testimonial"
-                >
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
+        <div className="col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3 flex flex-col tablet:min-h-[400px] desktop:min-h-[520px]">
+          <h2 
+            className="text-heading text-3xl font-bold text-text-primary leading-[150%] tracking-button"
+            style={{
+              fontFamily: 'GT Walsheim Trial, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+            }}
+          >
+            Testimonials
+          </h2>
+          
+          {/* Desktop/Tablet navigation at bottom */}
+          <div className="mt-auto hidden tablet:flex flex-col gap-2">
+            <div className="w-full h-px bg-text-primary" />
+            <div className="flex justify-between items-center mt-2">
+              <button
+                onClick={prevSlide}
+                className="w-6 h-6 flex items-center justify-center text-text-primary hover:text-text-brand transition-colors"
+                aria-label="Previous testimonial"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={nextSlide}
+                className="w-6 h-6 flex items-center justify-center text-text-primary hover:text-text-brand transition-colors"
+                aria-label="Next testimonial"
+              >
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
@@ -167,6 +160,25 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
               );
             })}
           </div>
+        </div>
+
+        {/* Mobile navigation */}
+        <div className="col-mobile-4 tablet:hidden mt-4 flex justify-between items-center">
+          <button
+            onClick={prevSlide}
+            className="w-10 h-10 flex items-center justify-center text-text-primary hover:text-text-brand transition-colors bg-background-secondary rounded-full"
+            aria-label="Previous testimonial"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+          
+          <button
+            onClick={nextSlide}
+            className="w-10 h-10 flex items-center justify-center text-text-primary hover:text-text-brand transition-colors bg-background-secondary rounded-full"
+            aria-label="Next testimonial"
+          >
+            <ArrowRight className="w-6 h-6" />
+          </button>
         </div>
       </Grid>
     </section>
