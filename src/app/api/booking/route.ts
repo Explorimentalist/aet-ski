@@ -6,8 +6,13 @@ import { generateQuoteId } from '@/lib/utils';
 
 // Initialize email service with environment variables
 function initializeEmailServiceFromEnv(): void {
+  // Type-safe provider validation
+  const validProviders: EmailConfig['provider'][] = ['resend', 'sendgrid', 'mailgun', 'emailjs', 'nodemailer'];
+  const envProvider = process.env.EMAIL_PROVIDER;
+  const provider: EmailConfig['provider'] = validProviders.find(p => p === envProvider) || 'resend';
+
   const emailConfig: EmailConfig = {
-    provider: (process.env.EMAIL_PROVIDER as any) || 'resend',
+    provider,
     apiKey: process.env.EMAIL_API_KEY || '',
     fromEmail: process.env.EMAIL_FROM || 'bookings@aet.ski',
     fromName: process.env.EMAIL_FROM_NAME || 'AET Ski Transfer',
