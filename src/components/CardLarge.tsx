@@ -1,5 +1,6 @@
 // src/components/CardLarge.tsx
 import React from 'react';
+import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface CardLargeProps {
@@ -55,9 +56,10 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({
       {/* Star rating */}
       <div className="flex gap-1 w-[116px] h-5">
         {Array.from({ length: rating }).map((_, i) => (
-          <div
+          <Star
             key={i}
-            className="w-5 h-5 bg-[#FFCC80]"
+            className="w-5 h-5 text-[#FFCC80]"
+            fill="#FFCC80"
             aria-hidden="true"
           />
         ))}

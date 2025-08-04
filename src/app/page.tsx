@@ -7,7 +7,7 @@ import { Clock, Users, Shield, MapPin, CheckCircle } from 'lucide-react';
 import { Footer } from '@/components/Footer';
 import { Grid } from '@/components/Grid';
 import { CardSmall } from '@/components/CardSmall';
-import { TestimonialCard } from '@/components/CardLarge';
+import { TestimonialsCarousel } from '@/components/TestimonialsCarousel';
 import { MultiStepForm } from '@/components/MultiStepForm';
 import { ImageWithGradient } from '@/components/ImageWithGradient';
 import { useState, useCallback } from 'react';
@@ -16,6 +16,35 @@ import { BookingFormData } from '@/types';
 
 export default function HomePage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  // Testimonials data
+  const testimonials = [
+    {
+      rating: 5,
+      quote: "Look no further for your transfers. Always faultless and friendly, with spotless vehicles and impressive punctuality.",
+      author: "Ross Wilkinson"
+    },
+    {
+      rating: 5,
+      quote: "Exceptional service from start to finish. Professional, reliable, and made our ski holiday stress-free.",
+      author: "Sarah Johnson"
+    },
+    {
+      rating: 5,
+      quote: "The best transfer service we've used in the Alps. Highly recommended for families and groups.",
+      author: "Michael Chen"
+    },
+    {
+      rating: 5,
+      quote: "Outstanding punctuality and comfort. Made our trip to Val d'Isère absolutely seamless and enjoyable.",
+      author: "Emma Watson"
+    },
+    {
+      rating: 5,
+      quote: "Professional drivers, immaculate vehicles, and unbeatable local knowledge of the Alpine routes.",
+      author: "James Thompson"
+    }
+  ];
 
   const handleOpenForm = useCallback(() => {
     setIsFormOpen(true);
@@ -210,41 +239,8 @@ export default function HomePage() {
         </Grid>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-24">
-        <Grid container>
-          {/* Section heading */}
-          <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-12 mb-16">
-            <h2 className="text-heading text-3xl">
-              What our customers say
-            </h2>
-          </div>
-          
-          {/* Testimonials grid */}
-          <Grid className="gap-grid-mobile tablet:gap-grid-tablet desktop:gap-grid-desktop">
-            {/* Testimonial Card 1 */}
-            <TestimonialCard
-              rating={5}
-              quote="Look no further for your transfers. Always faultless and friendly, with spotless vehicles and impressive punctuality."
-              author="Ross Wilkinson"
-            />
-
-            {/* Testimonial Card 2 */}
-            <TestimonialCard
-              rating={5}
-              quote="Exceptional service from start to finish. Professional, reliable, and made our ski holiday stress-free."
-              author="Sarah Johnson"
-            />
-
-            {/* Testimonial Card 3 */}
-            <TestimonialCard
-              rating={5}
-              quote="The best transfer service we've used in the Alps. Highly recommended for families and groups."
-              author="Michael Chen"
-            />
-          </Grid>
-        </Grid>
-      </section>
+      {/* Testimonials Carousel Section */}
+      <TestimonialsCarousel testimonials={testimonials} />
 
 
       {/* CTA Section */}
