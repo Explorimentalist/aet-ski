@@ -67,7 +67,7 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({
       
       {/* Quote and author container - responsive width */}
       <div className="flex flex-col gap-4 tablet:gap-6 desktop:gap-8 items-end w-full max-w-[280px] tablet:max-w-[312px]">
-        <p className="text-lg tablet:text-xl desktop:text-2xl font-medium text-text-inverse w-full">
+        <p className="text-md tablet:text-lg desktop:text-xl font-medium text-text-inverse w-full">
           {quote}
         </p>
         <p className="text-sm tablet:text-base font-medium text-text-inverse text-right w-full">
