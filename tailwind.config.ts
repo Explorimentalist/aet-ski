@@ -134,6 +134,17 @@ const config: Config = {
         'slide-in-2': 'slide-in 0.5s ease-out 200ms forwards',
         'slide-in-3': 'slide-in 0.5s ease-out 300ms forwards',
         'slide-in-4': 'slide-in 0.5s ease-out 400ms forwards',
+        'pulse-subtle': 'pulse-subtle 4s ease-in-out infinite',
+      },
+      keyframes: {
+        'slide-in': {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'pulse-subtle': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.005)' },
+        },
       },
       // Custom breakpoints matching design system
       screens: {

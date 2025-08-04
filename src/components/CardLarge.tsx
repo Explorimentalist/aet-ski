@@ -12,7 +12,7 @@ export const CardLarge: React.FC<CardLargeProps> = ({
   children,
   className,
 }) => {
-  // Responsive base classes with proper scaling
+  // Responsive base classes with proper scaling and motion
   const baseClasses = [
     'flex flex-col',
     'p-6 tablet:p-8 desktop:p-[48px]', // Responsive padding
@@ -26,6 +26,10 @@ export const CardLarge: React.FC<CardLargeProps> = ({
     'rounded-lg',
     'min-h-[320px] tablet:min-h-[400px] desktop:min-h-[520px]', // Responsive height
     'w-full', // Full width, controlled by parent container
+    // Motion and interaction states
+    'transition-all duration-normal ease-in-out',
+    'hover:shadow-lg hover:-translate-y-1',
+    'cursor-default',
     // Grid spans from design system
     'col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-4',
   ].join(' ');
@@ -58,9 +62,10 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({
         {Array.from({ length: rating }).map((_, i) => (
           <Star
             key={i}
-            className="w-4 h-4 tablet:w-5 tablet:h-5 text-[#FFCC80]"
+            className="w-4 h-4 tablet:w-5 tablet:h-5 text-[#FFCC80] transition-transform duration-fast hover:scale-110"
             fill="#FFCC80"
             aria-hidden="true"
+            style={{ animationDelay: `${i * 100}ms` }}
           />
         ))}
       </div>
