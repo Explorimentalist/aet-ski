@@ -86,8 +86,8 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
       role="region"
     >
       <Grid container className="gap-grid-mobile tablet:gap-grid-tablet desktop:gap-grid-desktop">
-        {/* Section Heading and Navigation - 3 columns desktop/tablet, 4 columns mobile */}
-        <div className="col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3 flex flex-col tablet:min-h-[400px] desktop:min-h-[520px]">
+        {/* Section Heading - simplified */}
+        <div className="col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3">
           <h2 
             className="text-heading text-3xl font-bold text-text-primary leading-[150%] tracking-button"
             style={{
@@ -96,31 +96,10 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
           >
             Testimonials
           </h2>
-          
-          {/* Desktop/Tablet navigation at bottom */}
-          <div className="mt-auto hidden tablet:flex flex-col gap-2">
-            <div className="w-full h-px bg-text-primary" />
-            <div className="flex justify-between items-center mt-2">
-              <button
-                onClick={prevSlide}
-                className="w-6 h-6 flex items-center justify-center text-text-primary hover:text-text-brand transition-colors"
-                aria-label="Previous testimonial"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={nextSlide}
-                className="w-6 h-6 flex items-center justify-center text-text-primary hover:text-text-brand transition-colors"
-                aria-label="Next testimonial"
-              >
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Testimonials Cards Container - responsive column spans */}
-        <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-9">
+        <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9">
           <div 
             className="flex items-center gap-6 tablet:gap-5 desktop:gap-6 overflow-hidden"
             role="group"
@@ -154,7 +133,7 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
                     rating={testimonial.rating}
                     quote={testimonial.quote}
                     author={testimonial.author}
-                    className="w-[360px] h-[400px] tablet:w-[360px] tablet:h-[400px] desktop:w-[408px] desktop:h-[520px]"
+                    className="w-[280px] tablet:w-[360px] desktop:w-[408px]"
                   />
                 </div>
               );
@@ -162,23 +141,31 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
           </div>
         </div>
 
-        {/* Mobile navigation */}
-        <div className="col-mobile-4 tablet:hidden mt-4 flex justify-between items-center">
-          <button
-            onClick={prevSlide}
-            className="w-10 h-10 flex items-center justify-center text-text-primary hover:text-text-brand transition-colors bg-background-secondary rounded-full"
-            aria-label="Previous testimonial"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
-          
-          <button
-            onClick={nextSlide}
-            className="w-10 h-10 flex items-center justify-center text-text-primary hover:text-text-brand transition-colors bg-background-secondary rounded-full"
-            aria-label="Next testimonial"
-          >
-            <ArrowRight className="w-6 h-6" />
-          </button>
+        {/* Navigation below cards - spans same width as cards container */}
+        <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9 mt-6">
+          <div className="flex flex-col gap-4">
+            {/* Separator line - hidden on mobile */}
+            <div className="w-full h-px bg-text-primary hidden tablet:block" />
+            
+            {/* Navigation controls */}
+            <div className="flex justify-between items-center">
+              <button
+                onClick={prevSlide}
+                className="w-8 h-8 tablet:w-6 tablet:h-6 flex items-center justify-center text-text-primary hover:text-text-brand transition-colors tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none"
+                aria-label="Previous testimonial"
+              >
+                <ArrowLeft className="w-5 h-5 tablet:w-4 tablet:h-4" />
+              </button>
+              
+              <button
+                onClick={nextSlide}
+                className="w-8 h-8 tablet:w-6 tablet:h-6 flex items-center justify-center text-text-primary hover:text-text-brand transition-colors tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none"
+                aria-label="Next testimonial"
+              >
+                <ArrowRight className="w-5 h-5 tablet:w-4 tablet:h-4" />
+              </button>
+            </div>
+          </div>
         </div>
       </Grid>
     </section>

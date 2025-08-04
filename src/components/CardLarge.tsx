@@ -12,11 +12,11 @@ export const CardLarge: React.FC<CardLargeProps> = ({
   children,
   className,
 }) => {
-  // Base classes from Figma card_lg_testimonials
+  // Responsive base classes with proper scaling
   const baseClasses = [
     'flex flex-col',
-    'p-[48px]',
-    'gap-[168px]',
+    'p-6 tablet:p-8 desktop:p-[48px]', // Responsive padding
+    'gap-16 tablet:gap-24 desktop:gap-[168px]', // Responsive gap
     'relative',
     'font-geist',
     'tracking-[-0.011em]',
@@ -24,8 +24,8 @@ export const CardLarge: React.FC<CardLargeProps> = ({
     'items-start',
     'bg-gradient-testimonial',
     'rounded-lg',
-    'min-h-[520px]',
-    'w-[408px]',
+    'min-h-[320px] tablet:min-h-[400px] desktop:min-h-[520px]', // Responsive height
+    'w-full', // Full width, controlled by parent container
     // Grid spans from design system
     'col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-4',
   ].join(' ');
@@ -54,23 +54,23 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({
   return (
     <CardLarge className={className}>
       {/* Star rating */}
-      <div className="flex gap-1 w-[116px] h-5">
+      <div className="flex gap-1 w-[100px] tablet:w-[116px] h-5">
         {Array.from({ length: rating }).map((_, i) => (
           <Star
             key={i}
-            className="w-5 h-5 text-[#FFCC80]"
+            className="w-4 h-4 tablet:w-5 tablet:h-5 text-[#FFCC80]"
             fill="#FFCC80"
             aria-hidden="true"
           />
         ))}
       </div>
       
-      {/* Quote and author container */}
-      <div className="flex flex-col gap-8 items-end w-[312px]">
-        <p className="text-2xl font-medium text-text-inverse w-full">
+      {/* Quote and author container - responsive width */}
+      <div className="flex flex-col gap-4 tablet:gap-6 desktop:gap-8 items-end w-full max-w-[280px] tablet:max-w-[312px]">
+        <p className="text-lg tablet:text-xl desktop:text-2xl font-medium text-text-inverse w-full">
           {quote}
         </p>
-        <p className="text-base font-medium text-text-inverse text-right w-full">
+        <p className="text-sm tablet:text-base font-medium text-text-inverse text-right w-full">
           {author}
         </p>
       </div>
