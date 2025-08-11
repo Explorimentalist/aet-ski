@@ -22,14 +22,15 @@ export const CardSmall: React.FC<CardSmallProps> = ({
     <div className={cn(
       // Base styles from Figma card_sm_white
       'flex flex-col items-center',
-      'p-[48px]',
+      'p-6xl', // Using design token for 48px padding
       'gap-4',
       'bg-background-secondary',
       'rounded-xl',
       'min-h-[240px]',
-      'w-[300px]',
-      // Grid spans from design system - only apply when variant is 'grid'
-      variant === 'grid' && 'col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3',
+      // Conditional layout classes for responsive width and grid support
+      variant === 'grid'
+        ? 'w-full col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3'
+        : 'w-full tablet:w-[300px]',
       className
     )}>
       <div className="w-16 h-16 bg-brand-primary rounded-full flex items-center justify-center">

@@ -1,13 +1,15 @@
 // src/app/terms/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import SideNavigation from '@/components/SideNavigation';
 import { Button } from '@/components/Button';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
+import { MultiStepForm } from '@/components/MultiStepForm';
 import { useStickyNavigation } from '@/hooks/useStickyNavigation';
 import { Download } from 'lucide-react';
+import { BookingFormData } from '@/types';
 
 interface TermsSection {
   id: string;
@@ -94,6 +96,7 @@ export default function TermsPage() {
       isActive: section.id === 'definitions'
     }))
   );
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   // Use sticky navigation hook with 84px trigger offset
   const { navigationRef, containerRef } = useStickyNavigation({
@@ -166,10 +169,25 @@ export default function TermsPage() {
     console.log('Download PDF clicked');
   };
 
+  const handleOpenForm = useCallback(() => {
+    setIsFormOpen(true);
+  }, []);
+
+  const handleCloseForm = useCallback(() => {
+    setIsFormOpen(false);
+  }, []);
+
+  const handleFormSubmit = useCallback((data: BookingFormData) => {
+    console.log('Form submitted:', data);
+    // TODO: Handle form submission (API call, etc.)
+    // Don't close modal here - let the success page handle closing
+    // The MultiStepForm will show the success page, and user can close it
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Fixed Navigation */}
-      <Navigation />
+      <Navigation onQuoteClick={handleOpenForm} />
 
       {/* Main Content with proper spacing for fixed navigation */}
       <div className="pt-14 md:pt-[72px]"> {/* Add top padding to account for fixed navigation on all devices */}
@@ -186,9 +204,9 @@ export default function TermsPage() {
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Side Navigation Container */}
-            <div className="lg:col-span-4" ref={containerRef}>
+            <div className="col-span-1 lg:col-span-4" ref={containerRef}>
               {/* Side Navigation */}
-              <div ref={navigationRef}>
+              <div ref={navigationRef} className="sticky top-[56px] md:top-[72px] z-10">
                 <SideNavigation 
                   items={navigationItems}
                   onItemClick={handleSectionClick}
@@ -235,7 +253,14 @@ export default function TermsPage() {
       </div>
 
       {/* Footer */}
-      <Footer />
+      <Footer onQuoteClick={handleOpenForm} />
+
+      {/* Multi-Step Form Modal */}
+      <MultiStepForm
+        isOpen={isFormOpen}
+        onClose={handleCloseForm}
+        onSubmit={handleFormSubmit}
+      />
     </div>
   );
 } 

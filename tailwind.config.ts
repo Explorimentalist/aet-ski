@@ -19,6 +19,9 @@ const config: Config = {
           'primary-active': '#0C2626',
           'primary-focus': 'rgba(29, 71, 71, 0.1)',
         },
+        accent: {
+          primary: '#FFCC80',
+        },
         background: {
           primary: '#F5F5F5',
           secondary: '#FFFFFF',
@@ -36,6 +39,7 @@ const config: Config = {
           inverse: '#FFFFFF',
           error: '#E53935',
           brand: '#1D4747',
+          muted: '#3C3C3C',
         },
         border: {
           primary: '#4F5B62',
@@ -71,6 +75,7 @@ const config: Config = {
         '6xl': '48px',
         '7xl': '56px',
         '8xl': '64px',
+        '8.5xl': '80px',
         '9xl': '84px',
         '10xl': '118px',
       },
@@ -122,6 +127,7 @@ const config: Config = {
       },
       backgroundImage: {
         'gradient-testimonial': 'radial-gradient(302.49% 115.61% at 50% 117.5%, #FFCC80 0%, #407099 25.48%, #2A4D6A 100%)',
+        'gradient-hero': 'linear-gradient(180deg, #CFE0F6 0%, #F5F5F5 100%)',
       },
       fontFamily: {
         heading: ['GT Walsheim Trial', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
@@ -145,6 +151,11 @@ const config: Config = {
           '0%, 100%': { transform: 'scale(1)' },
           '50%': { transform: 'scale(1.005)' },
         },
+      },
+      // Custom aspect ratios for hero images
+      aspectRatio: {
+        'hero-desktop': '1.5',   // 1272/848 ≈ 1.5
+        'hero-mobile': '0.754',  // 392/520 ≈ 0.754
       },
       // Custom breakpoints matching design system
       screens: {

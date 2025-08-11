@@ -265,6 +265,11 @@ export interface NavigationProps {
   className?: string;
   onMenuToggle?: () => void;
   isMobileMenuOpen?: boolean;
+  onQuoteClick?: () => void;
+}
+
+export interface FooterProps {
+  onQuoteClick?: () => void;
 }
 
 // Utility types

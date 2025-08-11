@@ -17,10 +17,7 @@ export const useStickyNavigation = ({
 
   useEffect(() => {
     // Check if we should enable sticky navigation
-    const checkMobile = () => window.innerWidth < 1024; // lg breakpoint
-    const isMobile = checkMobile();
-    
-    if (!enabled || isMobile || !navigationRef.current || !containerRef.current) return;
+    if (!enabled || !navigationRef.current || !containerRef.current) return;
 
     const navigation = navigationRef.current;
     const container = containerRef.current;
@@ -84,16 +81,9 @@ export const useStickyNavigation = ({
 
     // Handle window resize
     const handleResize = () => {
-      const newIsMobile = checkMobile();
-      if (newIsMobile !== isMobile) {
-        // Mobile state changed, reset
-        isSticky = false;
-        isStickyBottom = false;
-        navigation.style.position = 'relative';
-        navigation.style.top = 'auto';
-        navigation.style.width = '100%';
-        navigation.style.zIndex = 'auto';
-        window.removeEventListener('scroll', updateStickyState);
+      // Update width on resize
+      if (isSticky || isStickyBottom) {
+        navigation.style.width = `${container.offsetWidth}px`;
       }
     };
 

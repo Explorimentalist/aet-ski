@@ -24,6 +24,8 @@
     --color-brand-primary-active: #0C2626;
     --color-brand-primary-focus: rgba(29, 71, 71, 0.1);
     
+    --color-accent-primary: #FFCC80;
+    
     --color-background-primary: #F5F5F5;
     --color-background-secondary: #FFFFFF;
     --color-background-hover: #F8F8F8;
@@ -63,6 +65,7 @@
     --spacing-6xl: 48px;
     --spacing-7xl: 56px;
     --spacing-8xl: 64px;
+    --spacing-8-5xl: 80px;
     --spacing-9xl: 84px;
     --spacing-10xl: 118px;
     
@@ -129,6 +132,10 @@
       height: 48px;
       transition: all 0.2s ease-in-out;
     }
+
+    .form-input:hover {
+      border-color: var(--color-border-primary);
+    }
     
     .form-input:focus {
       outline: none;
@@ -149,6 +156,10 @@
       padding: 0.75rem 1rem;
       height: 48px;
       transition: all 0.2s ease-in-out;
+    }
+
+    .form-dropdown:hover {
+      border-color: var(--color-border-primary);
     }
     
     .form-dropdown:focus {
@@ -180,6 +191,10 @@
       padding: 0.75rem 1rem;
       height: 48px;
       transition: all 0.2s ease-in-out;
+    }
+
+    .form-calendar:hover {
+      border-color: var(--color-border-primary);
     }
     
     .form-calendar:focus {

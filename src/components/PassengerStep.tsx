@@ -2,7 +2,7 @@
 import React, { useMemo, useCallback } from 'react';
 import { X, ChevronRight, ChevronLeft } from 'lucide-react';
 import { Input } from '@/components/Input';
-import { PhoneInput } from '@/components/PhoneInput';
+// import { PhoneInput } from '@/components/PhoneInput';
 import { Button } from '@/components/Button';
 import { FormStepProps } from '@/types';
 
@@ -169,7 +169,7 @@ export const PassengerStep: React.FC<PassengerStepComponentProps> = React.memo((
               className="w-full"
             />
             
-            <PhoneInput
+            {/* <PhoneInput
               label="Phone number"
               value={passengerData.phone}
               onChange={handlePhoneChange}
@@ -177,7 +177,7 @@ export const PassengerStep: React.FC<PassengerStepComponentProps> = React.memo((
               error={validation.errors.phone}
               helper="Optional: We'll use this to contact you about your booking"
               className="w-full"
-            />
+            /> */}
           </div>
 
           {/* Navigation with Progress Dots and Buttons */}

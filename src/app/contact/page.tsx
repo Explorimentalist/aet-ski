@@ -1,13 +1,16 @@
 // src/app/contact/page.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
+import { MultiStepForm } from '@/components/MultiStepForm';
 import { Input } from '@/components/Input';
 import { Textarea } from '@/components/Textarea';
 import { Button } from '@/components/Button';
 import { Grid } from '@/components/Grid';
+import { BookingFormData } from '@/types';
+import { Mail, MapPinned } from 'lucide-react';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -15,6 +18,7 @@ export default function ContactPage() {
     email: '',
     message: '',
   });
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -28,10 +32,25 @@ export default function ContactPage() {
     console.log('Form submitted:', formData);
   };
 
+  const handleOpenForm = useCallback(() => {
+    setIsFormOpen(true);
+  }, []);
+
+  const handleCloseForm = useCallback(() => {
+    setIsFormOpen(false);
+  }, []);
+
+  const handleFormSubmit = useCallback((data: BookingFormData) => {
+    console.log('Form submitted:', data);
+    // TODO: Handle form submission (API call, etc.)
+    // Don't close modal here - let the success page handle closing
+    // The MultiStepForm will show the success page, and user can close it
+  }, []);
+
   return (
     <div className="min-h-screen bg-background-primary">
       {/* Navigation */}
-      <Navigation />
+      <Navigation onQuoteClick={handleOpenForm} />
 
       {/* Main Content */}
       <main className="pt-[72px] pb-0">
@@ -51,8 +70,8 @@ export default function ContactPage() {
           {/* Form and Contact Info Container */}
           <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-12">
             <Grid>
-              {/* Contact Form - Left Side */}
-              <div className="col-mobile-4 tablet:col-tablet-4 desktop:col-desktop-6">
+              {/* Contact Form - Full width on mobile/tablet, left side on desktop */}
+              <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-6">
                 <form className="space-y-6">
                   {/* Name Field */}
                   <Input
@@ -97,56 +116,56 @@ export default function ContactPage() {
                 </form>
               </div>
 
-              {/* Contact Information - Right Side */}
-              <div className="col-mobile-4 tablet:col-tablet-4 desktop:col-desktop-4 desktop:col-start-desktop-8">
-                <div className="space-y-8">
-                  {/* Email Section */}
-                  <div className="space-y-2">
-                    <h2 
-                      className="text-base font-bold text-text-primary leading-[150%] tracking-[0.0005em]"
-                      style={{
-                        fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                      }}
-                    >
-                      Email
-                    </h2>
-                    <a
-                      href="mailto:hq@aet.ski"
-                      className="
-                        text-base font-normal leading-[150%] tracking-[0.0005em]
-                        text-text-primary
-                        transition-colors duration-200 ease-in-out
-                        hover:text-brand-primary
-                        focus:text-brand-primary
-                        outline-none
-                      "
-                      style={{
-                        fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                      }}
-                    >
-                      hq@aet.ski
-                    </a>
-                  </div>
+              {/* Contact Information - Below form on mobile/tablet, right side on desktop */}
+              <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-4 desktop:col-start-desktop-8 mt-8xl desktop:mt-0 space-y-8">
+                {/* Email Section */}
+                <div className="space-y-2">
+                  <h2 
+                    className="text-base font-bold text-text-primary leading-[150%] tracking-[0.0005em] flex items-center gap-2"
+                    style={{
+                      fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+                    }}
+                  >
+                    <Mail className="w-4 h-4" />
+                    Email
+                  </h2>
+                  <a
+                    href="mailto:hq@aet.ski"
+                    className="
+                      text-base font-normal leading-[150%] tracking-[0.0005em]
+                      text-text-primary
+                      transition-colors duration-200 ease-in-out
+                      hover:text-brand-primary
+                      focus:text-brand-primary
+                      outline-none
+                    "
+                    style={{
+                      fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+                    }}
+                  >
+                    hq@aet.ski
+                  </a>
+                </div>
 
-                  {/* Address Section */}
-                  <div className="space-y-2">
-                    <h2 
-                      className="text-base font-bold text-text-primary leading-[150%] tracking-[0.0005em]"
-                      style={{
-                        fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                      }}
-                    >
-                      Address
-                    </h2>
-                    <p 
-                      className="text-base font-normal text-text-primary leading-[150%] tracking-[0.0005em]"
-                      style={{
-                        fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                      }}
-                    >
-                      55 Rue Derrière le Château, 73600, Salins-Fontaine, France - Siret 921 741 328 00014.
-                    </p>
-                  </div>
+                {/* Address Section */}
+                <div className="space-y-2">
+                  <h2 
+                    className="text-base font-bold text-text-primary leading-[150%] tracking-[0.0005em] flex items-center gap-2"
+                    style={{
+                      fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+                    }}
+                  >
+                    <MapPinned className="w-4 h-4" />
+                    Address
+                  </h2>
+                  <p 
+                    className="text-base font-normal text-text-primary leading-[150%] tracking-[0.0005em]"
+                    style={{
+                      fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+                    }}
+                  >
+                    55 Rue Derrière le Château, 73600, Salins-Fontaine, France - Siret 921 741 328 00014.
+                  </p>
                 </div>
               </div>
             </Grid>
@@ -155,7 +174,14 @@ export default function ContactPage() {
       </main>
 
       {/* Footer */}
-      <Footer />
+      <Footer onQuoteClick={handleOpenForm} />
+
+      {/* Multi-Step Form Modal */}
+      <MultiStepForm
+        isOpen={isFormOpen}
+        onClose={handleCloseForm}
+        onSubmit={handleFormSubmit}
+      />
     </div>
   );
 } 

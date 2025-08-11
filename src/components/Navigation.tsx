@@ -22,6 +22,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   className = '',
   onMenuToggle,
   isMobileMenuOpen: externalMobileMenuOpen,
+  onQuoteClick,
 }) => {
   const [internalMobileMenuOpen, setInternalMobileMenuOpen] = useState(false);
   const isMobileMenuOpen = externalMobileMenuOpen ?? internalMobileMenuOpen;
@@ -174,6 +175,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               variant="secondary"
               size="md"
               className="flex-none"
+              onClick={onQuoteClick}
               style={{
                 // Exact Figma specifications
                 background: '#FFFFFF',
@@ -211,11 +213,11 @@ export const Navigation: React.FC<NavigationProps> = ({
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden bg-[#F5F5F5] flex items-center justify-center">
+        <div className="fixed inset-0 z-40 md:hidden flex items-center justify-center">
           {/* Centered Menu Content */}
-          <div className="flex flex-col items-center w-full px-6">
+          <div className="flex flex-col items-center w-full h-full px-6 py-20 bg-[#F5F5F5]">
             {/* Mobile Navigation Links */}
             <nav className="flex flex-col items-center space-y-12" role="navigation" aria-label="Mobile navigation">
               {items.map((item, index) => {
@@ -255,7 +257,10 @@ export const Navigation: React.FC<NavigationProps> = ({
                   variant="secondary"
                   size="md"
                   className="transform translate-y-4 opacity-0 animate-slide-in-4 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-[#F5F5F5] hover:scale-105 transition-transform duration-200"
-                  onClick={handleMenuToggle}
+                  onClick={() => {
+                    handleMenuToggle();
+                    onQuoteClick?.();
+                  }}
                   aria-label="Get a quote - opens quote form"
                 >
                   Get a quote

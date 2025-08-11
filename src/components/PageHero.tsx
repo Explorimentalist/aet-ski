@@ -45,13 +45,16 @@ export const PageHero: React.FC<PageHeroProps> = ({
         {/* Image - 4 columns on mobile, 8 columns on tablet, 12 columns on desktop */}
         <div className={GridLayouts.heroImage}>
           <div className="relative">
-            <img
-              src={imageSrc}
-              alt={imageAlt}
-              className="w-full h-auto rounded-2xl"
-            />
-            {/* Gradient overlay as seen in the design */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#CFE0F6] to-[#F5F5F5] mix-blend-multiply rounded-2xl" />
+            <picture>
+              {/* Default image */}
+              <img
+                src={imageSrc}
+                alt={imageAlt}
+                className="w-full h-auto rounded-2xl"
+              />
+            </picture>
+            {/* Gradient overlay using design tokens */}
+            <div className="absolute inset-0 bg-gradient-hero mix-blend-multiply rounded-2xl" />
           </div>
         </div>
       </Grid>

@@ -1,6 +1,7 @@
 // src/components/Footer.tsx
 import Link from 'next/link';
 import { Grid } from './Grid';
+import { FooterProps } from '@/types';
 
 interface FooterLinkProps {
   href: string;
@@ -27,7 +28,7 @@ const FooterSection = ({ title, children }: { title: string; children: React.Rea
   </div>
 );
 
-export const Footer = () => {
+export const Footer: React.FC<FooterProps> = ({ onQuoteClick }) => {
   return (
     <footer 
       className="bg-[#4F5B62] w-full relative"
@@ -41,7 +42,12 @@ export const Footer = () => {
               <FooterSection title="Menu">
                 <FooterLink href="/">Home</FooterLink>
                 <FooterLink href="/routes">Routes</FooterLink>
-                <FooterLink href="/quote">Quote</FooterLink>
+                <button
+                  onClick={onQuoteClick}
+                  className="text-white hover:text-gray-200 transition-colors duration-200 text-base leading-relaxed tracking-[-0.011em] text-left bg-transparent border-none p-0 cursor-pointer"
+                >
+                  Quote
+                </button>
               </FooterSection>
             </div>
 
@@ -58,8 +64,8 @@ export const Footer = () => {
         {/* Logo and Text Container - Using our grid system */}
         <Grid className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-12">
           {/* Logo - Using grid system for responsive layout */}
-          <div className="col-mobile-4 tablet:col-tablet-4 desktop:col-desktop-3  desktop:col-start-10 order-1 tablet:order-2 flex justify-center tablet:justify-end">
-            <svg width="408" height="110" viewBox="0 0 408 110" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-auto h-[110px]" aria-label="AET Logo">
+          <div className="col-mobile-4 tablet:col-tablet-4 desktop:col-desktop-3 desktop:col-start-10 order-1 tablet:order-2 flex justify-center tablet:justify-end mb-12 tablet:mb-0">
+            <svg width="408" height="110" viewBox="0 0 408 110" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-[70px] tablet:h-[110px] w-auto" aria-label="AET Logo">
               <path d="M74.3637 70.9182C74.3637 70.9182 3.58027 60.2445 38.972 50.6943C38.972 50.6943 -26.1937 61.368 12.0069 72.0417C50.2075 82.7154 87.2845 92.8274 44.028 102.378C44.028 102.378 162.562 87.7714 74.3637 70.9182Z" fill="white"/>
               <path d="M124.923 64.7377C115.935 59.12 100.205 42.2668 91.7786 22.6047C83.352 2.94267 81.6667 6.87508 72.1165 20.3576C62.5664 33.8402 64.8135 40.0197 56.3869 30.4696C47.9603 20.9194 45.7132 49.5699 45.7132 49.5699C45.7132 49.5699 12.5685 56.8729 73.2401 65.8613C113.604 71.8411 119.406 75.0858 118.768 76.5879C123.165 74.3552 131.823 69.0502 124.923 64.7377Z" fill="white"/>
               <path d="M203.888 0.119141L235.34 84.2259H216.139L209.778 65.4962H178.326L171.73 84.2259H153L184.923 0.119141H203.888ZM194.111 20.8513L183.156 51.714H204.948L194.347 20.8513H194.111ZM318.902 0.119141V15.6683H274.492V33.6911H315.25V48.0623H274.492V68.6767H319.844V84.2259H255.998V0.119141H318.902ZM408 0.119141V15.6683H382.792V84.2259H364.297V15.6683H339.089V0.119141H408Z" fill="white"/>

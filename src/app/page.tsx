@@ -3,19 +3,21 @@
 // src/app/page.tsx
 import { Button } from '@/components/Button';
 import { Navigation } from '@/components/Navigation';
-import { Clock, Users, Shield, MapPin, CheckCircle } from 'lucide-react';
+import { Clock, Shield, MapPin, CheckCircle, Bus } from 'lucide-react';
 import { Footer } from '@/components/Footer';
 import { Grid } from '@/components/Grid';
 import { CardSmall } from '@/components/CardSmall';
 import { TestimonialsCarousel } from '@/components/TestimonialsCarousel';
 import { MultiStepForm } from '@/components/MultiStepForm';
-import { ImageWithGradient } from '@/components/ImageWithGradient';
+import { PageHeroHome } from '@/components/PageHeroHome';
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { BookingFormData } from '@/types';
 
 
 export default function HomePage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const router = useRouter();
 
   // Testimonials data
   const testimonials = [
@@ -61,39 +63,20 @@ export default function HomePage() {
     // The MultiStepForm will show the success page, and user can close it
   }, []);
 
+  const handleViewRoutes = useCallback(() => {
+    router.push('/routes');
+  }, [router]);
+
   return (
     <main className="min-h-screen">
       {/* Fixed Navigation */}
-      <Navigation />
+      <Navigation onQuoteClick={handleOpenForm} />
       
       {/* Main Content with top padding to account for fixed nav */}
       <div className="pt-[72px] md:pt-[72px]">
 
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-100 to-background-primary rounded-3xl mx-21 my-30 lg:mx-84px md:mx-10">
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-100/50 to-background-primary/50 rounded-3xl" />
-        </div>
-        
-        {/* Hero Content */}
-        <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
-          <h1 className="text-heading text-4xl md:text-5xl lg:text-6xl font-bold text-text-inverse mb-8">
-            Reliable airport transfers to the French Alps
-          </h1>
-          
-          <p className="text-body text-xl md:text-2xl text-text-inverse mb-12 max-w-3xl mx-auto">
-            More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button size="lg" className="w-full sm:w-auto" onClick={handleOpenForm}>
-              Get a quote
-            </Button>
-            
-          </div>
-        </div>
-      </section>
+      <PageHeroHome onQuoteClick={handleOpenForm} />
 
       {/* The Transfers Section */}
       <section className="py-24">
@@ -111,63 +94,71 @@ export default function HomePage() {
                 The transfers
               </h2>
               
-              {/* Bullet Points List */}
-              <div className="flex flex-col gap-3">
-                <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-text-primary rounded-full mt-2 flex-shrink-0"></div>
+              {/* Service Features List - Clean separator design */}
+              <div className="flex flex-col">
+                {/* First Item */}
+                <div className="py-xl">
                   <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
                     We offer private transfers from Geneva, Lyon, Chambery and Grenoble airports
                   </p>
                 </div>
+                <div className="w-full h-px bg-border-secondary"></div>
                 
-                <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-text-primary rounded-full mt-2 flex-shrink-0"></div>
+                {/* Second Item */}
+                <div className="py-xl">
                   <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.001em]">
                     We cover all the resorts of Les 3 Vallées as well as Val d&apos;Isère, Tignes, Les Arcs, La Plagne and others in their surrounding areas.
                   </p>
                 </div>
+                <div className="w-full h-px bg-border-secondary"></div>
                 
-                <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-text-primary rounded-full mt-2 flex-shrink-0"></div>
+                {/* Third Item */}
+                <div className="py-xl">
                   <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
                     7 days a week
                   </p>
                 </div>
+                <div className="w-full h-px bg-border-secondary"></div>
                 
-                <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-text-primary rounded-full mt-2 flex-shrink-0"></div>
+                {/* Fourth Item */}
+                <div className="py-xl">
                   <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
                     Door to door throughout the winter
                   </p>
                 </div>
               </div>
-              
-              {/* Button */}
-              <Button
-                variant="secondary"
-                size="md"
-                className="w-fit"
-                style={{
-                  background: '#FFFFFF',
-                  border: '2px solid #1D4747',
-                  borderRadius: '8px',
-                  padding: '8px 16px',
-                  width: '119px',
-                  height: '40px',
-                }}
-              >
-                View routes
-              </Button>
             </div>
           </div>
           
-          {/* Right Column - Image (9/5/4 columns) */}
+          {/* Right Column - Interactive Map (iframe) (9/5/4 columns) */}
           <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9">
-            <ImageWithGradient
-              alt="Map showing transfer routes from various airports to ski resorts in the French Alps"
-              placeholder={true}
-              height="h-[528px]"
+            <iframe
+              src="https://www.textomap.com/?MTM4MzI7MTsxOzA7MA=="
+              title="Interactive transfer routes map"
+              className="w-full h-[528px] rounded-2xl border-0"
+              frameBorder={0}
+              loading="lazy"
             />
+          </div>
+
+          {/* Button - Moved to be responsive */}
+          <div className="col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3 mt-4 tablet:mt-0 desktop:mt-0">
+            <Button
+              variant="secondary"
+              size="md"
+              className="w-fit"
+              onClick={handleViewRoutes}
+              style={{
+                background: '#FFFFFF',
+                border: '2px solid #1D4747',
+                borderRadius: '8px',
+                padding: '8px 16px',
+                width: '119px',
+                height: '40px',
+              }}
+            >
+              View routes
+            </Button>
           </div>
         </Grid>
       </section>
@@ -228,9 +219,9 @@ export default function HomePage() {
 
               {/* Card 5: Your quote within a day */}
               <CardSmall
-                icon={Users}
-                title="Your quote within a day"
-                description="We sent you a quote back within 24h"
+                icon={Bus}
+                title="Over 1700 journeys"
+                description="Over 10 years of experience bringing people to the joy of the slopes"
                 className="flex-shrink-0"
                 variant="flex"
               />
@@ -265,7 +256,7 @@ export default function HomePage() {
         onSubmit={handleFormSubmit}
       />
 
-      <Footer />
+      <Footer onQuoteClick={handleOpenForm} />
       
       </div> {/* Close main content wrapper */}
     </main>
