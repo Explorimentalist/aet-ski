@@ -10,43 +10,59 @@ import { CardSmall } from '@/components/CardSmall';
 import { TestimonialsCarousel } from '@/components/TestimonialsCarousel';
 import { MultiStepForm } from '@/components/MultiStepForm';
 import { PageHeroHome } from '@/components/PageHeroHome';
-import { useState, useCallback } from 'react';
+import MarqueeRebrand from '../components/MarqueeRebrand';
+import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookingFormData } from '@/types';
+import { TestimonialCard } from '@/components/CardLarge';
 
 
 export default function HomePage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const router = useRouter();
 
-  // Testimonials data
-  const testimonials = [
-    {
-      rating: 5,
-      quote: "Look no further for your transfers. Always faultless and friendly, with spotless vehicles and impressive punctuality.",
-      author: "Ross Wilkinson"
-    },
-    {
-      rating: 5,
-      quote: "Exceptional service from start to finish. Professional, reliable, and made our ski holiday stress-free.",
-      author: "Sarah Johnson"
-    },
-    {
-      rating: 5,
-      quote: "The best transfer service we've used in the Alps. Highly recommended for families and groups.",
-      author: "Michael Chen"
-    },
-    {
-      rating: 5,
-      quote: "Outstanding punctuality and comfort. Made our trip to Val d'Isère absolutely seamless and enjoyable.",
-      author: "Emma Watson"
-    },
-    {
-      rating: 5,
-      quote: "Professional drivers, immaculate vehicles, and unbeatable local knowledge of the Alpine routes.",
-      author: "James Thompson"
-    }
-  ];
+  // Testimonials state - fetched from Sanity with fallback
+  const [testimonials, setTestimonials] = useState([
+    { rating: 5, quote: "Look no further for your transfers. Always faultless and friendly, with spotless vehicles and impressive punctuality.", author: "Ross Wilkinson" },
+    { rating: 5, quote: "Exceptional service from start to finish. Professional, reliable, and made our ski holiday stress-free.", author: "Sarah Johnson" },
+    { rating: 5, quote: "The best transfer service we've used in the Alps. Highly recommended for families and groups.", author: "Michael Chen" },
+  ]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch('/api/testimonials');
+        if (!res.ok) return;
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          const mapped = json.data.map((t: any) => ({
+            rating: t.rating,
+            quote: t.content,
+            author: t.author,
+          }));
+          setTestimonials(mapped);
+        }
+      } catch {
+        // silent fallback to defaults
+      }
+    })();
+  }, []);
+
+  // Single CMS testimonial for separate display
+  const [cmsFeaturedTestimonial, setCmsFeaturedTestimonial] = useState<{ rating: number; quote: string; author: string } | null>(null);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch('/api/testimonials');
+        if (!res.ok) return;
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          const first = json.data[0];
+          setCmsFeaturedTestimonial({ rating: first.rating, quote: first.content, author: first.author });
+        }
+      } catch {}
+    })();
+  }, []);
 
   const handleOpenForm = useCallback(() => {
     setIsFormOpen(true);
@@ -77,6 +93,9 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <PageHeroHome onQuoteClick={handleOpenForm} />
+
+      {/* Rebrand Marquee Section */}
+      <MarqueeRebrand />
 
       {/* The Transfers Section */}
       <section className="py-24">

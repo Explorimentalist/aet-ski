@@ -15,6 +15,16 @@
   }
 }
 
+/* Seamless horizontal marquee scroll */
+@keyframes marquee-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
 /* Import design tokens as CSS custom properties */
 @layer base {
   :root {

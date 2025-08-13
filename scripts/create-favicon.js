@@ -1,0 +1,22 @@
+const fs = require('fs');
+const path = require('path');
+
+const svgContent = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1D4747"/>
+<path d="M13.4984 13.735C13.4984 13.735 3.50545 12.2281 8.50192 10.8799C8.50192 10.8799 -0.697928 12.3868 4.69508 13.8937C10.0881 15.4005 15.3225 16.8281 9.2157 18.1764C9.2157 18.1764 25.9499 16.1143 13.4984 13.735Z" fill="#F5F5F5"/>
+<path d="M20.6362 12.8627C19.3672 12.0696 17.1466 9.69032 15.9569 6.91448C14.7673 4.13864 14.5294 4.6938 13.1811 6.59724C11.8329 8.50068 12.1501 9.37308 10.9605 8.02482C9.77084 6.67655 9.4536 10.7214 9.4536 10.7214C9.4536 10.7214 4.77437 11.7524 13.3397 13.0213C19.0382 13.8656 19.8573 14.3236 19.7672 14.5357C20.3879 14.2205 21.6103 13.4715 20.6362 12.8627Z" fill="#F5F5F5"/>
+</svg>`;
+
+// Ensure public directory exists
+if (!fs.existsSync('public')) {
+  fs.mkdirSync('public', { recursive: true });
+}
+
+// Write SVG to public directory
+fs.writeFileSync(path.join('public', 'icon.svg'), svgContent);
+console.log('SVG favicon created successfully in public/icon.svg');
+
+// Also write to app directory for Next.js
+fs.writeFileSync(path.join('src', 'app', 'icon.svg'), svgContent);
+console.log('SVG favicon created successfully in src/app/icon.svg');
+

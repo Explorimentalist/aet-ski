@@ -1,9 +1,9 @@
 // src/components/Button.tsx
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { ButtonProps } from '@/types';
 import { Loader2 } from 'lucide-react';
 
-export const Button: React.FC<ButtonProps> = ({
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ 
   variant = 'primary',
   size = 'md',
   children,
@@ -11,7 +11,7 @@ export const Button: React.FC<ButtonProps> = ({
   disabled = false,
   loading = false,
   className = '',
-}) => {
+}, ref) => {
   // Base classes matching Figma specifications
   const baseClasses = [
     'inline-flex',
@@ -57,6 +57,7 @@ export const Button: React.FC<ButtonProps> = ({
   
   return (
     <button
+      ref={ref}
       className={combinedClasses}
       onClick={onClick}
       disabled={disabled || loading}
@@ -81,4 +82,6 @@ export const Button: React.FC<ButtonProps> = ({
       {children}
     </button>
   );
-}; 
+});
+
+Button.displayName = 'Button';

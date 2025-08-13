@@ -25,7 +25,10 @@ export const metadata: Metadata = {
     description: 'Reliable airport transfers to the French Alps',
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico' }
+    ],
     apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',

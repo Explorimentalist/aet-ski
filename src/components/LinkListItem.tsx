@@ -70,9 +70,9 @@ export const LinkListItem: React.FC<LinkListItemProps> = ({
               <img
                 src={optimizedLogoUrl}
                 alt={altText}
-                className="block h-auto max-h-12 max-w-full object-left"
+                className="block h-auto max-h-12 max-w-full object-contain"
                 loading="lazy"
-                style={{ objectPosition: 'left center' }}
+                style={{ objectPosition: 'left center', objectFit: 'contain' }}
               />
             ) : (
               <Image
@@ -80,12 +80,12 @@ export const LinkListItem: React.FC<LinkListItemProps> = ({
                 alt={altText}
                 width={logoWidth}
                 height={logoHeight}
-                className="block h-auto max-h-12 max-w-full object-left"
+                className="block h-auto max-h-12 max-w-full object-contain"
                 priority={false}
                 loading="lazy"
                 sizes="(max-width: 768px) 200px, (max-width: 1200px) 250px, 300px"
                 quality={85}
-                style={{ objectPosition: 'left center' }}
+                style={{ objectPosition: 'left center', objectFit: 'contain' }}
               />
             )}
           </div>

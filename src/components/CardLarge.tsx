@@ -15,8 +15,9 @@ export const CardLarge: React.FC<CardLargeProps> = ({
   // Responsive base classes with proper scaling and motion
   const baseClasses = [
     'flex flex-col',
-    'p-6 tablet:p-8 desktop:p-[48px]', // Responsive padding
-    'gap-16 tablet:gap-24 desktop:gap-[168px]', // Responsive gap
+    'p-6 tablet:p-8 desktop:p-6xl', // 24 / 32 / 48 px from tokens
+    'gap-4 tablet:gap-5 desktop:gap-6', // 16 / 20 / 24 px from tokens
+    'justify-between', // align stars to top and text block to bottom
     'relative',
     'font-geist',
     'tracking-[-0.011em]',
@@ -71,11 +72,11 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({
       </div>
       
       {/* Quote and author container - responsive width */}
-      <div className="flex flex-col gap-4 tablet:gap-6 desktop:gap-8 items-end w-full max-w-[280px] tablet:max-w-[312px]">
-        <p className="text-md tablet:text-lg desktop:text-xl font-medium text-text-inverse w-full">
+      <div className="flex flex-col gap-8 items-end w-full max-w-[280px] tablet:max-w-[312px]">
+        <p className="text-base tablet:text-[18px] desktop:text-[20px] font-medium text-text-inverse w-full">
           {quote}
         </p>
-        <p className="text-sm tablet:text-base font-medium text-text-inverse text-right w-full">
+        <p className="text-xs tablet:text-base font-medium text-text-inverse text-right w-full">
           {author}
         </p>
       </div>

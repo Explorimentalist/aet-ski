@@ -8,7 +8,7 @@ interface LogoProps {
 
 export const Logo: React.FC<LogoProps> = ({ 
   className = "w-[95.76px] h-6", 
-  color = "#1D4747" // Using current brand primary color
+  color = "#4F5B62" // Using current brand primary color
 }) => {
   return (
     <svg 
