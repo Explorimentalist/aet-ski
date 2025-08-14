@@ -1,6 +1,6 @@
 // src/components/RouteTransfer.tsx
 import React from 'react';
-import { Grid, GridLayouts } from './Grid';
+import { Grid } from './Grid';
 import { ShieldCheck } from 'lucide-react';
 
 interface TransferStats {

@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { Geist, Inter } from 'next/font/google';
+import { Geist } from 'next/font/google';
 import '@/styles/globals.css';
 
 const geist = Geist({ subsets: ['latin'] });
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'AET - Alpine Airport Transfers',

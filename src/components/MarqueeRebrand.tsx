@@ -36,7 +36,7 @@ const MarqueeRebrand: React.FC = () => {
             className="flex w-max select-none"
             style={{
               /* Slight negative offset helps eliminate seam due to pixel rounding */
-              ['--marquee-fix' as any]: '0.5px',
+              ['--marquee-fix' as string]: '0.5px',
               animation: 'marquee-scroll 24s linear infinite',
               willChange: 'transform',
             }}

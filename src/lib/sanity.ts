@@ -73,7 +73,7 @@ export function urlFor(source: SanityImage) {
 // Fetch helpers
 export async function fetchTestimonials() {
   const results = await sanityClient.fetch(testimonialsQuery);
-  return (results || []).map((doc: any) => ({
+  return (results || []).map((doc: { _id: string; author: string; rating: number; content: string; date: string; route?: string }) => ({
     id: doc._id,
     author: doc.author,
     rating: doc.rating,
@@ -86,7 +86,7 @@ export async function fetchTestimonials() {
 export async function fetchLinksByCategory(category: string) {
   const query = linksByCategoryQuery(category);
   const results = await sanityClient.fetch(query);
-  return (results || []).map((doc: any) => ({
+  return (results || []).map((doc: { _id: string; name: string; url: string; logo?: string; description?: string }) => ({
     id: doc._id,
     companyName: doc.name,
     url: doc.url,

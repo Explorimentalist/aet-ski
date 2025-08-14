@@ -27,7 +27,6 @@ export const useStickyNavigation = ({
     const initialWidth = navigation.offsetWidth;
     const navigationHeight = navigation.offsetHeight;
     const containerTop = container.offsetTop;
-    const containerHeight = container.offsetHeight;
     const footerTop = footer?.offsetTop || 0;
 
     // Calculate sticky boundaries

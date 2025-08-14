@@ -15,7 +15,6 @@ import { ImageWithGradient } from '@/components/ImageWithGradient';
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookingFormData } from '@/types';
-import { TestimonialCard } from '@/components/CardLarge';
 
 
 export default function HomePage() {
@@ -36,7 +35,7 @@ export default function HomePage() {
         if (!res.ok) return;
         const json = await res.json();
         if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          const mapped = json.data.map((t: any) => ({
+          const mapped = json.data.map((t: { rating: number; content: string; author: string }) => ({
             rating: t.rating,
             quote: t.content,
             author: t.author,
@@ -46,22 +45,6 @@ export default function HomePage() {
       } catch {
         // silent fallback to defaults
       }
-    })();
-  }, []);
-
-  // Single CMS testimonial for separate display
-  const [cmsFeaturedTestimonial, setCmsFeaturedTestimonial] = useState<{ rating: number; quote: string; author: string } | null>(null);
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch('/api/testimonials');
-        if (!res.ok) return;
-        const json = await res.json();
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          const first = json.data[0];
-          setCmsFeaturedTestimonial({ rating: first.rating, quote: first.content, author: first.author });
-        }
-      } catch {}
     })();
   }, []);
 

@@ -5,7 +5,7 @@ import { Route } from '@/types';
 export function useMap(containerId: string) {
   const mapRef = useRef<unknown>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
 
   useEffect(() => {
     // TODO: Implement MapTiler integration

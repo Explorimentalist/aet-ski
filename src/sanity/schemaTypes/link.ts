@@ -81,7 +81,7 @@ export const linkType = defineType({
       url: 'url',
     },
     prepare(selection) {
-      const { title, subtitle, description, url } = selection
+      const { title, subtitle, url } = selection
       const domain = url ? new URL(url).hostname : ''
       return {
         title: title,
