@@ -21,7 +21,8 @@
     transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translate3d(-50%, 0, 0);
+    /* Use a tiny adjustable offset to avoid subpixel rounding seams at the loop boundary */
+    transform: translate3d(calc(-50% - var(--marquee-fix, 0px)), 0, 0);
   }
 }
 
@@ -296,6 +297,39 @@
 
 /* Utility styles */
 @layer utilities {
+  /* Fades content at the left/right edges (0-10% and 90-100%) using CSS mask */
+  .marquee-edge-fade {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 1) 10%,
+      rgba(0, 0, 0, 1) 90%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 1) 10%,
+      rgba(0, 0, 0, 1) 90%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+
+  /* Right-edge-only fade mask for carousels */
+  .edge-fade-right {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 85%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 85%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
   /* Text utilities */
   .text-heading {
     font-family: var(--font-family-heading);

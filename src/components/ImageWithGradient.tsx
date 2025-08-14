@@ -30,12 +30,11 @@ export const ImageWithGradient: React.FC<ImageWithGradientProps> = ({
       height,
       className
     )}>
-      {/* Gradient Background */}
+      {/* Background gradient (subtle base) */}
       <div 
         className="absolute inset-0 rounded-xl"
         style={{
           background: `linear-gradient(to bottom, ${gradientFrom} 0%, ${gradientTo} 100%)`,
-          mixBlendMode: 'multiply',
         }}
       />
       
@@ -54,6 +53,16 @@ export const ImageWithGradient: React.FC<ImageWithGradientProps> = ({
           }}
         />
       )}
+
+      {/* Veil overlay on top of image */}
+      <div
+        className="absolute inset-0 rounded-xl pointer-events-none"
+        style={{
+          background: `linear-gradient(180deg, ${gradientFrom} 0%, ${gradientTo} 100%)`,
+          mixBlendMode: 'multiply',
+        }}
+        aria-hidden
+      />
     </div>
   );
 }; 

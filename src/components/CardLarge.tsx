@@ -76,7 +76,7 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({
         <p className="text-base tablet:text-[18px] desktop:text-[20px] font-medium text-text-inverse w-full">
           {quote}
         </p>
-        <p className="text-xs tablet:text-base font-medium text-text-inverse text-right w-full">
+        <p className="text-xs tablet:text-base font-regular text-text-inverse text-right w-full">
           {author}
         </p>
       </div>

@@ -11,6 +11,7 @@ import { TestimonialsCarousel } from '@/components/TestimonialsCarousel';
 import { MultiStepForm } from '@/components/MultiStepForm';
 import { PageHeroHome } from '@/components/PageHeroHome';
 import MarqueeRebrand from '../components/MarqueeRebrand';
+import { ImageWithGradient } from '@/components/ImageWithGradient';
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookingFormData } from '@/types';
@@ -113,50 +114,57 @@ export default function HomePage() {
                 The transfers
               </h2>
               
-              {/* Service Features List - Clean separator design */}
+              {/* Service Features List - Numbered with separators */}
               <div className="flex flex-col">
-                {/* First Item */}
-                <div className="py-xl">
+                {/* Item 1 */}
+                <div className="py-xl grid grid-cols-[40px_1fr] gap-4 items-center tablet:items-start">
+                  <div className="flex justify-end items-center tablet:items-start w-6 h-10">
+                    <span className="text-[40px] leading-none font-light text-text-form">1</span>
+                  </div>
                   <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
                     We offer private transfers from Geneva, Lyon, Chambery and Grenoble airports
                   </p>
+                  <div className="col-span-2 h-px bg-border-secondary"></div>
                 </div>
-                <div className="w-full h-px bg-border-secondary"></div>
-                
-                {/* Second Item */}
-                <div className="py-xl">
+
+                {/* Item 2 */}
+                <div className="py-xl grid grid-cols-[40px_1fr] gap-4 items-center tablet:items-start">
+                  <div className="flex justify-end items-center tablet:items-start w-6 h-10">
+                    <span className="text-[40px] leading-none font-light text-text-form">2</span>
+                  </div>
                   <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.001em]">
                     We cover all the resorts of Les 3 Vallées as well as Val d&apos;Isère, Tignes, Les Arcs, La Plagne and others in their surrounding areas.
                   </p>
+                  <div className="col-span-2 h-px bg-border-secondary"></div>
                 </div>
-                <div className="w-full h-px bg-border-secondary"></div>
-                
-                {/* Third Item */}
-                <div className="py-xl">
-                  <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
-                    7 days a week
-                  </p>
+
+                {/* Item 3 */}
+                <div className="py-xl grid grid-cols-[40px_1fr] gap-4 items-center tablet:items-start">
+                  <div className="flex justify-end items-center tablet:items-start w-6 h-10">
+                    <span className="text-[40px] leading-none font-light text-text-form">3</span>
+                  </div>
+                  <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">7 days a week</p>
+                  <div className="col-span-2 h-px bg-border-secondary"></div>
                 </div>
-                <div className="w-full h-px bg-border-secondary"></div>
-                
-                {/* Fourth Item */}
-                <div className="py-xl">
-                  <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
-                    Door to door throughout the winter
-                  </p>
+
+                {/* Item 4 */}
+                <div className="py-xl grid grid-cols-[40px_1fr] gap-4 items-center tablet:items-start">
+                  <div className="flex justify-end items-center tablet:items-start w-6 h-10">
+                    <span className="text-[40px] leading-none font-light text-text-form">4</span>
+                  </div>
+                  <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">Door to door throughout the winter</p>
                 </div>
               </div>
             </div>
           </div>
           
-          {/* Right Column - Interactive Map (iframe) (9/5/4 columns) */}
+          {/* Right Column - Static Map with veil (9/5/4 columns) */}
           <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9">
-            <iframe
-              src="https://www.textomap.com/?MTM4MzI7MTsxOzA7MA=="
-              title="Interactive transfer routes map"
-              className="w-full h-[528px] rounded-2xl border-0"
-              frameBorder={0}
-              loading="lazy"
+            <ImageWithGradient
+              src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1754484387/routes_top_map_scw9bx.png"
+              alt="Map showing transfer routes from airports to resorts"
+              height="h-[528px]"
+              className="rounded-2xl"
             />
           </div>
 

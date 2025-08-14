@@ -54,9 +54,9 @@ export const PageHeroHome: React.FC<PageHeroHomeProps> = ({ onQuoteClick }) => {
 
             {/* Hero Text Content - Positioned in upper portion */}
             <div className="absolute inset-0">
-              <div className="text-center max-w-4xl mx-auto px-6 tablet:px-8 desktop:px-12 pt-7xl tablet:pt-8xl desktop:pt-8.5xl">
+              <div className="text-center max-w-4xl mx-auto px-6 tablet:px-8 desktop:px-12 pt-5xl tablet:pt-4xl desktop:pt-8.5xl">
                 <h1 
-                  className="text-2xl tablet:text-4xl desktop:text-6xl font-bold text-text-inverse mb-xl tablet:mb-2xl desktop:mb-3xl leading-tight tracking-tight"
+                  className="text-3xl tablet:text-3xl desktop:text-6xl font-bold text-text-inverse mb-xl tablet:mb-2xl desktop:mb-3xl leading-tight tracking-tight"
                   style={{
                     fontFamily: 'GT Walsheim Trial, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
                     lineHeight: '120%',
@@ -67,7 +67,7 @@ export const PageHeroHome: React.FC<PageHeroHomeProps> = ({ onQuoteClick }) => {
                 </h1>
                 
                 <p 
-                  className="text-base tablet:text-lg desktop:text-2xl max-w-3xl mx-auto leading-relaxed"
+                  className="text-base tablet:text-lg desktop:text-xl max-w-3xl mx-auto leading-relaxed"
                   style={{
                     fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
                     lineHeight: '150%',
@@ -81,7 +81,7 @@ export const PageHeroHome: React.FC<PageHeroHomeProps> = ({ onQuoteClick }) => {
             </div>
 
             {/* CTA Button - Positioned near bottom */}
-            <div className="absolute inset-x-0 bottom-6xl tablet:bottom-8xl desktop:bottom-10xl">
+            <div className="absolute inset-x-0 bottom-4xl tablet:bottom-4xl desktop:bottom-8xl">
               <div className="flex justify-center px-6 tablet:px-8 desktop:px-12">
                 <Button 
                   size="lg" 
