@@ -47,16 +47,6 @@ export const PassengerStep: React.FC<PassengerStepComponentProps> = React.memo((
     });
   }, [passengerData, onUpdate]);
 
-  // Handle phone change
-  const handlePhoneChange = useCallback((value: string) => {
-    onUpdate({
-      passenger: {
-        ...passengerData,
-        phone: value,
-      },
-    });
-  }, [passengerData, onUpdate]);
-
   // Validate current step
   const isStepValid = useMemo(() => {
     return passengerData.name.trim() !== '' && 

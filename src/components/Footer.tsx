@@ -46,7 +46,7 @@ export const Footer: React.FC<FooterProps> = ({ onQuoteClick }) => {
                   onClick={onQuoteClick}
                   className="text-white hover:text-gray-200 transition-colors duration-200 text-base leading-relaxed tracking-[-0.011em] text-left bg-transparent border-none p-0 cursor-pointer"
                 >
-                  Quote
+                  Get a quote
                 </button>
               </FooterSection>
             </div>

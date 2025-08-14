@@ -217,9 +217,9 @@ export const Navigation: React.FC<NavigationProps> = ({
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 md:hidden flex items-center justify-center">
           {/* Centered Menu Content */}
-          <div className="flex flex-col items-center w-full h-full px-6 py-20 bg-[#F5F5F5]">
+          <div className="flex flex-col items-center justify-center w-full h-full px-6 py-20 bg-[#F5F5F5]">
             {/* Mobile Navigation Links */}
-            <nav className="flex flex-col items-center space-y-12" role="navigation" aria-label="Mobile navigation">
+            <nav className="flex flex-col items-center justify-center text-center space-y-12" role="navigation" aria-label="Mobile navigation">
               {items.map((item, index) => {
                 const isActive = isItemActive(item);
                 return (
@@ -228,7 +228,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                     href={item.href}
                     className={`
                       block font-geist font-medium text-lg transition-all duration-300 ease-out
-                      transform translate-y-4 opacity-0
+                      transform translate-y-4 opacity-0 text-center
                       focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-[#F5F5F5]
                       hover:scale-105 hover:text-brand-primary
                       ${
@@ -252,7 +252,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             
             {/* Mobile CTA Button */}
             {showCTA && (
-              <div className="mt-[68px]">
+              <div className="mt-[68px] flex justify-center">
                 <Button
                   variant="secondary"
                   size="md"

@@ -206,9 +206,10 @@ export function getLogoUrl(
     width?: number;
     // include 'svg' to allow vector delivery
     format?: 'auto' | 'png' | 'webp' | 'svg';
+    crop?: 'scale' | 'fit' | 'fill' | 'crop';
   } = {}
 ) {
-  const { height, width, format = 'auto' } = options;
+  const { height, width, format = 'auto', crop = 'scale' } = options;
 
   // For SVG delivery: avoid any transformations that rasterize the asset.
   // Return the raw SVG URL under the logos/ folder.
@@ -221,6 +222,6 @@ export function getLogoUrl(
     width,
     format,
     quality: 'auto',
-    crop: 'scale',
+    crop,
   });
 }

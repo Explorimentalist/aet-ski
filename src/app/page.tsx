@@ -10,7 +10,9 @@ import { CardSmall } from '@/components/CardSmall';
 import { TestimonialsCarousel } from '@/components/TestimonialsCarousel';
 import { MultiStepForm } from '@/components/MultiStepForm';
 import { PageHeroHome } from '@/components/PageHeroHome';
-import { useState, useCallback } from 'react';
+import MarqueeRebrand from '../components/MarqueeRebrand';
+import { ImageWithGradient } from '@/components/ImageWithGradient';
+import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookingFormData } from '@/types';
 
@@ -19,34 +21,32 @@ export default function HomePage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const router = useRouter();
 
-  // Testimonials data
-  const testimonials = [
-    {
-      rating: 5,
-      quote: "Look no further for your transfers. Always faultless and friendly, with spotless vehicles and impressive punctuality.",
-      author: "Ross Wilkinson"
-    },
-    {
-      rating: 5,
-      quote: "Exceptional service from start to finish. Professional, reliable, and made our ski holiday stress-free.",
-      author: "Sarah Johnson"
-    },
-    {
-      rating: 5,
-      quote: "The best transfer service we've used in the Alps. Highly recommended for families and groups.",
-      author: "Michael Chen"
-    },
-    {
-      rating: 5,
-      quote: "Outstanding punctuality and comfort. Made our trip to Val d'Isère absolutely seamless and enjoyable.",
-      author: "Emma Watson"
-    },
-    {
-      rating: 5,
-      quote: "Professional drivers, immaculate vehicles, and unbeatable local knowledge of the Alpine routes.",
-      author: "James Thompson"
-    }
-  ];
+  // Testimonials state - fetched from Sanity with fallback
+  const [testimonials, setTestimonials] = useState([
+    { rating: 5, quote: "Look no further for your transfers. Always faultless and friendly, with spotless vehicles and impressive punctuality.", author: "Ross Wilkinson" },
+    { rating: 5, quote: "Exceptional service from start to finish. Professional, reliable, and made our ski holiday stress-free.", author: "Sarah Johnson" },
+    { rating: 5, quote: "The best transfer service we've used in the Alps. Highly recommended for families and groups.", author: "Michael Chen" },
+  ]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch('/api/testimonials');
+        if (!res.ok) return;
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          const mapped = json.data.map((t: { rating: number; content: string; author: string }) => ({
+            rating: t.rating,
+            quote: t.content,
+            author: t.author,
+          }));
+          setTestimonials(mapped);
+        }
+      } catch {
+        // silent fallback to defaults
+      }
+    })();
+  }, []);
 
   const handleOpenForm = useCallback(() => {
     setIsFormOpen(true);
@@ -78,6 +78,9 @@ export default function HomePage() {
       {/* Hero Section */}
       <PageHeroHome onQuoteClick={handleOpenForm} />
 
+      {/* Rebrand Marquee Section */}
+      <MarqueeRebrand />
+
       {/* The Transfers Section */}
       <section className="py-24">
         <Grid container className="gap-grid-mobile tablet:gap-grid-tablet desktop:gap-grid-desktop">
@@ -94,50 +97,57 @@ export default function HomePage() {
                 The transfers
               </h2>
               
-              {/* Service Features List - Clean separator design */}
+              {/* Service Features List - Numbered with separators */}
               <div className="flex flex-col">
-                {/* First Item */}
-                <div className="py-xl">
+                {/* Item 1 */}
+                <div className="py-xl grid grid-cols-[40px_1fr] gap-4 items-center tablet:items-start">
+                  <div className="flex justify-end items-center tablet:items-start w-6 h-10">
+                    <span className="text-[40px] leading-none font-light text-text-form">1</span>
+                  </div>
                   <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
                     We offer private transfers from Geneva, Lyon, Chambery and Grenoble airports
                   </p>
+                  <div className="col-span-2 h-px bg-border-secondary"></div>
                 </div>
-                <div className="w-full h-px bg-border-secondary"></div>
-                
-                {/* Second Item */}
-                <div className="py-xl">
+
+                {/* Item 2 */}
+                <div className="py-xl grid grid-cols-[40px_1fr] gap-4 items-center tablet:items-start">
+                  <div className="flex justify-end items-center tablet:items-start w-6 h-10">
+                    <span className="text-[40px] leading-none font-light text-text-form">2</span>
+                  </div>
                   <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.001em]">
                     We cover all the resorts of Les 3 Vallées as well as Val d&apos;Isère, Tignes, Les Arcs, La Plagne and others in their surrounding areas.
                   </p>
+                  <div className="col-span-2 h-px bg-border-secondary"></div>
                 </div>
-                <div className="w-full h-px bg-border-secondary"></div>
-                
-                {/* Third Item */}
-                <div className="py-xl">
-                  <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
-                    7 days a week
-                  </p>
+
+                {/* Item 3 */}
+                <div className="py-xl grid grid-cols-[40px_1fr] gap-4 items-center tablet:items-start">
+                  <div className="flex justify-end items-center tablet:items-start w-6 h-10">
+                    <span className="text-[40px] leading-none font-light text-text-form">3</span>
+                  </div>
+                  <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">7 days a week</p>
+                  <div className="col-span-2 h-px bg-border-secondary"></div>
                 </div>
-                <div className="w-full h-px bg-border-secondary"></div>
-                
-                {/* Fourth Item */}
-                <div className="py-xl">
-                  <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
-                    Door to door throughout the winter
-                  </p>
+
+                {/* Item 4 */}
+                <div className="py-xl grid grid-cols-[40px_1fr] gap-4 items-center tablet:items-start">
+                  <div className="flex justify-end items-center tablet:items-start w-6 h-10">
+                    <span className="text-[40px] leading-none font-light text-text-form">4</span>
+                  </div>
+                  <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">Door to door throughout the winter</p>
                 </div>
               </div>
             </div>
           </div>
           
-          {/* Right Column - Interactive Map (iframe) (9/5/4 columns) */}
+          {/* Right Column - Static Map with veil (9/5/4 columns) */}
           <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9">
-            <iframe
-              src="https://www.textomap.com/?MTM4MzI7MTsxOzA7MA=="
-              title="Interactive transfer routes map"
-              className="w-full h-[528px] rounded-2xl border-0"
-              frameBorder={0}
-              loading="lazy"
+            <ImageWithGradient
+              src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1754484387/routes_top_map_scw9bx.png"
+              alt="Map showing transfer routes from airports to resorts"
+              height="h-[528px]"
+              className="rounded-2xl"
             />
           </div>
 

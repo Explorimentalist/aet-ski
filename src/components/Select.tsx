@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Check, Plane, Hotel, Train, Mountain } from 'lucide-react';
 import { SelectOption, CategorizedOption } from '@/types';
-import { flattenCategorizedOptions, findOptionByValue } from '@/data/locations';
+import { findOptionByValue } from '@/data/locations';
 
 export interface SelectProps {
   label?: string;

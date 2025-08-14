@@ -1,6 +1,6 @@
 // src/components/RouteTransfer.tsx
 import React from 'react';
-import { Grid, GridLayouts } from './Grid';
+import { Grid } from './Grid';
 import { ShieldCheck } from 'lucide-react';
 
 interface TransferStats {
@@ -153,14 +153,13 @@ export const RouteTransfer: React.FC<RouteTransferProps> = ({
             >
               Transfer information
             </span>
-            <p 
+            <div 
               className="text-base font-medium text-text-primary leading-[150%] tracking-[-0.011em]"
               style={{
                 fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
               }}
-            >
-              {transferDescription}
-            </p>
+              dangerouslySetInnerHTML={{ __html: transferDescription }}
+            />
           </div>
         </div>
 

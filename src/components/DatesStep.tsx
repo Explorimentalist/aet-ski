@@ -1,5 +1,5 @@
 // src/components/DatesStep.tsx
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState, useRef, useEffect } from 'react';
 import { X, ChevronRight, ChevronLeft } from 'lucide-react';
 import { Calendar } from '@/components/Calendar';
 import { TimeSelector } from '@/components/TimeSelector';
@@ -20,6 +20,9 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
   totalSteps,
   validation,
 }) => {
+  const [showReturnSoonWarning, setShowReturnSoonWarning] = useState(false);
+  const continueButtonRef = useRef<HTMLButtonElement | null>(null);
+
   const datesData = useMemo(() => data.dates || {
     collectionDate: null,
     collectionTime: '',
@@ -107,10 +110,36 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
 
   // Handle next step
   const handleNext = useCallback(() => {
-    if (isStepValid) {
-      onNext();
+    if (!isStepValid) return;
+
+    // Intercept when return journey is same-day or within 7 days of collection date
+    if (
+      isReturnJourney &&
+      datesData.collectionDate instanceof Date &&
+      datesData.returnDate instanceof Date &&
+      !datesData.isCollectionFlexible &&
+      !datesData.isReturnFlexible
+    ) {
+      const start = new Date(
+        datesData.collectionDate.getFullYear(),
+        datesData.collectionDate.getMonth(),
+        datesData.collectionDate.getDate()
+      );
+      const end = new Date(
+        datesData.returnDate.getFullYear(),
+        datesData.returnDate.getMonth(),
+        datesData.returnDate.getDate()
+      );
+      const msPerDay = 1000 * 60 * 60 * 24;
+      const diffDays = Math.round((end.getTime() - start.getTime()) / msPerDay);
+      if (diffDays >= 0 && diffDays <= 7) {
+        setShowReturnSoonWarning(true);
+        return;
+      }
     }
-  }, [isStepValid, onNext]);
+
+    onNext();
+  }, [isStepValid, onNext, isReturnJourney, datesData]);
 
   // Handle previous step
   const handlePrevious = useCallback(() => {
@@ -124,6 +153,27 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
       handleNext();
     }
   }, [isStepValid, handleNext]);
+
+  // Focus the primary action when the warning opens
+  useEffect(() => {
+    if (showReturnSoonWarning && continueButtonRef.current) {
+      continueButtonRef.current.focus();
+    }
+  }, [showReturnSoonWarning]);
+
+  const formattedCollection = useMemo(() => {
+    if (!(datesData.collectionDate instanceof Date)) return '';
+    return datesData.collectionDate.toLocaleDateString(undefined, {
+      weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+    });
+  }, [datesData.collectionDate]);
+
+  const formattedReturn = useMemo(() => {
+    if (!(datesData.returnDate instanceof Date)) return '';
+    return datesData.returnDate.toLocaleDateString(undefined, {
+      weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+    });
+  }, [datesData.returnDate]);
 
   return (
     <div 
@@ -276,6 +326,54 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
           </div>
         </div>
       </div>
+
+      {showReturnSoonWarning && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="return-warning-title"
+        >
+          <div className="bg-background-secondary text-text-primary rounded-md shadow-lg w-[92%] tablet:w-[560px] max-w-[90vw]">
+            {/* Header */}
+            <div className="px-4xl py-3xl border-b border-border-secondary">
+              <h3 id="return-warning-title" className="text-lg font-bold">
+                Please confirm your return dates
+              </h3>
+            </div>
+            {/* Body */}
+            <div className="px-4xl py-3xl space-y-md">
+              <p className="text-text-secondary">
+                Your return is scheduled for <span className="font-medium text-text-primary">{formattedReturn}</span>,
+                which is within 7 days of your collection date <span className="font-medium text-text-primary">{formattedCollection}</span>.
+              </p>
+              <p className="text-text-secondary">
+                If this is correct, continue. Otherwise, go back to adjust your dates.
+              </p>
+            </div>
+            {/* Footer */}
+            <div className="px-4xl py-3xl border-t border-border-secondary flex items-center justify-end gap-md">
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={() => setShowReturnSoonWarning(false)}
+              >
+                Go back
+              </Button>
+              <Button
+                size="md"
+                onClick={() => {
+                  setShowReturnSoonWarning(false);
+                  onNext();
+                }}
+                ref={continueButtonRef as unknown as React.Ref<HTMLButtonElement>}
+              >
+                Continue
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 });

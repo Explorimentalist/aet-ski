@@ -26,6 +26,7 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
   const [currentIndex, setCurrentIndex] = useState(testimonials.length);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isTransitionEnabled, setIsTransitionEnabled] = useState(true);
   const [screenSize, setScreenSize] = useState<'mobile' | 'tablet' | 'desktop'>('mobile');
 
   // Calculate exact transform values for pixel-perfect positioning
@@ -46,6 +47,7 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
   };
 
   const transformValues = getTransformValue();
+  const trackRef = React.useRef<HTMLDivElement>(null);
 
   // Detect screen size for responsive transforms
   useEffect(() => {
@@ -70,16 +72,36 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
     
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex + 1;
-      // If we've moved past the middle set, reset to beginning of middle set
+      // If we're at the end of the duplicated set, prepare for seamless reset
       if (newIndex >= testimonials.length * 2) {
+        // Set a timeout to reset position after transition completes
         setTimeout(() => {
+          // Disable transition and jump instantly to middle clone
+          setIsTransitionEnabled(false);
           setCurrentIndex(testimonials.length);
+          // Also directly set transform to prevent frame flash
+          const tr = trackRef.current;
+          if (tr) {
+            tr.style.transition = 'none';
+            const t = getTransformValue();
+            tr.style.transform = `translateX(${t[screenSize]}px)`;
+          }
+          // Re-enable transition on next frame
+          requestAnimationFrame(() => {
+            setIsTransitionEnabled(true);
+            setIsAnimating(false);
+            const trEnable = trackRef.current;
+            if (trEnable) {
+              trEnable.style.transition = '';
+            }
+          });
         }, 400);
-        return testimonials.length * 2 - 1;
+        return newIndex;
       }
       return newIndex;
     });
     
+    // For normal slides, reset animation state after transition
     setTimeout(() => setIsAnimating(false), 400);
   }, [testimonials.length, isAnimating]);
 
@@ -89,16 +111,35 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
     
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex - 1;
-      // If we've moved before the middle set, reset to end of middle set
+      // If we're at the beginning of the duplicated set, prepare for seamless reset
       if (newIndex < testimonials.length) {
+        // Set a timeout to reset position after transition completes
         setTimeout(() => {
+          setIsTransitionEnabled(false);
           setCurrentIndex(testimonials.length * 2 - 1);
+          // Also directly set transform to prevent frame flash
+          const tr = trackRef.current;
+          if (tr) {
+            tr.style.transition = 'none';
+            const t = getTransformValue();
+            tr.style.transform = `translateX(${t[screenSize]}px)`;
+          }
+          // Re-enable transition on next frame
+          requestAnimationFrame(() => {
+            setIsTransitionEnabled(true);
+            setIsAnimating(false);
+            const trEnable = trackRef.current;
+            if (trEnable) {
+              trEnable.style.transition = '';
+            }
+          });
         }, 400);
-        return testimonials.length;
+        return newIndex;
       }
       return newIndex;
     });
     
+    // For normal slides, reset animation state after transition
     setTimeout(() => setIsAnimating(false), 400);
   }, [testimonials.length, isAnimating]);
 
@@ -154,36 +195,45 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
         {/* Testimonials Cards Container - responsive column spans */}
         <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9">
           <div 
-            className="relative overflow-hidden"
+            className="relative overflow-hidden edge-fade-right"
             role="group"
             aria-label="Testimonials"
             aria-live="polite"
             aria-atomic="true"
           >
             <div 
-              className="flex items-center gap-6 tablet:gap-5 desktop:gap-6 transition-transform duration-[400ms] ease-out motion-reduce:transition-none"
+              className={`flex items-center gap-6 tablet:gap-5 desktop:gap-6 ${
+                isTransitionEnabled 
+                  ? 'transition-transform duration-[400ms] ease-out' 
+                  : ''
+              } motion-reduce:transition-none`}
               style={{
                 transform: `translateX(${transformValues[screenSize]}px)`,
               }}
+              ref={trackRef}
             >
               {/* Render testimonials 3 times for infinite scrolling */}
               {[...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => {
-                const originalIndex = index % testimonials.length;
+                const n = testimonials.length;
+                const originalIndex = index % n;
                 
-                // Calculate position relative to current focused testimonial
-                const positionFromCurrent = index - currentIndex;
+                // Normalize distance independent of which cloned set we're in
+                const activeIndex = ((currentIndex % n) + n) % n;
+                let relative = originalIndex - activeIndex; // range potentially [-n+1, n-1]
+                if (relative > n / 2) relative -= n;
+                if (relative < -n / 2) relative += n;
                 
                 let opacity = 1;
                 let blur = 0;
                 
-                // Apply visual effects based on distance from current item
-                if (positionFromCurrent === 1) {
+                // Apply visual effects based on normalized distance
+                if (relative === 1) {
                   opacity = 0.48;
                   blur = 5;
-                } else if (positionFromCurrent === 2) {
+                } else if (relative === 2) {
                   opacity = 0.24;
                   blur = 12;
-                } else if (positionFromCurrent < 0 || positionFromCurrent > 2) {
+                } else if (relative < 0 || relative > 2) {
                   opacity = 0;
                   blur = 12;
                 }
@@ -221,27 +271,27 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
               <button
                 onClick={prevSlide}
                 disabled={isAnimating}
-                className={`w-8 h-8 tablet:w-6 tablet:h-6 flex items-center justify-center transition-all duration-200 ease-in-out tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none tablet:hover:bg-transparent tablet:focus:bg-transparent focus:outline-none focus:ring-2 focus:ring-[rgba(29,71,71,0.1)] ${
+                className={`w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none tablet:hover:bg-transparent tablet:focus:bg-transparent focus:outline-none focus:ring-2 focus:ring-[rgba(29,71,71,0.1)] ${
                   isAnimating 
                     ? 'text-text-disabled cursor-not-allowed' 
                     : 'text-text-primary hover:text-[#0C2626] hover:bg-background-hover cursor-pointer'
                 }`}
                 aria-label="Previous testimonial"
               >
-                <ArrowLeft className="w-5 h-5 tablet:w-4 tablet:h-4" />
+                <ArrowLeft className="w-8 h-8 tablet:w-8 tablet:h-8" />
               </button>
               
               <button
                 onClick={nextSlide}
                 disabled={isAnimating}
-                className={`w-8 h-8 tablet:w-6 tablet:h-6 flex items-center justify-center transition-all duration-200 ease-in-out tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none tablet:hover:bg-transparent tablet:focus:bg-transparent focus:outline-none focus:ring-2 focus:ring-[rgba(29,71,71,0.1)] ${
+                className={`w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none tablet:hover:bg-transparent tablet:focus:bg-transparent focus:outline-none focus:ring-2 focus:ring-[rgba(29,71,71,0.1)] ${
                   isAnimating 
                     ? 'text-text-disabled cursor-not-allowed' 
                     : 'text-text-primary hover:text-[#0C2626] hover:bg-background-hover cursor-pointer'
                 }`}
                 aria-label="Next testimonial"
               >
-                <ArrowRight className="w-5 h-5 tablet:w-4 tablet:h-4" />
+                <ArrowRight className="w-8 h-8 tablet:w-8 tablet:h-8" />
               </button>
             </div>
           </div>
