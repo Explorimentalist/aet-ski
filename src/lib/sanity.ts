@@ -3,13 +3,24 @@ import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImage } from '@/types';
 
-export const sanityClient = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-  apiVersion: '2025-01-29',
-  useCdn: process.env.NODE_ENV === 'production',
-  token: process.env.SANITY_API_TOKEN,
-});
+// Check if Sanity environment variables are available
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
+const apiVersion = '2025-01-29';
+const useCdn = process.env.NODE_ENV === 'production';
+const token = process.env.SANITY_API_TOKEN;
+
+// Flag to check if Sanity is properly configured
+export const isSanityConfigured = Boolean(projectId);
+
+// Create Sanity client only if projectId is available
+export const sanityClient = projectId ? createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn,
+  token,
+}) : null;
 
 // Query helpers
 export const routesQuery = `
@@ -63,34 +74,58 @@ export const siteSettingsQuery = `
   }
 `;
 
-// Image URL builder
-const builder = imageUrlBuilder(sanityClient);
+// Image URL builder with null check
+const builder = sanityClient ? imageUrlBuilder(sanityClient) : null;
 
 export function urlFor(source: SanityImage) {
+  if (!builder) {
+    // Return a placeholder or fallback URL when Sanity is not configured
+    return { url: () => '/placeholder-image.jpg' };
+  }
   return builder.image(source).auto('format').fit('max');
 } 
 
-// Fetch helpers
+// Fetch helpers with fallbacks
 export async function fetchTestimonials() {
-  const results = await sanityClient.fetch(testimonialsQuery);
-  return (results || []).map((doc: { _id: string; author: string; rating: number; content: string; date: string; route?: string }) => ({
-    id: doc._id,
-    author: doc.author,
-    rating: doc.rating,
-    content: doc.content,
-    date: doc.date,
-    route: doc.route,
-  }));
+  if (!sanityClient) {
+    console.warn('Sanity not configured, returning empty testimonials array');
+    return [];
+  }
+  
+  try {
+    const results = await sanityClient.fetch(testimonialsQuery);
+    return (results || []).map((doc: { _id: string; author: string; rating: number; content: string; date: string; route?: string }) => ({
+      id: doc._id,
+      author: doc.author,
+      rating: doc.rating,
+      content: doc.content,
+      date: doc.date,
+      route: doc.route,
+    }));
+  } catch (error) {
+    console.error('Error fetching testimonials:', error);
+    return [];
+  }
 }
 
 export async function fetchLinksByCategory(category: string) {
-  const query = linksByCategoryQuery(category);
-  const results = await sanityClient.fetch(query);
-  return (results || []).map((doc: { _id: string; name: string; url: string; logo?: string; description?: string }) => ({
-    id: doc._id,
-    companyName: doc.name,
-    url: doc.url,
-    logo: doc.logo,
-    description: doc.description,
-  }));
+  if (!sanityClient) {
+    console.warn('Sanity not configured, returning empty links array for category:', category);
+    return [];
+  }
+
+  try {
+    const query = linksByCategoryQuery(category);
+    const results = await sanityClient.fetch(query);
+    return (results || []).map((doc: { _id: string; name: string; url: string; logo?: string; description?: string }) => ({
+      id: doc._id,
+      companyName: doc.name,
+      url: doc.url,
+      logo: doc.logo,
+      description: doc.description,
+    }));
+  } catch (error) {
+    console.error('Error fetching links for category:', category, error);
+    return [];
+  }
 }
