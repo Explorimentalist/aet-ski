@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Grid } from '@/components/Grid';
 import { TestimonialCard } from '@/components/CardLarge';
@@ -26,7 +27,6 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
   const [currentIndex, setCurrentIndex] = useState(testimonials.length);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [isTransitionEnabled, setIsTransitionEnabled] = useState(true);
   const [screenSize, setScreenSize] = useState<'mobile' | 'tablet' | 'desktop'>('mobile');
 
   // Calculate exact transform values for pixel-perfect positioning
@@ -76,25 +76,8 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
       if (newIndex >= testimonials.length * 2) {
         // Set a timeout to reset position after transition completes
         setTimeout(() => {
-          // Disable transition and jump instantly to middle clone
-          setIsTransitionEnabled(false);
           setCurrentIndex(testimonials.length);
-          // Also directly set transform to prevent frame flash
-          const tr = trackRef.current;
-          if (tr) {
-            tr.style.transition = 'none';
-            const t = getTransformValue();
-            tr.style.transform = `translateX(${t[screenSize]}px)`;
-          }
-          // Re-enable transition on next frame
-          requestAnimationFrame(() => {
-            setIsTransitionEnabled(true);
-            setIsAnimating(false);
-            const trEnable = trackRef.current;
-            if (trEnable) {
-              trEnable.style.transition = '';
-            }
-          });
+          setIsAnimating(false);
         }, 400);
         return newIndex;
       }
@@ -115,24 +98,8 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
       if (newIndex < testimonials.length) {
         // Set a timeout to reset position after transition completes
         setTimeout(() => {
-          setIsTransitionEnabled(false);
           setCurrentIndex(testimonials.length * 2 - 1);
-          // Also directly set transform to prevent frame flash
-          const tr = trackRef.current;
-          if (tr) {
-            tr.style.transition = 'none';
-            const t = getTransformValue();
-            tr.style.transform = `translateX(${t[screenSize]}px)`;
-          }
-          // Re-enable transition on next frame
-          requestAnimationFrame(() => {
-            setIsTransitionEnabled(true);
-            setIsAnimating(false);
-            const trEnable = trackRef.current;
-            if (trEnable) {
-              trEnable.style.transition = '';
-            }
-          });
+          setIsAnimating(false);
         }, 400);
         return newIndex;
       }
@@ -181,7 +148,13 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
     >
       <Grid container className="gap-grid-mobile tablet:gap-grid-tablet desktop:gap-grid-desktop">
         {/* Section Heading - simplified */}
-        <div className="col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3">
+        <motion.div 
+          className="col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
           <h2 
             className="text-heading text-3xl font-bold text-text-primary leading-[150%] tracking-button"
             style={{
@@ -190,7 +163,7 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
           >
             Testimonials
           </h2>
-        </div>
+        </motion.div>
 
         {/* Testimonials Cards Container - responsive column spans */}
         <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9">
@@ -201,14 +174,16 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
             aria-live="polite"
             aria-atomic="true"
           >
-            <div 
-              className={`flex items-center gap-6 tablet:gap-5 desktop:gap-6 ${
-                isTransitionEnabled 
-                  ? 'transition-transform duration-[400ms] ease-out' 
-                  : ''
-              } motion-reduce:transition-none`}
-              style={{
-                transform: `translateX(${transformValues[screenSize]}px)`,
+            <motion.div 
+              className="flex items-center gap-6 tablet:gap-5 desktop:gap-6"
+              animate={{
+                x: transformValues[screenSize],
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                duration: 0.4
               }}
               ref={trackRef}
             >
@@ -225,26 +200,35 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
                 
                 let opacity = 1;
                 let blur = 0;
+                let scale = 1;
                 
                 // Apply visual effects based on normalized distance
                 if (relative === 1) {
                   opacity = 0.48;
                   blur = 5;
+                  scale = 0.95;
                 } else if (relative === 2) {
                   opacity = 0.24;
                   blur = 12;
+                  scale = 0.9;
                 } else if (relative < 0 || relative > 2) {
                   opacity = 0;
                   blur = 12;
+                  scale = 0.85;
                 }
 
                 return (
-                  <div
+                  <motion.div
                     key={`${originalIndex}-${Math.floor(index / testimonials.length)}`}
-                    className="flex-shrink-0 transition-all duration-[400ms] ease-out motion-reduce:transition-none"
-                    style={{
+                    className="flex-shrink-0"
+                    animate={{
                       opacity,
                       filter: blur > 0 ? `blur(${blur}px)` : 'none',
+                      scale,
+                    }}
+                    transition={{
+                      duration: 0.4,
+                      ease: "easeOut"
                     }}
                   >
                     <TestimonialCard
@@ -253,49 +237,61 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
                       author={testimonial.author}
                       className="w-[280px] tablet:w-[360px] desktop:w-[408px]"
                     />
-                  </div>
+                  </motion.div>
                 );
               })}
-            </div>
+            </motion.div>
           </div>
         </div>
 
         {/* Navigation below cards - spans same width as cards container */}
-        <div className="col-mobile-4 tablet:col-tablet-5 tablet:col-start-4 desktop:col-desktop-9 desktop:col-start-4 mt-6">
+        <motion.div 
+          className="col-mobile-4 tablet:col-tablet-5 tablet:col-start-4 desktop:col-desktop-9 desktop:col-start-4 mt-6"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+          viewport={{ once: true }}
+        >
           <div className="flex flex-col gap-4">
             {/* Separator line - hidden on mobile */}
             <div className="w-full h-px bg-text-primary hidden tablet:block" />
             
             {/* Navigation controls */}
             <div className="flex justify-between items-center">
-              <button
+              <motion.button
                 onClick={prevSlide}
                 disabled={isAnimating}
-                className={`w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none tablet:hover:bg-transparent tablet:focus:bg-transparent focus:outline-none focus:ring-2 focus:ring-[rgba(29,71,71,0.1)] ${
+                className={`w-10 h-10 flex items-center justify-center tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none tablet:hover:bg-transparent tablet:focus:bg-transparent focus:outline-none focus:ring-2 focus:ring-[rgba(29,71,71,0.1)] ${
                   isAnimating 
                     ? 'text-text-disabled cursor-not-allowed' 
                     : 'text-text-primary hover:text-[#0C2626] hover:bg-background-hover cursor-pointer'
                 }`}
                 aria-label="Previous testimonial"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
               >
                 <ArrowLeft className="w-8 h-8 tablet:w-8 tablet:h-8" />
-              </button>
+              </motion.button>
               
-              <button
+              <motion.button
                 onClick={nextSlide}
                 disabled={isAnimating}
-                className={`w-10 h-10 flex items-center justify-center transition-all duration-200 ease-in-out tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none tablet:hover:bg-transparent tablet:focus:bg-transparent focus:outline-none focus:ring-2 focus:ring-[rgba(29,71,71,0.1)] ${
+                className={`w-10 h-10 flex items-center justify-center tablet:bg-transparent bg-background-secondary rounded-full tablet:rounded-none tablet:hover:bg-transparent tablet:focus:bg-transparent focus:outline-none focus:ring-2 focus:ring-[rgba(29,71,71,0.1)] ${
                   isAnimating 
                     ? 'text-text-disabled cursor-not-allowed' 
                     : 'text-text-primary hover:text-[#0C2626] hover:bg-background-hover cursor-pointer'
                 }`}
                 aria-label="Next testimonial"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
               >
                 <ArrowRight className="w-8 h-8 tablet:w-8 tablet:h-8" />
-              </button>
+              </motion.button>
             </div>
           </div>
-        </div>
+        </motion.div>
       </Grid>
     </section>
   );

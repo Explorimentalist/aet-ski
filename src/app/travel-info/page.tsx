@@ -117,10 +117,22 @@ export default function TravelInfoPage() {
       url: 'https://www.airfrance.com/',
     },
     {
+      id: 'flybe',
+      logo: getLogoUrl('flybe', { format: 'svg' }),
+      companyName: 'Flybe',
+      url: 'https://www.flybe.com/',
+    },
+    {
       id: 'swiss-air',
       logo: getLogoUrl('swiss-air', { format: 'svg' }),
       companyName: 'Swiss Air',
       url: 'https://www.swiss.com/',
+    },
+    {
+      id: 'aer-lingus',
+      logo: getLogoUrl('aer-lingus', { format: 'svg' }),
+      companyName: 'Aer Lingus',
+      url: 'https://www.aerlingus.com/upload/',
     },
     {
       id: 'klm',
@@ -128,9 +140,13 @@ export default function TravelInfoPage() {
       companyName: 'KLM',
       url: 'https://www.klm.com/',
     },
+    {
+      id: 'etihad',
+      logo: getLogoUrl('etihad', { format: 'svg' }),
+      companyName: 'Etihad',
+      url: 'https://www.etihad.com/',
+    },
   ];
-
-  
 
   // Trains data - eco-friendly ski travel options
   const trainsData = [
@@ -149,13 +165,6 @@ export default function TravelInfoPage() {
       description: 'Book train tickets for travel across Europe. Convenient connections to major ski destinations in the Alps.',
     },
     {
-      id: 'tgv',
-      logo: getLogoUrl('tgv', { format: 'svg' }),
-      companyName: 'TGV / Rail Europe',
-      url: 'https://www.raileurope.com/',
-      description: 'Book TGV trains from Paris to ski resorts. High-speed, comfortable, and environmentally friendly travel option.',
-    },
-    {
       id: 'rtm',
       logo: getLogoUrl('rtm', { format: 'svg' }),
       companyName: 'RTM',
@@ -171,21 +180,21 @@ export default function TravelInfoPage() {
     },
   ];
 
-  // Accommodation data - luxury chalet providers
+  // Chalet accommodation data - luxury chalet providers
   const chaletAccommodationData = [
-    {
-      id: 'powder-byrnes',
-      logo: 'accommodation/powder-byrnes-logo', // Cloudinary public ID
-      companyName: 'Powder Byrnes',
-      url: 'https://www.powderbyrnes.com/',
-      description: 'Luxury catered ski chalets in premium locations across the French Alps. Professional service and gourmet cuisine included.',
-    },
     {
       id: 'oxford-ski',
       logo: getLogoUrl('oxford-ski', { format: 'svg' }),
       companyName: 'Oxford Ski',
       url: 'https://www.oxfordski.com/',
       description: 'Tailor-made luxury ski holidays and chalets across premier Alpine resorts.',
+    },
+    {
+      id: 'meriski',
+      logo: getLogoUrl('meriski', { format: 'svg' }),
+      companyName: 'Meriski',
+      url: 'https://www.meriski.com/',
+      description: 'Luxury chalet holidays in Méribel with exceptional service and attention to detail.',
     },
     {
       id: 'alpine-escape',
@@ -202,18 +211,39 @@ export default function TravelInfoPage() {
       description: 'Handpicked luxury chalets and hotels with a passion for food and service.',
     },
     {
-      id: 'ski-total',
-      logo: 'accommodation/ski-total-logo', // Cloudinary public ID
-      companyName: 'Ski Total',
-      url: 'https://www.skitotal.com/',
-      description: 'Quality catered chalets and hotels with excellent value. Family-friendly service and convenient resort locations.',
+      id: 'ski-cuisine',
+      logo: getLogoUrl('ski-cuisine', { format: 'svg' }),
+      companyName: 'Ski Cuisine',
+      url: 'https://www.skicuisine.com/',
+      description: 'Gourmet ski holidays combining exceptional skiing with world-class dining experiences.',
     },
     {
-      id: 'ams-rentals',
-      logo: getLogoUrl('ams', { format: 'svg' }),
-      companyName: 'AMS',
-      url: 'https://www.amsrentals.com/',
-      description: 'Exclusive Méribel Valley specialist offering premium self-catered properties.',
+      id: 'elegant-resorts',
+      logo: getLogoUrl('elegant-resorts', { format: 'svg' }),
+      companyName: 'Elegant Resorts',
+      url: 'https://www.elegantresorts.co.uk/',
+      description: 'Luxury travel company offering tailor-made ski holidays.',
+    },
+    {
+      id: 'meribel-ski-chalets',
+      logo: getLogoUrl('meribel-ski-chalets', { height: 80, width: 300, format: 'auto', crop: 'fit' }),
+      companyName: 'Méribel Ski Chalet',
+      url: 'https://www.meribel-chalets.co.uk/',
+      description: 'Independent specialist with a range of catered and self-catered chalets in Méribel.',
+    },
+    {
+      id: 'com-ski',
+      logo: getLogoUrl('com-ski', { format: 'svg' }),
+      companyName: 'com-ski.com',
+      url: 'https://www.com-ski.com/',
+      description: 'Comprehensive ski holiday booking platform with a wide selection of chalets and resorts.',
+    },
+    {
+      id: 'leski',
+      logo: getLogoUrl('leski', { format: 'svg' }),
+      companyName: 'Le Ski',
+      url: 'https://www.leski.com/',
+      description: 'British ski company offering catered chalets and quality ski instruction in the French Alps.',
     },
     {
       id: 'alpine-answers',
@@ -223,6 +253,13 @@ export default function TravelInfoPage() {
       description: 'Specialist ski holiday agency with extensive resort knowledge.',
     },
     {
+      id: 'ski-blanc',
+      logo: getLogoUrl('ski-blanc', { format: 'svg' }),
+      companyName: 'Ski Blanc',
+      url: 'https://www.skiblanc.co.uk/',
+      description: 'Luxury ski holidays with a focus on exceptional service and beautiful chalets.',
+    },
+    {
       id: 'ski-basics',
       logo: getLogoUrl('ski-basics', { format: 'svg' }),
       companyName: 'Ski Basics',
@@ -230,11 +267,39 @@ export default function TravelInfoPage() {
       description: 'Quality catered chalets and services in Méribel.',
     },
     {
-      id: 'elegant-resorts',
-      logo: getLogoUrl('elegant-resorts', { format: 'svg' }),
-      companyName: 'Elegant Resorts',
-      url: 'https://www.elegantresorts.co.uk/',
-      description: 'Luxury travel company offering tailor-made ski holidays.',
+      id: 'delicious-mountain',
+      logo: getLogoUrl('delicious-mountain', { format: 'svg' }),
+      companyName: 'Delicious Mountain',
+      url: 'https://www.deliciousmountain.com/',
+      description: 'Food-focused ski holidays with gourmet dining and exceptional chalet experiences.',
+    },
+    {
+      id: 'alpine-ethos',
+      logo: getLogoUrl('alpine-ethos', { format: 'svg' }),
+      companyName: 'Alpine Ethos',
+      url: 'https://www.alpineethos.com/',
+      description: 'Boutique ski holiday specialist offering unique and authentic Alpine experiences.',
+    },
+    {
+      id: 'skivo',
+      logo: getLogoUrl('skivo', { format: 'svg' }),
+      companyName: 'Skivo',
+      url: 'https://www.skivo.co.uk/',
+      description: 'Independent ski holiday specialist with a personal touch and extensive resort knowledge.',
+    },
+    {
+      id: 'firefly',
+      logo: getLogoUrl('firefly', { format: 'svg' }),
+      companyName: 'Firefly',
+      url: 'https://www.fireflyski.com/',
+      description: 'Luxury ski holidays with a focus on exceptional service and beautiful properties.',
+    },
+    {
+      id: 'alpine-independence',
+      logo: getLogoUrl('alpine-independence', { format: 'svg' }),
+      companyName: 'Alpine Independence',
+      url: 'https://www.alpineindependence.com/',
+      description: 'Independent ski holiday specialist offering personalized service and expert advice.',
     },
   ];
 
@@ -242,31 +307,38 @@ export default function TravelInfoPage() {
   const selfCateredAccommodationData = [
     {
       id: 'courchevel-rentals',
-      logo: getLogoUrl('courchevel-chalets-apartments', { format: 'svg' }),
+      logo: getLogoUrl('courchevel-chalets', { format: 'svg' }),
       companyName: 'Courchevel Chalet and Apartment Rentals',
       url: 'https://www.courchevelchaletrentals.com/',
       description: 'Extensive portfolio of luxury chalets and apartments throughout all Courchevel villages. From intimate retreats to large group properties.',
     },
     {
       id: 'meribel-rentals',
-      logo: getLogoUrl('meribel-chalets-apartments', { format: 'svg' }),
+      logo: getLogoUrl('meribel-chalets', { format: 'svg' }),
       companyName: 'Meribel Chalet and Apartment Rentals',
       url: 'https://www.meribelchaletrentals.com/',
       description: 'Authentic alpine properties in Méribel village and surrounding areas. Traditional chalets with modern amenities.',
     },
     {
-      id: 'meribel-ski-chalets',
-      logo: getLogoUrl('meribel-ski-chalets', { height: 80, width: 300, format: 'auto', crop: 'fit' }),
-      companyName: 'Meribel Ski Chalets',
-      url: 'https://www.meribel-chalets.co.uk/',
-      description: 'Independent specialist with a range of catered and self-catered chalets in Méribel.',
-    },
-    {
       id: 'ams-rentals',
-      logo: 'accommodation/ams-rentals-logo', // Cloudinary public ID
+      logo: getLogoUrl('ams', { format: 'svg' }),
       companyName: 'AMS Rentals',
       url: 'https://www.amsrentals.com/',
       description: 'Exclusive Méribel Valley specialist offering premium self-catered properties. Weekly and seasonal rentals available.',
+    },
+    {
+      id: 'ski-lettings',
+      logo: getLogoUrl('ski-lettings', { format: 'svg' }),
+      companyName: 'Ski Lettings',
+      url: 'https://www.skilettings.com/',
+      description: 'Specialist in self-catered ski accommodation across the French Alps with a focus on quality and value.',
+    },
+    {
+      id: 'sno-mobi',
+      logo: getLogoUrl('sno-mobi', { format: 'svg' }),
+      companyName: 'Sno.mobi',
+      url: 'https://www.sno.mobi/',
+      description: 'Innovative platform for finding and booking self-catered ski accommodation with real-time availability.',
     },
   ];
 
@@ -278,13 +350,6 @@ export default function TravelInfoPage() {
       companyName: 'Météo France',
       url: 'https://meteofrance.com/meteo-montagne/alpes-du-nord',
       description: 'Official French weather service with detailed mountain forecasts, avalanche bulletins, and snow reports.',
-    },
-    {
-      id: 'chamonix-weather',
-      logo: 'weather/chamonix-weather-logo', // Cloudinary public ID
-      companyName: 'Chamonix Weather',
-      url: 'https://www.chamonix.com/weather',
-      description: 'Local alpine weather specialists providing accurate mountain forecasts and real-time conditions.',
     },
     {
       id: 'snow-forecast',
@@ -305,15 +370,8 @@ export default function TravelInfoPage() {
       description: 'France\'s largest ski school network with qualified instructors in every resort. Group and private lessons for all levels.',
     },
     {
-      id: 'leski',
-      logo: getLogoUrl('leski', { format: 'svg' }),
-      companyName: 'Le Ski',
-      url: 'https://www.leski.com/',
-      description: 'British ski company offering catered chalets and quality ski instruction in the French Alps.',
-    },
-    {
       id: 'new-generation',
-      logo: getLogoUrl('newgen', { format: 'svg' }),
+      logo: getLogoUrl('new-generation', { format: 'svg' }),
       companyName: 'New Generation Ski School',
       url: 'https://www.skinewgen.com/',
       description: 'British-run ski school offering English instruction in major Three Valleys resorts. Small groups and performance-focused teaching.',
@@ -324,6 +382,41 @@ export default function TravelInfoPage() {
       companyName: 'Supreme Ski & Snowboard School',
       url: 'https://www.supremeski.com/',
       description: 'Established British ski school operating across top French resorts, offering private and group lessons with experienced instructors.',
+    },
+    {
+      id: 'snow-limits',
+      logo: getLogoUrl('snow-limits', { format: 'svg' }),
+      companyName: 'Snow Limits',
+      url: 'https://www.snowlimits.com/',
+      description: 'Specialist ski school focusing on advanced techniques and off-piste skiing for experienced skiers.',
+    },
+    {
+      id: 'rtm-snowboarding',
+      logo: getLogoUrl('rtm-snowboarding', { format: 'svg' }),
+      companyName: 'RTM Snowboarding',
+      url: 'https://www.rtmsnowboarding.com/',
+      description: 'Dedicated snowboard school with expert instructors specializing in freestyle and freeride techniques.',
+    },
+    {
+      id: 'oxygene',
+      logo: getLogoUrl('oxygene', { format: 'svg' }),
+      companyName: 'Oxygene',
+      url: 'https://www.oxygene.ski/',
+      description: 'International ski school with English-speaking instructors offering lessons in multiple languages.',
+    },
+    {
+      id: 'momentum',
+      logo: getLogoUrl('momentum', { format: 'svg' }),
+      companyName: 'Momentum',
+      url: 'https://www.momentumski.com/',
+      description: 'Performance-focused ski school specializing in advanced techniques and competition preparation.',
+    },
+    {
+      id: 'marmalade',
+      logo: getLogoUrl('marmalade', { format: 'svg' }),
+      companyName: 'Marmalade',
+      url: 'https://www.marmaladeski.com/',
+      description: 'Boutique ski school offering personalized instruction and small group lessons in a friendly atmosphere.',
     },
   ];
 
@@ -343,30 +436,30 @@ export default function TravelInfoPage() {
       url: 'https://www.skihigher.com/',
       description: 'Ski Higher provide quality rental equipment at very reasonable prices. The even better news is that we have secured a massive 20% discount if you book online through their new website! They have shops in Courchevel 1850, Le Praz, La Tania, Meribel and Les Allues.',
     },
+    {
+      id: 'freeride-france',
+      logo: getLogoUrl('freeride-france', { format: 'svg' }),
+      companyName: 'Freeride France',
+      url: 'https://www.freeridefrance.com/',
+      description: 'Specialist freeride equipment rental with high-performance gear for off-piste adventures and backcountry skiing.',
+    },
+    {
+      id: 'slide-candy',
+      logo: getLogoUrl('slide-candy', { format: 'svg' }),
+      companyName: 'Slide Candy',
+      url: 'https://www.slidecandy.com/',
+      description: 'Premium ski and snowboard rental with the latest equipment and personalized fitting service.',
+    },
   ];
 
   // Aches and pains data - wellness and recovery services
   const achesAndPainsData = [
-    {
-      id: 'courchevel-physio',
-      logo: 'wellness/courchevel-physio-logo', // Cloudinary public ID
-      companyName: 'Courchevel Physiotherapy',
-      url: 'https://www.courchevelphysio.com/',
-      description: 'Specialized sports physiotherapy for ski injuries. English-speaking therapists with experience treating ski-related conditions.',
-    },
     {
       id: 'ski-physio',
       logo: getLogoUrl('ski-physio', { format: 'svg' }),
       companyName: 'Ski-Physio',
       url: 'https://www.ski-physio.com/',
       description: 'Physiotherapy services specializing in ski-related injuries and recovery in the Alps.',
-    },
-    {
-      id: 'alpine-wellness',
-      logo: 'wellness/alpine-wellness-logo', // Cloudinary public ID
-      companyName: 'Alpine Wellness & Spa',
-      url: 'https://www.alpinewellness.com/',
-      description: 'Luxury spa treatments and therapeutic massage. Perfect for post-ski recovery and relaxation.',
     },
   ];
 
@@ -379,30 +472,77 @@ export default function TravelInfoPage() {
       url: 'https://www.les3vallees.com/',
       description: 'Official Three Valleys guide with events, restaurant recommendations, and insider tips for mountain life.',
     },
+  ];
+
+  // Information websites data - comprehensive ski resources
+  const informationWebsitesData = [
     {
-      id: 'mountain-culture',
-      logo: 'resort-info/mountain-culture-logo', // Cloudinary public ID
-      companyName: 'Alpine Culture & Events',
-      url: 'https://www.alpineculture.com/',
-      description: 'Discover local traditions, seasonal festivals, and authentic Savoyard culture in the French Alps.',
+      id: 'meribel-unplugged',
+      logo: getLogoUrl('meribel-unplugged', { format: 'svg' }),
+      companyName: 'Meribel Unplugged',
+      url: 'https://www.meribelunplugged.com/',
+      description: 'Comprehensive guide to Méribel with insider tips, restaurant reviews, and local knowledge.',
+    },
+    {
+      id: 'thesnowco',
+      logo: getLogoUrl('thesnowco', { format: 'svg' }),
+      companyName: 'Thesnowco',
+      url: 'https://www.thesnowco.com/',
+      description: 'Expert ski holiday advice and resort information from experienced ski professionals.',
+    },
+    {
+      id: 'merinet',
+      logo: getLogoUrl('merinet', { format: 'svg' }),
+      companyName: 'Merinet',
+      url: 'https://www.merinet.com/',
+      description: 'Local Méribel information portal with weather updates, snow reports, and resort news.',
+    },
+    {
+      id: 'welove2ski',
+      logo: getLogoUrl('welove2ski', { format: 'svg' }),
+      companyName: 'Welove2ski',
+      url: 'https://www.welove2ski.com/',
+      description: 'Passionate ski community sharing resort reviews, ski tips, and holiday planning advice.',
+    },
+    {
+      id: 'courchnet',
+      logo: getLogoUrl('courchnet', { format: 'svg' }),
+      companyName: 'Courchnet',
+      url: 'https://www.courchnet.com/',
+      description: 'Dedicated Courchevel information site with resort guides, weather updates, and local insights.',
+    },
+    {
+      id: 'snowheads',
+      logo: getLogoUrl('snowheads', { format: 'svg' }),
+      companyName: 'Snowheads',
+      url: 'https://www.snowheads.co.uk/',
+      description: 'UK\'s largest ski community forum with expert advice, trip reports, and ski holiday planning.',
+    },
+    {
+      id: 'natives',
+      logo: getLogoUrl('natives', { format: 'svg' }),
+      companyName: 'Natives.co.uk',
+      url: 'https://www.natives.co.uk/',
+      description: 'Comprehensive ski resort guides with detailed information, photos, and user reviews.',
+    },
+    {
+      id: 'unplugged-courchevel',
+      logo: getLogoUrl('unplugged-courchevel', { format: 'svg' }),
+      companyName: 'Unplugged Courchevel',
+      url: 'https://www.unpluggedcourchevel.com/',
+      description: 'Insider\'s guide to Courchevel with restaurant recommendations, events, and local knowledge.',
     },
   ];
 
   // Self catering data - grocery delivery and local suppliers
   const selfCateringData = [
+
     {
-      id: 'sherpa-livraison',
-      logo: 'groceries/sherpa-logo', // Cloudinary public ID
-      companyName: 'Sherpa Livraison',
-      url: 'https://www.sherpa-courses.com/',
-      description: 'Local grocery delivery service throughout the Three Valleys. Fresh produce, wine, and specialty items delivered to your chalet.',
-    },
-    {
-      id: 'carrefour-montagne',
-      logo: 'groceries/carrefour-montagne-logo', // Cloudinary public ID
-      companyName: 'Carrefour Montagne',
-      url: 'https://www.carrefour.fr/magasin/montagne',
-      description: 'Supermarket chain with mountain locations. Online ordering available with pickup or delivery options.',
+      id: 'extreme-cuisine',
+      logo: getLogoUrl('extreme-cuisine', { format: 'svg' }),
+      companyName: 'Extreme Cuisine',
+      url: 'https://www.extremecuisine.com/',
+      description: 'Gourmet food delivery service offering premium ingredients, prepared meals, and specialty items for your ski holiday.',
     },
   ];
 
@@ -450,6 +590,21 @@ export default function TravelInfoPage() {
                 "@type": "Place",
                 "name": "Méribel",
                 "description": "Traditional alpine ski resort with authentic charm"
+              },
+              {
+                "@type": "Place",
+                "name": "Les Menuires",
+                "description": "Value-focused ski resort with modern accommodation"
+              },
+              {
+                "@type": "Place",
+                "name": "Saint-Martin-de-Belleville",
+                "description": "Traditional Savoyard village with authentic mountain culture"
+              },
+              {
+                "@type": "Place",
+                "name": "La Tania",
+                "description": "Purpose-built Olympic resort with easy access to major ski areas"
               }
             ],
             "publisher": {
@@ -497,18 +652,20 @@ export default function TravelInfoPage() {
           imageAlt="Travel information links and resources for skiing in the French Alps"
         />
 
-        {/* Airlines Section */}
-        <LinksList
-          heading="Airlines"
-          description="The low-cost airlines provide a multitude of flights into Geneva during the winter months. Several of them fly into Chambery during the week so have a look as to which will be most convenient to you."
-          links={airlinesData}
-        />
 
         {/* Resorts Section */}
         <LinksList
           heading="Resorts"
           description="The Three Valleys ski area offers some of the world's finest ski resorts, each with its own unique character and charm. From the high-altitude snow-sure slopes of Val Thorens to the luxury of Courchevel, discover the perfect resort for your ski holiday in the French Alps."
           links={resortsData}
+        />
+
+
+        {/* Airlines Section */}
+        <LinksList
+          heading="Airlines"
+          description="The low-cost airlines provide a multitude of flights into Geneva during the winter months. Several of them fly into Chambery during the week so have a look as to which will be most convenient to you."
+          links={airlinesData}
         />
 
         {/* Trains Section */}
@@ -567,14 +724,20 @@ export default function TravelInfoPage() {
           links={lifeInResortData}
         />
 
-        {/* CMS Life in resort info (appended) */}
-        {cmsLifeInResortLinks.length > 0 && (
-          <LinksList
-            heading="Life in resort info (CMS)"
-            description="Links loaded from the CMS."
-            links={cmsLifeInResortLinks}
-          />
-        )}
+        {/* Information Websites Section */}
+        <LinksList
+          heading="Information Websites"
+          description="For comprehensive ski resort information, local knowledge, and community engagement, check out these websites."
+          links={informationWebsitesData}
+        />
+
+
+        {/* Information Websites Section */}
+        <LinksList
+          heading="Information Websites"
+          description="For comprehensive ski resort information, local knowledge, and community engagement, check out these websites. They provide insider tips, resort guides, weather updates, and community forums to help you make the most of your ski holiday."
+          links={informationWebsitesData}
+        />
 
         {/* Self catering Section */}
         <LinksList

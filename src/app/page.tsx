@@ -15,6 +15,7 @@ import { ImageWithGradient } from '@/components/ImageWithGradient';
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookingFormData } from '@/types';
+import { TestimonialCard } from '@/components/CardLarge';
 
 
 export default function HomePage() {
