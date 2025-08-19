@@ -13,8 +13,20 @@ import { useEffect } from 'react';
 
 export default function TravelInfoPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [cmsLifeInResortLinks, setCmsLifeInResortLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  
+  // CMS State for all sections
   const [cmsAirlinesLinks, setCmsAirlinesLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  const [cmsResortsLinks, setCmsResortsLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  const [cmsTrainsLinks, setCmsTrainsLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  const [cmsChaletAccommodationLinks, setCmsChaletAccommodationLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  const [cmsSelfCateredAccommodationLinks, setCmsSelfCateredAccommodationLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  const [cmsWeatherLinks, setCmsWeatherLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  const [cmsSkiSchoolsLinks, setCmsSkiSchoolsLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  const [cmsSkiHireLinks, setCmsSkiHireLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  const [cmsAchesAndPainsLinks, setCmsAchesAndPainsLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  const [cmsLifeInResortLinks, setCmsLifeInResortLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  const [cmsInformationWebsitesLinks, setCmsInformationWebsitesLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  const [cmsSelfCateringLinks, setCmsSelfCateringLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
 
   const handleOpenForm = useCallback(() => {
     setIsFormOpen(true);
@@ -29,32 +41,43 @@ export default function TravelInfoPage() {
     // TODO: Handle form submission (API call, etc.)
   }, []);
 
-  // Fetch CMS-powered sections
+  // Fetch all CMS-powered sections
   useEffect(() => {
-    (async () => {
+    const fetchCategoryData = async (category: string, setter: React.Dispatch<React.SetStateAction<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>>) => {
       try {
-        // Fetch Life in resort info
-        const lifeInResortRes = await fetch(`/api/links?category=${encodeURIComponent('Life in resort info')}`);
-        if (lifeInResortRes.ok) {
-          const lifeInResortJson = await lifeInResortRes.json();
-          if (lifeInResortJson.success && Array.isArray(lifeInResortJson.data) && lifeInResortJson.data.length > 0) {
-            setCmsLifeInResortLinks(lifeInResortJson.data);
-          }
-        }
-
-        // Fetch Airlines
-        const airlinesRes = await fetch(`/api/links?category=${encodeURIComponent('Airlines')}`);
-        if (airlinesRes.ok) {
-          const airlinesJson = await airlinesRes.json();
-          if (airlinesJson.success && Array.isArray(airlinesJson.data) && airlinesJson.data.length > 0) {
-            setCmsAirlinesLinks(airlinesJson.data);
-          }
+        const res = await fetch(`/api/links?category=${encodeURIComponent(category)}`);
+        if (!res.ok) return;
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setter(json.data);
         }
       } catch {
         // silent fail, page shows built-in sections
       }
-    })();
+    };
+
+    // Fetch data for all categories
+    fetchCategoryData('Airlines', setCmsAirlinesLinks);
+    fetchCategoryData('Resorts', setCmsResortsLinks);
+    fetchCategoryData('Trains', setCmsTrainsLinks);
+    fetchCategoryData('Chalet accommodation', setCmsChaletAccommodationLinks);
+    fetchCategoryData('Self-catered Accommodation', setCmsSelfCateredAccommodationLinks);
+    fetchCategoryData('Weather', setCmsWeatherLinks);
+    fetchCategoryData('Ski Schools', setCmsSkiSchoolsLinks);
+    fetchCategoryData('Ski hire', setCmsSkiHireLinks);
+    fetchCategoryData('Aches and pains', setCmsAchesAndPainsLinks);
+    fetchCategoryData('Life in resort info', setCmsLifeInResortLinks);
+    fetchCategoryData('Information Websites', setCmsInformationWebsitesLinks);
+    fetchCategoryData('Self catering', setCmsSelfCateringLinks);
   }, []);
+
+  // Helper function to merge CMS data with hardcoded fallbacks
+  const mergeWithCMS = (cmsData: Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>, fallbackData: Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>) => {
+    if (cmsData.length > 0) {
+      return cmsData;
+    }
+    return fallbackData;
+  };
 
   // Resorts data - Three Valleys ski resorts with SEO-rich descriptions
   const resortsData = [
@@ -669,7 +692,7 @@ export default function TravelInfoPage() {
         <LinksList
           heading="Resorts"
           description="The Three Valleys ski area offers some of the world's finest ski resorts, each with its own unique character and charm. From the high-altitude snow-sure slopes of Val Thorens to the luxury of Courchevel, discover the perfect resort for your ski holiday in the French Alps."
-          links={resortsData}
+          links={mergeWithCMS(cmsResortsLinks, resortsData)}
         />
 
 
@@ -677,70 +700,70 @@ export default function TravelInfoPage() {
         <LinksList
           heading="Airlines"
           description="The low-cost airlines provide a multitude of flights into Geneva during the winter months. Several of them fly into Chambery during the week so have a look as to which will be most convenient to you."
-          links={cmsAirlinesLinks.length > 0 ? cmsAirlinesLinks : airlinesData}
+          links={mergeWithCMS(cmsAirlinesLinks, airlinesData)}
         />
 
         {/* Trains Section */}
         <LinksList
           heading="Trains"
           description="If you want to be in resort early on a Saturday morning then catch the overnight Eurostar direct from London. We can collect you from the station in Moutiers and get you to your accommodation for as little as 15€ per person. Another popular option is to travel via Paris on the TGV."
-          links={trainsData}
+          links={mergeWithCMS(cmsTrainsLinks, trainsData)}
         />
 
         {/* Chalet Accommodation Section */}
         <LinksList
           heading="Chalet accommodation"
           description="High quality, great value for money chalet holidays can be found by clicking below."
-          links={chaletAccommodationData}
+          links={mergeWithCMS(cmsChaletAccommodationLinks, chaletAccommodationData)}
         />
 
         {/* Self-catered Accommodation Section */}
         <LinksList
           heading="Self-catered Accommodation"
           description="If you're looking for self-catered accommodation then look no further than Courchevel Chalet and Apartment Rentals, Meribel Chalet and Apartment Rentals or AMS Rentals. As the names suggest, Courchevel and Meribel Chalet and Apartment Rentals have a vast array of properties available throughout both Courchevel and Meribel. However, AMS Rentals offer some of the very best skiing self-catered chalets and apartments exclusively within the Meribel Valley. These privately-owned properties are available to rent by the week or for longer periods, summer and winter. Some are available for seasonal rental and others for long weekends."
-          links={selfCateredAccommodationData}
+          links={mergeWithCMS(cmsSelfCateredAccommodationLinks, selfCateredAccommodationData)}
         />
 
         {/* Weather Section */}
         <LinksList
           heading="Weather"
           description="We often find that the most popular links from our site are those to do with the weather. Our drivers love the fact that you'll know far more about the weather for the week ahead when you arrive at the airport than they ever will. Have a read of the websites here so that you can let them know whether they'll be skiing in deep powder!"
-          links={weatherData}
+          links={mergeWithCMS(cmsWeatherLinks, weatherData)}
         />
 
         {/* Ski Schools Section */}
         <LinksList
           heading="Ski Schools"
           description="Whether you're a beginner looking to learn the basics or an advanced skier wanting to perfect your technique, these ski schools offer professional instruction from qualified instructors. Book your lessons in advance to secure the best instructors and times that suit your schedule."
-          links={skiSchoolsData}
+          links={mergeWithCMS(cmsSkiSchoolsLinks, skiSchoolsData)}
         />
 
         {/* Ski Hire Section */}
         <LinksList
           heading="Ski hire"
           description="Ski Higher provide quality rental equipment at very reasonable prices. The even better news is that we have secured a massive 20% discount if you book online through their new website! They have shops in Courchevel 1850, Le Praz, La Tania, Meribel and Les Allues so click on the link below to take advantage of this fantastic offer!"
-          links={skiHireData}
+          links={mergeWithCMS(cmsSkiHireLinks, skiHireData)}
         />
 
         {/* Aches and pains Section */}
         <LinksList
           heading="Aches and pains"
           description="After a long day on the slopes, your body might need some professional care. These physiotherapy and massage services specialize in treating ski-related injuries and helping you recover quickly so you can get back to enjoying your time on the mountain."
-          links={achesAndPainsData}
+          links={mergeWithCMS(cmsAchesAndPainsLinks, achesAndPainsData)}
         />
 
         {/* Life in resort info Section */}
         <LinksList
           heading="Life in resort info"
           description="Get the most out of your ski holiday with insider information about resort life, local events, and mountain culture. These resources will help you discover the best restaurants, activities, and hidden gems that make each resort unique."
-          links={lifeInResortData}
+          links={mergeWithCMS(cmsLifeInResortLinks, lifeInResortData)}
         />
 
         {/* Information Websites Section */}
         <LinksList
           heading="Information Websites"
           description="For comprehensive ski resort information, local knowledge, and community engagement, check out these websites."
-          links={informationWebsitesData}
+          links={mergeWithCMS(cmsInformationWebsitesLinks, informationWebsitesData)}
         />
 
 
@@ -755,7 +778,7 @@ export default function TravelInfoPage() {
         <LinksList
           heading="Self catering"
           description="If you're staying in self-catered accommodation, these local suppliers and delivery services will ensure you have everything you need for a comfortable stay. From fresh groceries to specialty items, they'll help you stock up without the hassle."
-          links={selfCateringData}
+          links={mergeWithCMS(cmsSelfCateringLinks, selfCateringData)}
         />
       </div>
 
