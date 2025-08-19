@@ -3,9 +3,9 @@ import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImage } from '@/types';
 
-// Check if Sanity environment variables are available
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
+// Sanity configuration - hardcoded for managed studio compatibility
+const projectId = 'hns0qja9';
+const dataset = 'production';
 const apiVersion = '2025-01-29';
 const useCdn = process.env.NODE_ENV === 'production';
 const token = process.env.SANITY_API_TOKEN;
