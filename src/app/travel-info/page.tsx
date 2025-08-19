@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 export default function TravelInfoPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [cmsLifeInResortLinks, setCmsLifeInResortLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
+  const [cmsAirlinesLinks, setCmsAirlinesLinks] = useState<Array<{ id: string; logo: string; companyName: string; url: string; description?: string }>>([]);
 
   const handleOpenForm = useCallback(() => {
     setIsFormOpen(true);
@@ -28,15 +29,26 @@ export default function TravelInfoPage() {
     // TODO: Handle form submission (API call, etc.)
   }, []);
 
-  // Fetch a single CMS-powered section without touching existing arrays
+  // Fetch CMS-powered sections
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(`/api/links?category=${encodeURIComponent('Life in resort info')}`);
-        if (!res.ok) return;
-        const json = await res.json();
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          setCmsLifeInResortLinks(json.data);
+        // Fetch Life in resort info
+        const lifeInResortRes = await fetch(`/api/links?category=${encodeURIComponent('Life in resort info')}`);
+        if (lifeInResortRes.ok) {
+          const lifeInResortJson = await lifeInResortRes.json();
+          if (lifeInResortJson.success && Array.isArray(lifeInResortJson.data) && lifeInResortJson.data.length > 0) {
+            setCmsLifeInResortLinks(lifeInResortJson.data);
+          }
+        }
+
+        // Fetch Airlines
+        const airlinesRes = await fetch(`/api/links?category=${encodeURIComponent('Airlines')}`);
+        if (airlinesRes.ok) {
+          const airlinesJson = await airlinesRes.json();
+          if (airlinesJson.success && Array.isArray(airlinesJson.data) && airlinesJson.data.length > 0) {
+            setCmsAirlinesLinks(airlinesJson.data);
+          }
         }
       } catch {
         // silent fail, page shows built-in sections
@@ -665,7 +677,7 @@ export default function TravelInfoPage() {
         <LinksList
           heading="Airlines"
           description="The low-cost airlines provide a multitude of flights into Geneva during the winter months. Several of them fly into Chambery during the week so have a look as to which will be most convenient to you."
-          links={airlinesData}
+          links={cmsAirlinesLinks.length > 0 ? cmsAirlinesLinks : airlinesData}
         />
 
         {/* Trains Section */}
