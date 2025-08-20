@@ -1,9 +1,9 @@
 // src/components/DatesStep.tsx
 import React, { useMemo, useCallback, useState, useRef, useEffect } from 'react';
-import { X, ChevronRight, ChevronLeft } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Calendar } from '@/components/Calendar';
 import { TimeSelector } from '@/components/TimeSelector';
-import { Button } from '@/components/Button';
+import { FormNavigation } from '@/components/FormNavigation';
 import { FormStepProps, DatesStepData } from '@/types';
 
 export interface DatesStepComponentProps extends FormStepProps {
@@ -177,7 +177,7 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
 
   return (
     <div 
-      className="w-full h-full relative"
+      className="w-full h-full relative min-h-[500px] pb-32"
       onKeyDown={handleKeyDown}
       role="form"
       aria-labelledby="dates-step-title"
@@ -192,21 +192,23 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
         <X className="w-4 h-4 tablet:w-5 tablet:h-5 desktop:w-5 desktop:h-5" />
       </button>
 
-      {/* Responsive Grid Container - Moved down 120px (10xl = 118px) */}
+      {/* Content Container with proper spacing for sticky footer */}
       <div className="
         w-full h-full
         px-3xl tablet:px-7xl desktop:px-9xl
-        grid grid-cols-4 tablet:grid-cols-8 desktop:grid-cols-12
-        gap-xl tablet:gap-2xl desktop:gap-3xl
-        pt-10xl py-6
+        pt-10xl pb-6
       ">
-        {/* Content Area - Middle 6/6/4 columns */}
+        {/* Content Area - spans same columns as navigation */}
         <div className="
-          col-span-4 
-          tablet:col-start-2 tablet:col-span-6 
-          desktop:col-start-4 desktop:col-span-6
-          space-y-6
+          grid grid-cols-4 tablet:grid-cols-8 desktop:grid-cols-12
+          gap-xl tablet:gap-2xl desktop:gap-3xl
         ">
+          <div className="
+            col-span-4 
+            tablet:col-start-2 tablet:col-span-6 
+            desktop:col-start-4 desktop:col-span-6
+            space-y-6
+          ">
           {/* Header */}
           <div className="flex items-baseline justify-between">
             <div className="flex-1">
@@ -283,49 +285,21 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
             </div>
           )}
 
-          {/* Navigation with Progress Dots and Buttons */}
-          <div className="flex items-center justify-between pt-4">
-            {/* Back Button */}
-            <Button
-              size="left-icon"
-              variant="secondary"
-              onClick={handlePrevious}
-            >
-              <ChevronLeft className="w-4 h-4" /> Back
-            </Button>
-
-            {/* Progress Dots - Centered in available space */}
-            <div className="flex-1 flex justify-center">
-              <div className="flex gap-2">
-                {Array.from({ length: totalSteps }, (_, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className={`
-                      w-3 h-3 rounded-full transition-all duration-300 ease-in-out
-                                      ${index <= currentStep - 1 
-                  ? 'bg-text-form scale-110' 
-                  : 'bg-border-secondary hover:bg-border-primary'
-                }
-                    `}
-                    aria-label={`Step ${index + 1} of ${totalSteps}`}
-                    disabled={index >= currentStep}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Next Button */}
-            <Button
-              size="right-icon"
-              onClick={handleNext}
-              disabled={!isStepValid}
-            >
-              Next <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
+          {/* Content continues... */}
+        </div>
         </div>
       </div>
+
+      {/* Sticky Footer Navigation */}
+      <FormNavigation
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        onNext={handleNext}
+        onPrevious={onPrevious}
+        isNextDisabled={!isStepValid}
+        isPreviousDisabled={false}
+        showProgressDots={true}
+      />
 
       {showReturnSoonWarning && (
         <div
@@ -353,23 +327,24 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
             </div>
             {/* Footer */}
             <div className="px-4xl py-3xl border-t border-border-secondary flex items-center justify-end gap-md">
-              <Button
-                variant="secondary"
-                size="md"
+              <button
+                type="button"
+                className="px-4 py-2 bg-background-secondary text-text-primary rounded-lg hover:bg-background-hover transition-colors"
                 onClick={() => setShowReturnSoonWarning(false)}
               >
                 Go back
-              </Button>
-              <Button
-                size="md"
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 bg-text-primary text-white rounded-lg hover:bg-text-primary/90 transition-colors"
                 onClick={() => {
                   setShowReturnSoonWarning(false);
                   onNext();
                 }}
-                ref={continueButtonRef as unknown as React.Ref<HTMLButtonElement>}
+                ref={continueButtonRef}
               >
                 Continue
-              </Button>
+              </button>
             </div>
           </div>
         </div>

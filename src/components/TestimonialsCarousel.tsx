@@ -1,8 +1,8 @@
 // src/components/TestimonialsCarousel.tsx
 'use client';
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { motion, useAnimation } from 'motion/react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Grid } from '@/components/Grid';
 import { TestimonialCard } from '@/components/CardLarge';
@@ -23,31 +23,28 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
   testimonials,
   className,
 }) => {
-  // Start from the middle set for true infinite scrolling
-  const [currentIndex, setCurrentIndex] = useState(testimonials.length);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
   const [screenSize, setScreenSize] = useState<'mobile' | 'tablet' | 'desktop'>('mobile');
+  const controls = useAnimation();
+  const trackRef = useRef<HTMLDivElement>(null);
+  
+  // Create extended array for seamless infinite scrolling
+  const extendedTestimonials = [...testimonials, ...testimonials];
 
-  // Calculate exact transform values for pixel-perfect positioning
-  const getTransformValue = () => {
-    // Card widths: Mobile: 280px, Tablet: 360px, Desktop: 408px
-    // Gaps: Mobile: 24px, Tablet: 20px, Desktop: 24px
-    const cardWithGap = {
-      mobile: 280 + 24,   // 304px per card
-      tablet: 360 + 20,   // 380px per card  
-      desktop: 408 + 24,  // 432px per card
-    };
-    
-    return {
-      mobile: -currentIndex * cardWithGap.mobile,
-      tablet: -currentIndex * cardWithGap.tablet,
-      desktop: -currentIndex * cardWithGap.desktop,
-    };
+  // Calculate card dimensions for different screen sizes
+  const cardDimensions = {
+    mobile: { width: 280, gap: 24 },
+    tablet: { width: 360, gap: 20 },
+    desktop: { width: 408, gap: 24 },
   };
 
-  const transformValues = getTransformValue();
-  const trackRef = React.useRef<HTMLDivElement>(null);
+  // Calculate exact transform values for pixel-perfect positioning
+  const getTransformValue = (index: number) => {
+    const { width, gap } = cardDimensions[screenSize];
+    return -(index * (width + gap));
+  };
 
   // Detect screen size for responsive transforms
   useEffect(() => {
@@ -66,49 +63,76 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
     return () => window.removeEventListener('resize', updateScreenSize);
   }, []);
 
-  const nextSlide = useCallback(() => {
-    if (isAnimating) return;
+  const nextSlide = useCallback(async () => {
+    if (isAnimating || testimonials.length === 0) return;
     setIsAnimating(true);
     
-    setCurrentIndex((prevIndex) => {
-      const newIndex = prevIndex + 1;
-      // If we're at the end of the duplicated set, prepare for seamless reset
-      if (newIndex >= testimonials.length * 2) {
-        // Set a timeout to reset position after transition completes
-        setTimeout(() => {
-          setCurrentIndex(testimonials.length);
-          setIsAnimating(false);
-        }, 400);
-        return newIndex;
+    const nextIndex = currentIndex + 1;
+    
+    // Animate to the next position
+    await controls.start({
+      x: getTransformValue(nextIndex),
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+        duration: 0.4
       }
-      return newIndex;
     });
     
-    // For normal slides, reset animation state after transition
-    setTimeout(() => setIsAnimating(false), 400);
-  }, [testimonials.length, isAnimating]);
+    // If we've reached the end of the first set, reset to beginning seamlessly
+    if (nextIndex >= testimonials.length) {
+      // Instantly jump back to position 0 (which is visually identical to position testimonials.length)
+      controls.set({ x: getTransformValue(0) });
+      setCurrentIndex(0);
+    } else {
+      setCurrentIndex(nextIndex);
+    }
+    
+    setIsAnimating(false);
+  }, [currentIndex, testimonials.length, isAnimating, controls, getTransformValue]);
 
-  const prevSlide = useCallback(() => {
-    if (isAnimating) return;
+  const prevSlide = useCallback(async () => {
+    if (isAnimating || testimonials.length === 0) return;
     setIsAnimating(true);
     
-    setCurrentIndex((prevIndex) => {
-      const newIndex = prevIndex - 1;
-      // If we're at the beginning of the duplicated set, prepare for seamless reset
-      if (newIndex < testimonials.length) {
-        // Set a timeout to reset position after transition completes
-        setTimeout(() => {
-          setCurrentIndex(testimonials.length * 2 - 1);
-          setIsAnimating(false);
-        }, 400);
-        return newIndex;
-      }
-      return newIndex;
-    });
+    if (currentIndex === 0) {
+      // If we're at the beginning, jump to the end of the first set and animate backwards
+      const lastIndex = testimonials.length - 1;
+      controls.set({ x: getTransformValue(testimonials.length) }); // Position at duplicate of first item
+      
+      await controls.start({
+        x: getTransformValue(lastIndex),
+        transition: {
+          type: "spring",
+          stiffness: 300,
+          damping: 30,
+          duration: 0.4
+        }
+      });
+      setCurrentIndex(lastIndex);
+    } else {
+      // Normal previous slide
+      const prevIndex = currentIndex - 1;
+      await controls.start({
+        x: getTransformValue(prevIndex),
+        transition: {
+          type: "spring",
+          stiffness: 300,
+          damping: 30,
+          duration: 0.4
+        }
+      });
+      setCurrentIndex(prevIndex);
+    }
     
-    // For normal slides, reset animation state after transition
-    setTimeout(() => setIsAnimating(false), 400);
-  }, [testimonials.length, isAnimating]);
+    setIsAnimating(false);
+  }, [currentIndex, testimonials.length, isAnimating, controls, getTransformValue]);
+
+  // Initialize animation position
+  useEffect(() => {
+    controls.set({ x: getTransformValue(currentIndex) });
+  }, [screenSize, controls, currentIndex, getTransformValue]);
 
   // Auto-play functionality
   useEffect(() => {
@@ -176,42 +200,36 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
           >
             <motion.div 
               className="flex items-center gap-6 tablet:gap-5 desktop:gap-6"
-              animate={{
-                x: transformValues[screenSize],
-              }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-                duration: 0.4
-              }}
+              animate={controls}
               ref={trackRef}
             >
-              {/* Render testimonials 3 times for infinite scrolling */}
-              {[...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => {
-                const n = testimonials.length;
-                const originalIndex = index % n;
+              {/* Render testimonials with duplicates for seamless infinite scrolling */}
+              {extendedTestimonials.map((testimonial, index) => {
+                const originalIndex = index % testimonials.length;
                 
-                // Normalize distance independent of which cloned set we're in
-                const activeIndex = ((currentIndex % n) + n) % n;
-                let relative = originalIndex - activeIndex; // range potentially [-n+1, n-1]
-                if (relative > n / 2) relative -= n;
-                if (relative < -n / 2) relative += n;
+                // Calculate distance from current active card
+                let distance = Math.abs(index - currentIndex);
+                
+                // For the duplicated set, also consider the wrapped distance
+                const wrappedDistance = Math.abs(index - currentIndex - testimonials.length);
+                if (wrappedDistance < distance) {
+                  distance = wrappedDistance;
+                }
                 
                 let opacity = 1;
                 let blur = 0;
                 let scale = 1;
                 
-                // Apply visual effects based on normalized distance
-                if (relative === 1) {
+                // Apply visual effects based on distance from active card
+                if (distance === 1) {
                   opacity = 0.48;
                   blur = 5;
                   scale = 0.95;
-                } else if (relative === 2) {
+                } else if (distance === 2) {
                   opacity = 0.24;
                   blur = 12;
                   scale = 0.9;
-                } else if (relative < 0 || relative > 2) {
+                } else if (distance > 2) {
                   opacity = 0;
                   blur = 12;
                   scale = 0.85;
@@ -219,7 +237,7 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
 
                 return (
                   <motion.div
-                    key={`${originalIndex}-${Math.floor(index / testimonials.length)}`}
+                    key={`testimonial-${originalIndex}-${Math.floor(index / testimonials.length)}`}
                     className="flex-shrink-0"
                     animate={{
                       opacity,

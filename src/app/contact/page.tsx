@@ -27,9 +27,37 @@ export default function ContactPage() {
     }));
   };
 
-  const handleSubmit = () => {
-    // Handle form submission
-    console.log('Form submitted:', formData);
+  const handleSubmit = async () => {
+    try {
+      // Send contact form data to API
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Contact form submitted successfully:', result);
+        alert('Thank you! Your message has been sent successfully.');
+        
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          message: '',
+        });
+      } else {
+        const error = await response.json();
+        console.error('Contact form submission failed:', error);
+        alert('Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      alert('Network error. Please check your connection and try again.');
+    }
   };
 
   const handleOpenForm = useCallback(() => {

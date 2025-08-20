@@ -66,7 +66,10 @@ export const Calendar: React.FC<CalendarProps> = ({
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
+    
+    // Convert Sunday (0) to 6, Monday (1) to 0, etc. for Monday start
+    let startingDayOfWeek = firstDay.getDay();
+    startingDayOfWeek = startingDayOfWeek === 0 ? 6 : startingDayOfWeek - 1;
 
     const days: Date[] = [];
 
@@ -124,7 +127,7 @@ export const Calendar: React.FC<CalendarProps> = ({
   };
 
   const days = getDaysInMonth(currentMonth);
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   return (
     <div className={`flex flex-col gap-2 ${className}`}>

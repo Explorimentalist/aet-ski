@@ -77,7 +77,7 @@ export const SuccessStep: React.FC<SuccessStepProps> = React.memo(({
           <div className="flex justify-center">
             <Button
               size="lg"
-              onClick={onGoHome}
+              onClick={() => window.location.href = '/'}
               className="
                 w-[154px]
                 h-[48px]

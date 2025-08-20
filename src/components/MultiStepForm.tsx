@@ -161,21 +161,47 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
   }, [validation.touched, validateCurrentStep, formData]);
 
   // Handle form submission (will be used in final step)
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     console.log('handleSubmit called, validation.isValid:', validation.isValid);
     console.log('formData:', formData);
     
-    // TEMPORARY: For testing purposes, always show success page
-    // TODO: Remove this bypass when email service is set up
-    onSubmit(formData as BookingFormData);
-    console.log('Setting showSuccess to true');
-    setShowSuccess(true);
-    
-    // ORIGINAL CODE (commented out for testing):
-    // if (validation.isValid) {
-    //   onSubmit(formData as BookingFormData);
-    //   setShowSuccess(true);
-    // }
+    if (validation.isValid) {
+      try {
+        // Send booking data to API
+        const response = await fetch('/api/booking', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('✅ Booking submitted successfully:', result);
+          
+          if (result.emailSent) {
+            console.log('📧 Emails sent successfully');
+          } else {
+            console.warn('⚠️ Emails not sent - check server logs');
+          }
+          
+          // Call onSubmit with the result
+          onSubmit(formData as BookingFormData);
+          setShowSuccess(true);
+        } else {
+          const error = await response.json();
+          console.error('❌ Booking submission failed:', error);
+          
+          // Show more specific error message
+          const errorMessage = error.message || 'Failed to submit booking. Please try again.';
+          alert(`Booking Error: ${errorMessage}`);
+        }
+      } catch (error) {
+        console.error('Error submitting booking:', error);
+        alert('Network error. Please check your connection and try again.');
+      }
+    }
   }, [validation.isValid, formData, onSubmit]);
 
   // Handle next step

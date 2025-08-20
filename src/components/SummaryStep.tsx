@@ -2,7 +2,7 @@
 import React, { useMemo, useCallback, useState } from 'react';
 import { X, Edit } from 'lucide-react';
 import { Textarea } from '@/components/Textarea';
-import { Button } from '@/components/Button';
+import { FormNavigation } from '@/components/FormNavigation';
 import { FormStepProps } from '@/types';
 
 export interface SummaryStepComponentProps extends FormStepProps {
@@ -64,35 +64,14 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
   // Handle form submission
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = useCallback(async () => {
-    console.log('SummaryStep: handleSubmit called');
+  const handleSubmit = useCallback(() => {
+    console.log('SummaryStep: handleSubmit called - delegating to parent');
     setIsSubmitting(true);
-    try {
-      // Call the real API
-      const response = await fetch('/api/booking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to submit booking');
-      }
-
-      console.log('SummaryStep: API response:', result);
-      console.log('SummaryStep: Calling onSubmit');
-      onSubmit(); // This will trigger the success page
-    } catch (error) {
-      console.error('Submission error:', error);
-      // TODO: Show error message to user
-      alert('Failed to submit booking. Please try again.');
-      setIsSubmitting(false);
-    }
-  }, [onSubmit, data]);
+    
+    // Simply call onSubmit - let the parent handle the API call
+    // This prevents duplicate API calls
+    onSubmit();
+  }, [onSubmit]);
 
   // Handle key navigation
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
@@ -104,7 +83,7 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
 
   return (
     <div 
-      className="w-full h-full relative"
+      className="w-full h-full relative min-h-[500px] pb-50"
       onKeyDown={handleKeyDown}
       role="form"
       aria-labelledby="summary-step-title"
@@ -119,21 +98,23 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
         <X className="w-4 h-4 tablet:w-5 tablet:h-5 desktop:w-5 desktop:h-5" />
       </button>
 
-      {/* Responsive Grid Container - Moved down 120px (10xl = 118px) */}
+      {/* Content Container with proper spacing for sticky footer */}
       <div className="
         w-full h-full
         px-3xl tablet:px-7xl desktop:px-9xl
-        grid grid-cols-4 tablet:grid-cols-8 desktop:grid-cols-12
-        gap-xl tablet:gap-2xl desktop:gap-3xl
-        pt-10xl py-6
+        pt-10xl pb-6
       ">
-        {/* Content Area - Middle 6/6/4 columns */}
+        {/* Content Area - spans same columns as navigation */}
         <div className="
-          col-span-4 
-          tablet:col-start-2 tablet:col-span-6 
-          desktop:col-start-4 desktop:col-span-6
-          space-y-6
+          grid grid-cols-4 tablet:grid-cols-8 desktop:grid-cols-12
+          gap-xl tablet:gap-2xl desktop:gap-3xl
         ">
+          <div className="
+            col-span-4 
+            tablet:col-start-2 tablet:col-span-6 
+            desktop:col-start-4 desktop:col-span-6
+            space-y-6
+          ">
           {/* Header */}
           <div className="flex items-baseline justify-between">
             <div className="flex-1">
@@ -284,19 +265,25 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
             className="w-full"
           />
 
-          {/* Submit Button */}
-          <div className="flex justify-end pt-4 pb-9xl">
-            <Button
-              size="lg"
-              onClick={handleSubmit}
-              loading={isSubmitting}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Submitting...' : 'Get a quote'}
-            </Button>
-          </div>
+          {/* Bottom spacing to ensure content is visible above navigation */}
+          <div className="h-40" />
+
+          {/* Content continues... */}
+        </div>
         </div>
       </div>
+
+      {/* Sticky Footer Navigation */}
+      <FormNavigation
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        onNext={handleSubmit}
+        onPrevious={() => {}} // No previous on final step
+        isNextDisabled={isSubmitting}
+        isPreviousDisabled={true}
+        nextButtonText={isSubmitting ? 'Submitting...' : 'Get a quote'}
+        showProgressDots={false}
+      />
     </div>
   );
 });
