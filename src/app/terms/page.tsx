@@ -7,7 +7,7 @@ import { Button } from '@/components/Button';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { MultiStepForm } from '@/components/MultiStepForm';
-import { useStickyNavigation } from '@/hooks/useStickyNavigation';
+import { PDFGenerator } from '@/lib/pdfGenerator';
 import { Download } from 'lucide-react';
 import { BookingFormData } from '@/types';
 
@@ -98,12 +98,6 @@ export default function TermsPage() {
   );
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  // Use sticky navigation hook with 84px trigger offset
-  const { navigationRef, containerRef } = useStickyNavigation({
-    triggerOffset: 84,
-    enabled: true
-  });
-
   // Scroll spy functionality
   useEffect(() => {
     const observerOptions = {
@@ -164,9 +158,41 @@ export default function TermsPage() {
     }
   };
 
-  const handleDownloadPDF = () => {
-    // TODO: Implement PDF download functionality
-    console.log('Download PDF clicked');
+  const handleDownloadPDF = async () => {
+    try {
+      // Show loading state
+      const button = document.querySelector('[data-download-button]') as HTMLButtonElement;
+      if (button) {
+        button.disabled = true;
+        button.innerHTML = '<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div> Generating PDF...';
+      }
+
+      // Generate PDF using optimized method (no DOM manipulation needed)
+      await PDFGenerator.generateTermsPDF(termsSections, {
+        filename: 'aet-terms-and-conditions.pdf',
+        format: 'a4',
+        orientation: 'portrait'
+      });
+
+      // Reset button state
+      if (button) {
+        button.disabled = false;
+        button.innerHTML = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download T&Cs in PDF';
+      }
+
+    } catch (error) {
+      console.error('PDF generation failed:', error);
+      
+      // Reset button state
+      const button = document.querySelector('[data-download-button]') as HTMLButtonElement;
+      if (button) {
+        button.disabled = false;
+        button.innerHTML = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download T&Cs in PDF';
+      }
+
+      // Show error message to user
+      alert('Failed to generate PDF. Please try again.');
+    }
   };
 
   const handleOpenForm = useCallback(() => {
@@ -204,9 +230,9 @@ export default function TermsPage() {
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Side Navigation Container */}
-            <div className="col-span-1 lg:col-span-4" ref={containerRef}>
-              {/* Side Navigation */}
-              <div ref={navigationRef} className="sticky top-[56px] md:top-[72px] z-10">
+            <div className="col-span-1 lg:col-span-4">
+              {/* Side Navigation - Let Tailwind CSS handle sticky behavior */}
+              <div className="sticky top-[56px] md:top-[72px] z-10">
                 <SideNavigation 
                   items={navigationItems}
                   onItemClick={handleSectionClick}

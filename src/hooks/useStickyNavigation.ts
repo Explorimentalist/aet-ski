@@ -34,36 +34,33 @@ export const useStickyNavigation = ({
     const stickyEnd = footerTop - navigationHeight - 48; // 48px is footer's py-12
 
     let isSticky = false;
-    let isStickyBottom = false;
 
     const updateStickyState = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
       if (scrollTop >= stickyStart && scrollTop < stickyEnd) {
-        // Normal sticky state
+        // Normal sticky state - navigation sticks to viewport
         if (!isSticky) {
           isSticky = true;
-          isStickyBottom = false;
           navigation.style.position = 'fixed';
           navigation.style.top = `${triggerOffset}px`;
           navigation.style.width = `${initialWidth}px`;
           navigation.style.zIndex = '10';
         }
       } else if (scrollTop >= stickyEnd) {
-        // Bottom sticky state - navigation stops at footer boundary
-        if (!isStickyBottom) {
+        // Reached footer boundary - revert to relative positioning
+        // This allows navigation to scroll naturally with content and align with download button
+        if (isSticky) {
           isSticky = false;
-          isStickyBottom = true;
-          navigation.style.position = 'fixed';
-          navigation.style.top = `${stickyEnd}px`;
-          navigation.style.width = `${initialWidth}px`;
-          navigation.style.zIndex = '10';
+          navigation.style.position = 'relative';
+          navigation.style.top = 'auto';
+          navigation.style.width = '100%';
+          navigation.style.zIndex = 'auto';
         }
       } else {
-        // Normal flow state
-        if (isSticky || isStickyBottom) {
+        // Above sticky start - normal document flow
+        if (isSticky) {
           isSticky = false;
-          isStickyBottom = false;
           navigation.style.position = 'relative';
           navigation.style.top = 'auto';
           navigation.style.width = '100%';
@@ -80,8 +77,8 @@ export const useStickyNavigation = ({
 
     // Handle window resize
     const handleResize = () => {
-      // Update width on resize
-      if (isSticky || isStickyBottom) {
+      // Update width on resize only if currently sticky
+      if (isSticky) {
         navigation.style.width = `${container.offsetWidth}px`;
       }
     };
