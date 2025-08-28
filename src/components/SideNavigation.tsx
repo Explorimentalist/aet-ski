@@ -25,34 +25,50 @@ export default function SideNavigation({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const navigationRef = useRef<HTMLDivElement>(null);
+  const [stickyThreshold, setStickyThreshold] = useState(56);
 
   useEffect(() => {
-    // Only run on mobile
-    if (typeof window === 'undefined' || window.innerWidth >= 768) return;
+    // Calculate sticky threshold based on actual navigation height
+    const calculateStickyThreshold = () => {
+      // Main navigation height: 56px on mobile, 72px on desktop
+      const mainNavHeight = window.innerWidth >= 768 ? 72 : 56;
+      setStickyThreshold(mainNavHeight);
+    };
 
     const handleScroll = () => {
       if (!navigationRef.current) return;
       
-      // Get the mobile navigation height
-      const mobileNavHeight = 56; // 56px (14rem) as defined in the terms page
       const scrollY = window.scrollY;
+      const shouldBeSticky = scrollY >= stickyThreshold;
       
-      // Check if we've scrolled past the top navigation
-      setIsSticky(scrollY >= mobileNavHeight);
+      // Only update if the state actually changes to prevent unnecessary re-renders
+      if (shouldBeSticky !== isSticky) {
+        setIsSticky(shouldBeSticky);
+      }
     };
 
+    const handleResize = () => {
+      calculateStickyThreshold();
+    };
+
+    // Initial calculations
+    calculateStickyThreshold();
+    handleScroll();
+
+    // Add event listeners
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
+    window.addEventListener('resize', handleResize, { passive: true });
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [isSticky, stickyThreshold]);
 
   const handleItemClick = (id: string) => {
     onItemClick(id);
     // On mobile, close the accordion after selection
-    if (window.innerWidth < 768) {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
       setIsExpanded(false);
     }
   };
@@ -92,59 +108,75 @@ export default function SideNavigation({
       </div>
 
       {/* Mobile Accordion Navigation */}
-      <div className="md:hidden relative z-20" ref={navigationRef}>
+      <div className="md:hidden relative" ref={navigationRef}>
+        {/* Main Toggle Button */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className={`
-            w-full bg-white shadow-md p-4 flex items-center justify-between
+            w-full bg-white shadow-md flex items-center justify-between
             transition-all duration-300 ease-in-out
             ${isSticky 
-              ? 'rounded-none fixed top-[56px] left-0 right-0 px-6' 
-              : 'rounded-lg'}
+              ? `fixed left-0 right-0 z-30 px-6 py-4 rounded-none shadow-lg
+                 backdrop-blur-md bg-white/95 border-b border-gray-100
+                 top-[${stickyThreshold}px]`
+              : 'relative px-4 py-4 rounded-lg z-20'}
           `}
+          style={isSticky ? { top: `${stickyThreshold}px` } : undefined}
         >
-          <span className="flex-1 text-left text-base font-medium text-gray-700">
+          <span className="flex-1 text-left text-base font-medium text-gray-700 truncate pr-2">
             {activeItem ? `${activeItem.number}. ${activeItem.title}` : 'Select Section'}
           </span>
-          {isExpanded ? (
-            <ChevronUp className="w-5 h-5 text-gray-700" />
-          ) : (
-            <ChevronDown className="w-5 h-5 text-gray-700" />
-          )}
+          <div className="flex-shrink-0">
+            {isExpanded ? (
+              <ChevronUp className="w-5 h-5 text-gray-700" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-700" />
+            )}
+          </div>
         </button>
 
+        {/* Dropdown Menu */}
         {isExpanded && (
-          <>
-            {/* Dropdown menu */}
-            <div className={`
+          <div 
+            className={`
               ${isSticky 
-                ? 'fixed top-[104px] left-0 right-0 rounded-none px-6' 
-                : 'absolute top-full left-0 right-0 mt-2 rounded-lg'}
-              bg-white shadow-lg overflow-hidden z-20
-              transition-all duration-300 ease-in-out
-            `}>
-              <nav className="py-2 max-h-[50vh] overflow-y-auto">
-                {items.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => handleItemClick(item.id)}
-                    className={`w-full flex items-start gap-2 px-4 py-3 text-left transition-colors duration-200 ${
-                      item.isActive 
-                        ? 'bg-gray-100 text-gray-700 font-semibold' 
-                        : 'text-gray-700/60 font-semibold hover:bg-gray-50 hover:text-gray-700'
-                    }`}
-                  >
-                                      <span className="text-base md:font-semibold font-normal leading-relaxed tracking-tight flex-shrink-0">
+                ? `fixed left-0 right-0 z-20 px-0 shadow-xl
+                   backdrop-blur-md bg-white/95 border-b border-gray-100`
+                : 'absolute left-0 right-0 mt-2 rounded-lg shadow-lg z-20 bg-white'}
+              overflow-hidden transition-all duration-300 ease-in-out
+            `}
+            style={isSticky ? { top: `${stickyThreshold + 56}px` } : undefined}
+          >
+            <nav className="py-2 max-h-[60vh] overflow-y-auto">
+              {items.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleItemClick(item.id)}
+                  className={`w-full flex items-start gap-3 px-6 py-3 text-left transition-colors duration-200 ${
+                    item.isActive 
+                      ? 'bg-gray-50 text-gray-700 font-semibold border-l-4 border-gray-700' 
+                      : 'text-gray-700/70 font-medium hover:bg-gray-50 hover:text-gray-700'
+                  }`}
+                >
+                  <span className="text-base font-medium leading-relaxed tracking-tight flex-shrink-0 min-w-[1.5rem]">
                     {item.number}
                   </span>
-                  <span className="text-base md:font-semibold font-normal leading-relaxed tracking-tight">
+                  <span className="text-base font-medium leading-relaxed tracking-tight">
                     {item.title}
                   </span>
-                  </button>
-                ))}
-              </nav>
-            </div>
-          </>
+                </button>
+              ))}
+            </nav>
+          </div>
+        )}
+
+        {/* Backdrop overlay when expanded and sticky */}
+        {isExpanded && isSticky && (
+          <div 
+            className="fixed inset-0 bg-black/10 backdrop-blur-sm z-10"
+            onClick={() => setIsExpanded(false)}
+            style={{ top: `${stickyThreshold + 56 + (items.length * 48) + 16}px` }}
+          />
         )}
       </div>
     </div>

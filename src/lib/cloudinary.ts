@@ -211,12 +211,19 @@ export function getLogoUrl(
 ) {
   const { height, width, format = 'auto', crop = 'scale' } = options;
 
-  // For SVG delivery: avoid any transformations that rasterize the asset.
-  // Return the raw SVG URL under the logos/ folder.
+  // For SVG format: use direct URL but let Cloudinary handle version IDs
   if (format === 'svg') {
-    return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/logos/${publicId}.svg`;
+    // Use the optimized URL function but with format 'auto' to let Cloudinary handle it
+    return getOptimizedImageUrl(`logos/${publicId}`, {
+      height,
+      width,
+      format: 'auto', // Let Cloudinary determine the best format for SVG
+      quality: 'auto',
+      crop,
+    });
   }
 
+  // For all other formats: use getOptimizedImageUrl to handle version IDs automatically
   return getOptimizedImageUrl(`logos/${publicId}`, {
     height,
     width,

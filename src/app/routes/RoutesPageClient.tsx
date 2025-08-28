@@ -8,6 +8,7 @@ import { PageHero } from '@/components/PageHero';
 import { MultiStepForm } from '@/components/MultiStepForm';
 import { useState, useCallback } from 'react';
 import { BookingFormData } from '@/types';
+import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
 
 export default function RoutesPageClient() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -28,12 +29,12 @@ export default function RoutesPageClient() {
   }, []);
 
   return (
-    <main className="min-h-screen">
+    <>
       {/* Fixed Navigation */}
       <Navigation onQuoteClick={handleOpenForm} />
       
       {/* Main Content */}
-      <div className="pt-[72px]">
+      <PageWrapper className="pt-[72px]">
         {/* Page Hero */}
         <PageHero
           heading="Airport Transfer Routes from Geneva, Lyon & Grenoble"
@@ -112,7 +113,7 @@ export default function RoutesPageClient() {
           mapImageSrc="https://res.cloudinary.com/dzrn3khsd/image/upload/v1755189664/a3f3c9ce-f1ef-4476-8716-b533c3ca9f00.png"
           mapImageAlt="Map showing Eurostar and TGV routes to Moutiers Station"
         />
-      </div>
+      </PageWrapper>
 
       {/* Footer */}
       <Footer onQuoteClick={handleOpenForm} />
@@ -123,7 +124,9 @@ export default function RoutesPageClient() {
         onClose={handleCloseForm}
         onSubmit={handleFormSubmit}
       />
-    </main>
+    </>
   );
 }
+
+
 

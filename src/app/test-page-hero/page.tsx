@@ -3,15 +3,17 @@
 
 import { PageHero } from '@/components/PageHero';
 import { Navigation } from '@/components/Navigation';
+import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
 
 export default function TestPageHero() {
   return (
-    <main className="min-h-screen">
+    <>
       {/* Fixed Navigation */}
       <Navigation />
       
       {/* Page Hero Component - Routes Example */}
-      <PageHero
+      <PageWrapper className="min-h-screen">
+        <PageHero
         heading="Routes"
         description="Deciding which airport to fly into can often be a simple case of choosing the most convenient flight from your local airport in the UK. You may find that the cost of the flight is the deciding factor but it's also important to understand the geography of where you'll arrive as well."
         imageSrc="https://via.placeholder.com/1271x706/CFE0F6/F5F5F5?text=Routes+Map"
@@ -37,6 +39,7 @@ export default function TestPageHero() {
           </p>
         </div>
       </section>
-    </main>
+      </PageWrapper>
+    </>
   );
 }

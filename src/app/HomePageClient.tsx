@@ -16,6 +16,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookingFormData } from '@/types';
 import { TestimonialCard } from '@/components/CardLarge';
+import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
 
 export default function HomePageClient() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -68,12 +69,12 @@ export default function HomePageClient() {
   }, [router]);
 
   return (
-    <main className="min-h-screen">
+    <>
       {/* Fixed Navigation */}
       <Navigation onQuoteClick={handleOpenForm} />
       
       {/* Main Content with top padding to account for fixed nav */}
-      <div className="pt-[72px] md:pt-[72px]">
+      <PageWrapper className="pt-[72px] md:pt-[72px]">
 
       {/* Hero Section */}
       <PageHeroHome onQuoteClick={handleOpenForm} />
@@ -267,8 +268,10 @@ export default function HomePageClient() {
 
       <Footer onQuoteClick={handleOpenForm} />
       
-      </div> {/* Close main content wrapper */}
-    </main>
+      </PageWrapper> {/* Close PageWrapper */}
+    </>
   );
 }
+
+
 

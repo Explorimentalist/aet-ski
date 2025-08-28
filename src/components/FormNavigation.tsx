@@ -1,8 +1,10 @@
 // src/components/FormNavigation.tsx
 import React from 'react';
 import { createPortal } from 'react-dom';
+import { motion } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/Button';
+import { motionTokens, useMotionSafeSimple } from '@/motion';
 
 export interface FormNavigationProps {
   currentStep: number;
@@ -27,19 +29,29 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
   previousButtonText = 'Previous',
   showProgressDots = true,
 }) => {
+  const shouldAnimate = useMotionSafeSimple();
+
   // Create portal to render outside Modal's scrollable context
   const navigationContent = (
-    <div className="
-      fixed bottom-0 left-0 right-0 
-      border-t border-border-secondary
-      px-3xl tablet:px-7xl desktop:px-9xl
-      py-6xl
-      backdrop-blur-[24px]
-      z-[60]
-    "
-    style={{
-      background: 'linear-gradient(to bottom, rgba(245, 245, 245, 0.9) 0%, rgba(245, 245, 245, 0.3) 50%, transparent 100%)',
-    }}
+    <motion.div
+      initial={shouldAnimate ? "hidden" : false}
+      animate={shouldAnimate ? "visible" : undefined}
+      variants={motionTokens.patterns.entrance}
+      transition={{
+        duration: motionTokens.d.medium,
+        ease: motionTokens.e.brand
+      }}
+      className="
+        fixed bottom-0 left-0 right-0 
+        border-t border-border-secondary
+        px-3xl tablet:px-7xl desktop:px-9xl
+        py-6xl
+        backdrop-blur-[24px]
+        z-[60]
+      "
+      style={{
+        background: 'linear-gradient(to bottom, rgba(245, 245, 245, 0.9) 0%, rgba(245, 245, 245, 0.3) 50%, transparent 100%)',
+      }}
     >
       <div className="
         grid grid-cols-4 tablet:grid-cols-8 desktop:grid-cols-12
@@ -103,7 +115,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
         </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 
   // Use portal to render outside Modal's scrollable context

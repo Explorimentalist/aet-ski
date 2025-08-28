@@ -1,5 +1,10 @@
 // src/components/MultiStepForm.tsx
+// Enhanced multi-step form with sophisticated step transition animations
+// Features slide transitions, stagger effects, and progress indicators
+
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { motionTokens, useMotionSafeSimple } from '@/motion';
 import { Modal } from '@/components/Modal';
 import { JourneyStep } from '@/components/JourneyStep';
 import { DatesStep } from '@/components/DatesStep';
@@ -335,13 +340,49 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
     }
   }, [currentStep, formData, handleFormUpdate, handleNext, handlePrevious, validation, handleClose, handleEditStep, markFieldAsTouched, showSuccess, handleGoHome, handleSubmit]);
 
+  const shouldAnimate = useMotionSafeSimple();
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
+      coordinateWithFixedBottom={true}
     >
       <FormErrorBoundary>
-        {currentStepComponent}
+        <div className="relative min-h-full">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={showSuccess ? 'success' : `step-${currentStep}`}
+              initial={shouldAnimate ? "enter" : false}
+              animate={shouldAnimate ? "center" : undefined}
+              exit={shouldAnimate ? "exit" : undefined}
+              variants={motionTokens.components.multiStep.step}
+              transition={{
+                type: "tween",
+                duration: motionTokens.d.short,
+                ease: motionTokens.e.brand
+              }}
+              className="w-full"
+            >
+              {/* Step Content with Stagger Animation */}
+              <motion.div
+                initial={shouldAnimate ? "hidden" : false}
+                animate={shouldAnimate ? "visible" : undefined}
+                variants={motionTokens.components.multiStep.content}
+              >
+                <motion.div
+                  variants={motionTokens.patterns.entrance}
+                  transition={{
+                    duration: motionTokens.d.short,
+                    ease: motionTokens.e.brand
+                  }}
+                >
+                  {currentStepComponent}
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </FormErrorBoundary>
     </Modal>
   );

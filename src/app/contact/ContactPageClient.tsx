@@ -11,6 +11,7 @@ import { Button } from '@/components/Button';
 import { Grid } from '@/components/Grid';
 import { BookingFormData } from '@/types';
 import { Mail, MapPinned } from 'lucide-react';
+import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
 
 export default function ContactPageClient() {
   const [formData, setFormData] = useState({
@@ -76,12 +77,12 @@ export default function ContactPageClient() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background-primary">
+    <>
       {/* Navigation */}
       <Navigation onQuoteClick={handleOpenForm} />
 
       {/* Main Content */}
-      <main className="pt-[72px] pb-0">
+      <PageWrapper className="pt-[72px] pb-0">
         <Grid container className="py-12 tablet:py-16 desktop:py-24">
           {/* Page Heading */}
           <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-12 mb-16">
@@ -199,7 +200,7 @@ export default function ContactPageClient() {
             </Grid>
           </div>
         </Grid>
-      </main>
+      </PageWrapper>
 
       {/* Footer */}
       <Footer onQuoteClick={handleOpenForm} />
@@ -210,7 +211,9 @@ export default function ContactPageClient() {
         onClose={handleCloseForm}
         onSubmit={handleFormSubmit}
       />
-    </div>
+    </>
   );
 }
+
+
 

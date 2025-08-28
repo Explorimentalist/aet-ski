@@ -10,6 +10,7 @@ import { MultiStepForm } from '@/components/MultiStepForm';
 import { PDFGenerator } from '@/lib/pdfGenerator';
 import { Download } from 'lucide-react';
 import { BookingFormData } from '@/types';
+import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
 
 interface TermsSection {
   id: string;
@@ -211,14 +212,14 @@ export default function TermsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
       {/* Fixed Navigation */}
       <Navigation onQuoteClick={handleOpenForm} />
 
       {/* Main Content with proper spacing for fixed navigation */}
-      <div className="pt-14 md:pt-[72px]"> {/* Add top padding to account for fixed navigation on all devices */}
+      <PageWrapper className="pt-14 md:pt-[72px]"> {/* Add top padding to account for fixed navigation on all devices */}
         {/* Header */}
-        <div className="bg-gray-50">
+        <div>
           <div className="max-w-7xl mx-auto px-6 py-8">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-700 leading-tight tracking-tight">
               Terms and conditions
@@ -276,7 +277,7 @@ export default function TermsPage() {
             </div>
           </div>
         </div>
-      </div>
+      </PageWrapper>
 
       {/* Footer */}
       <Footer onQuoteClick={handleOpenForm} />
@@ -287,6 +288,6 @@ export default function TermsPage() {
         onClose={handleCloseForm}
         onSubmit={handleFormSubmit}
       />
-    </div>
+    </>
   );
 } 

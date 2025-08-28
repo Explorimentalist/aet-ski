@@ -1,10 +1,11 @@
 // src/components/JourneyStep.tsx
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { X } from 'lucide-react';
 import { Select } from '@/components/Select';
 import { FormNavigation } from '@/components/FormNavigation';
 import { FormStepProps } from '@/types';
 import { locations } from '@/data/locations';
+import { filterDestinationOptions, validateDifferentLocations } from '@/utils/locationFilters';
 
 export interface JourneyStepComponentProps extends FormStepProps {
   onClose: () => void;
@@ -25,8 +26,21 @@ export const JourneyStep: React.FC<JourneyStepComponentProps> = React.memo(({
     destinationPoint: '',
   }, [data.journey]);
 
+  // Track user interactions to determine when to show errors
+  const [hasInteracted, setHasInteracted] = useState({
+    collectionPoint: false,
+    destinationPoint: false,
+  });
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+
   // Memoize the categorized options for better performance
   const categorizedOptions = useMemo(() => locations, []);
+
+  // Filter destination options to exclude the selected collection point
+  const filteredDestinationOptions = useMemo(() => 
+    filterDestinationOptions(categorizedOptions, journeyData.collectionPoint),
+    [categorizedOptions, journeyData.collectionPoint]
+  );
 
   // Handle journey type change
   const handleJourneyTypeChange = useCallback((type: 'one-way' | 'return') => {
@@ -40,6 +54,7 @@ export const JourneyStep: React.FC<JourneyStepComponentProps> = React.memo(({
 
   // Handle collection point change
   const handleCollectionPointChange = useCallback((value: string) => {
+    setHasInteracted(prev => ({ ...prev, collectionPoint: true }));
     onUpdate({
       journey: {
         ...journeyData,
@@ -50,6 +65,7 @@ export const JourneyStep: React.FC<JourneyStepComponentProps> = React.memo(({
 
   // Handle destination point change
   const handleDestinationPointChange = useCallback((value: string) => {
+    setHasInteracted(prev => ({ ...prev, destinationPoint: true }));
     onUpdate({
       journey: {
         ...journeyData,
@@ -58,15 +74,56 @@ export const JourneyStep: React.FC<JourneyStepComponentProps> = React.memo(({
     });
   }, [journeyData, onUpdate]);
 
+  // Enhanced validation with location difference check
+  const validationErrors = useMemo(() => {
+    const errors: Record<string, string> = {};
+    
+    // Only show errors if user has interacted or attempted submit
+    const shouldShowErrors = hasAttemptedSubmit || 
+      hasInteracted.collectionPoint || 
+      hasInteracted.destinationPoint;
+    
+    if (!shouldShowErrors) {
+      return errors;
+    }
+    
+    if (!journeyData.collectionPoint) {
+      errors.collectionPoint = 'Please select a collection point';
+    }
+    
+    if (!journeyData.destinationPoint) {
+      errors.destinationPoint = 'Please select a destination';
+    }
+    
+    // Check if locations are different - only show this error if both fields have values
+    if (journeyData.collectionPoint && journeyData.destinationPoint) {
+      const locationValidation = validateDifferentLocations(
+        journeyData.collectionPoint, 
+        journeyData.destinationPoint
+      );
+      
+      if (!locationValidation.isValid && locationValidation.error) {
+        errors.destinationPoint = locationValidation.error;
+      }
+    }
+    
+    return errors;
+  }, [journeyData, hasInteracted, hasAttemptedSubmit]);
+
   // Validate current step
   const isStepValid = useMemo(() => {
-    return journeyData.collectionPoint && journeyData.destinationPoint;
+    return journeyData.collectionPoint && 
+           journeyData.destinationPoint && 
+           journeyData.collectionPoint !== journeyData.destinationPoint;
   }, [journeyData]);
 
   // Handle next step
   const handleNext = useCallback(() => {
     if (isStepValid) {
       onNext();
+    } else {
+      // Mark that user has attempted to submit, so show all relevant errors
+      setHasAttemptedSubmit(true);
     }
   }, [isStepValid, onNext]);
 
@@ -77,7 +134,6 @@ export const JourneyStep: React.FC<JourneyStepComponentProps> = React.memo(({
       handleNext();
     }
   }, [isStepValid, handleNext]);
-
 
   return (
     <div 
@@ -186,21 +242,28 @@ export const JourneyStep: React.FC<JourneyStepComponentProps> = React.memo(({
             value={journeyData.collectionPoint}
             onChange={handleCollectionPointChange}
             required
-            error={validation.errors.collectionPoint}
+            error={validationErrors.collectionPoint}
             className="w-full"
           />
 
-          {/* Destination Point */}
-          <Select
-            label="Destination"
-            placeholder="Select your destination"
-            categorizedOptions={categorizedOptions}
-            value={journeyData.destinationPoint}
-            onChange={handleDestinationPointChange}
-            required
-            error={validation.errors.destinationPoint}
-            className="w-full"
-          />
+          {/* Destination Point - with filtered options */}
+          <div className="space-y-2">
+            <Select
+              label="Destination"
+              placeholder="Select your destination"
+              categorizedOptions={filteredDestinationOptions}
+              value={journeyData.destinationPoint}
+              onChange={handleDestinationPointChange}
+              required
+              error={validationErrors.destinationPoint}
+              className="w-full"
+            />
+            {journeyData.collectionPoint && !validationErrors.destinationPoint && (
+              <p className="text-sm text-text-secondary">
+                Choose a different location from your collection point
+              </p>
+            )}
+          </div>
         </div>
         </div>
       </div>

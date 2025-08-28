@@ -1,5 +1,10 @@
 // src/components/Modal.tsx
+// Enhanced Modal with sophisticated entrance/exit animations
+// Features overlay fade, content scale, and focus management
+
 import React, { useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { motionTokens, useMotionSafeSimple } from '@/motion';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -8,6 +13,7 @@ export interface ModalProps {
   className?: string;
   closeOnOverlayClick?: boolean;
   closeOnEscape?: boolean;
+  coordinateWithFixedBottom?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> = React.memo(({
@@ -17,6 +23,7 @@ export const Modal: React.FC<ModalProps> = React.memo(({
   className = '',
   closeOnOverlayClick = true,
   closeOnEscape = true,
+  coordinateWithFixedBottom = false,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
@@ -62,30 +69,58 @@ export const Modal: React.FC<ModalProps> = React.memo(({
     }
   }, [isOpen, handleEscape]);
 
-  if (!isOpen) return null;
+  const shouldAnimate = useMotionSafeSimple();
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
-      onClick={handleOverlayClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-    >
-      <div
-        ref={modalRef}
-        className={`
-          w-full h-full overflow-y-auto
-          bg-background-primary
-          transform transition-all duration-300 ease-out
-          ${className}
-        `}
-        tabIndex={-1}
-        role="document"
-      >
-        {children}
-      </div>
-    </div>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="fixed inset-0 z-50"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+          initial={shouldAnimate ? "hidden" : false}
+          animate={shouldAnimate ? "visible" : undefined}
+          exit={shouldAnimate ? "exit" : undefined}
+          variants={motionTokens.components.modal.overlay}
+          transition={{
+            duration: motionTokens.d.medium,
+            ease: motionTokens.e.fade
+          }}
+        >
+          {/* Backdrop Overlay */}
+          <motion.div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={handleOverlayClick}
+            variants={motionTokens.components.modal.overlay}
+            transition={{
+              duration: motionTokens.d.medium,
+              ease: motionTokens.e.fade
+            }}
+          />
+          
+          {/* Modal Content */}
+          <motion.div
+            ref={modalRef}
+            className={`
+              relative w-full h-full overflow-y-auto
+              bg-background-primary
+              ${className}
+            `}
+            tabIndex={-1}
+            role="document"
+            variants={motionTokens.components.modal.content}
+            transition={{
+              duration: motionTokens.d.medium,
+              ease: motionTokens.e.brand,
+              delay: coordinateWithFixedBottom ? 0 : (shouldAnimate ? motionTokens.stagger.xs : 0)
+            }}
+          >
+            {children}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 });
 
