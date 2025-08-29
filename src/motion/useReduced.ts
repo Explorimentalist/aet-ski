@@ -1,3 +1,5 @@
+'use client';
+
 // src/motion/useReduced.ts
 // Motion utilities for handling reduced motion preferences
 // Provides consistent motion safety across components

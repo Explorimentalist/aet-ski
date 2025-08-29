@@ -63,7 +63,7 @@ export const Navigation: React.FC<NavigationProps> = ({
       >
         {/* Progressive Blur Background */}
         <div 
-          className="absolute inset-0 pointer-events-none"
+          className="absolute top-0 left-0 right-0 h-[72px] pointer-events-none"
           style={{
             zIndex: -1,
           }}
@@ -255,7 +255,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   );
 };
 
-// Desktop Navigation Link with underline draw animation
+// Desktop Navigation Link with enhanced drawing underline animation
 interface NavigationLinkProps {
   item: NavigationItem;
   isActive: boolean;
@@ -280,26 +280,45 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({ item, isActive, shouldA
         {item.label}
       </span>
       
-      {/* Underline */}
+      {/* Enhanced Drawing Underline Animation */}
       <motion.div
-        className="absolute bottom-0 left-0 h-[1px] bg-[#1D4747]"
+        className="absolute bottom-0 left-0 right-0 h-[1px] overflow-hidden"
         initial={false}
         animate={{
-          width: isActive ? '100%' : '0%',
           opacity: isActive ? 1 : 0,
         }}
-        whileHover={{
-          width: shouldAnimate ? '100%' : (isActive ? '100%' : '0%'),
-          opacity: shouldAnimate ? 1 : (isActive ? 1 : 0),
-        }}
         transition={{
-          duration: shouldAnimate ? motionTokens.d.short : 0,
+          duration: motionTokens.d.short,
           ease: motionTokens.e.brand,
         }}
-        style={{
-          originX: 0,
-        }}
-      />
+      >
+        {/* Active State Underline - Always visible when active */}
+        {isActive && (
+          <motion.div
+            className="absolute bottom-0 left-0 h-[1px] bg-[#1D4747]"
+            initial={{ width: 0 }}
+            animate={{ width: '100%' }}
+            transition={{
+              duration: motionTokens.d.short,
+              ease: motionTokens.e.brand,
+            }}
+          />
+        )}
+        
+        {/* Hover Underline - Drawing animation from left to right */}
+        <motion.div
+          className="absolute bottom-0 left-0 h-[1px] bg-[#1D4747]"
+          initial={{ width: 0 }}
+          whileHover={shouldAnimate ? { width: '100%' } : {}}
+          transition={{
+            duration: motionTokens.d.short,
+            ease: motionTokens.e.brand,
+          }}
+          style={{
+            originX: 0, // Ensures animation starts from left
+          }}
+        />
+      </motion.div>
     </Link>
   );
 };

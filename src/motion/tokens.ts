@@ -177,6 +177,70 @@ export const motionTokens = {
     },
   },
   
+  // Glassmorphism page transition tokens
+  glassmorphism: {
+    // Overlay styling
+    overlay: {
+      background: 'rgba(245, 245, 245, 0.95)',     // background.primary with 95% opacity for better visibility
+      backdropBlur: '24px',                        // Strong blur for premium feel
+      borderRadius: '0px',                         // No radius for full-screen overlay
+    },
+    
+    // Three-phase timing (total: 1.2s)
+    timing: {
+      slideIn: 0.48,      // Phase 1: Overlay slides in (medium duration)
+      pause: 0.24,        // Phase 2: Brief pause (short duration)
+      slideOut: 0.48,     // Phase 3: Overlay slides out (medium duration)
+      total: 1.20,        // Total transition time
+    },
+    
+    // Animation variants for the overlay
+    overlay_variants: {
+      initial: {
+        y: '100%',                    // Start below viewport
+        opacity: 1,
+      },
+      covering: {
+        y: '0%',                      // Cover the screen
+        opacity: 1,
+        transition: {
+          duration: 0.48,
+          ease: [0.25, 0.90, 0.30, 1],  // Brand easing
+          type: 'tween',
+        }
+      },
+      exit: {
+        y: '-100%',                   // Exit above viewport
+        opacity: 1,
+        transition: {
+          duration: 0.48,
+          ease: [0.25, 0.90, 0.30, 1],  // Brand easing
+          type: 'tween',
+          delay: 0.24,                  // Pause duration
+        }
+      }
+    },
+    
+    // Content variants (hidden during transition)
+    content_variants: {
+      hidden: {
+        opacity: 0,
+        y: 8,
+        scale: 0.99,
+      },
+      visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+          duration: 0.48,
+          ease: [0.25, 0.90, 0.30, 1],
+          delay: 0.72,                  // After overlay covers + pause
+        }
+      }
+    }
+  },
+
   // Component-specific animation patterns
   components: {
     // Navigation & Layout
@@ -387,7 +451,7 @@ export type MotionTransitions = typeof motionTokens.transitions;
 // Utility functions for common animation operations
 export const motionUtils = {
   // Create reduced motion alternatives
-  createReducedMotion: (normal: any, reduced: any) => {
+  createReducedMotion: (normal: Record<string, unknown>, reduced: Record<string, unknown>) => {
     return {
       ...normal,
       reduced: reduced
@@ -395,7 +459,7 @@ export const motionUtils = {
   },
   
   // Create staggered children variants
-  createStaggered: (staggerDelay: number = 0.08, childVariants: any) => {
+  createStaggered: (staggerDelay: number = 0.08, childVariants: Record<string, unknown>) => {
     return {
       hidden: {},
       visible: {
@@ -409,7 +473,7 @@ export const motionUtils = {
   },
   
   // Create responsive animation variants
-  createResponsive: (mobile: any, tablet: any, desktop: any) => {
+  createResponsive: (mobile: Record<string, unknown>, tablet: Record<string, unknown>, desktop: Record<string, unknown>) => {
     return {
       mobile,
       tablet,

@@ -150,3 +150,4 @@ async function testAllLogos() {
 // Run the test
 testAllLogos().catch(console.error);
 
+

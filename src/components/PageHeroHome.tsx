@@ -9,7 +9,7 @@ interface PageHeroHomeProps {
 
 export const PageHeroHome: React.FC<PageHeroHomeProps> = ({ onQuoteClick }) => {
   return (
-    <section className="relative">
+    <section className="relative bg-background-primary">
       <Grid container>
         {/* Background Image Container - Full width across all devices */}
         <div className={GridLayouts.heroImage}>

@@ -255,7 +255,7 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
 
           {/* Additional Information */}
           <Textarea
-            label="Additional information"
+            label="Special requests"
             placeholder="Any additional information or special requests..."
             value={passengerData.specialRequests || ''}
             onChange={handleAdditionalInfoChange}

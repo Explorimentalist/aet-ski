@@ -106,3 +106,4 @@ function createSignature(timestamp) {
 // Main execution
 listLogos().catch(console.error);
 
+

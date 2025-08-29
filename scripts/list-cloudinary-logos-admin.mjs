@@ -145,3 +145,4 @@ async function listLogos() {
 // Main execution
 listLogos().catch(console.error);
 
+

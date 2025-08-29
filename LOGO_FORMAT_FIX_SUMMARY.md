@@ -124,3 +124,4 @@ node scripts/test-logo-formats.mjs
 
 This solution ensures that all logos display correctly regardless of their actual format in Cloudinary, while maintaining optimal performance and SEO benefits.
 
+

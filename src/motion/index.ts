@@ -28,6 +28,13 @@ export {
   PageSection,
 } from './PageWrapper';
 
+// Glassmorphism overlay system
+export {
+  GlassmorphismOverlay,
+  useGlassmorphismTransition,
+  GlassmorphismContent,
+} from './GlassmorphismOverlay';
+
 // Re-export motion components for convenience
 export { motion, AnimatePresence } from 'motion/react';
 export type { Variants, Transition, MotionProps } from 'motion/react';

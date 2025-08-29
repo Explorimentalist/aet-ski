@@ -217,7 +217,7 @@ export default function TermsPage() {
       <Navigation onQuoteClick={handleOpenForm} />
 
       {/* Main Content with proper spacing for fixed navigation */}
-      <PageWrapper className="pt-14 md:pt-[72px]"> {/* Add top padding to account for fixed navigation on all devices */}
+      <PageWrapper className="pt-14 md:pt-[72px] bg-background-primary"> {/* Add top padding to account for fixed navigation on all devices */}
         {/* Header */}
         <div>
           <div className="max-w-7xl mx-auto px-6 py-8">

@@ -1,14 +1,19 @@
 'use client';
 
 // src/motion/PageTransition.tsx
-// Page transition wrapper for route changes
-// Hybrid approach: fixed nav + animated page container
+// Glassmorphism page transition system
+// Three-phase overlay transition: slide-in → pause → slide-out
 
-import React, { ReactNode } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { ReactNode, useEffect } from 'react';
+import { AnimatePresence } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import { motionTokens as T } from './tokens';
 import { useMotionSafe } from './useReduced';
+import { 
+  GlassmorphismOverlay, 
+  useGlassmorphismTransition,
+  GlassmorphismContent 
+} from './GlassmorphismOverlay';
 
 interface PageTransitionProps {
   children: ReactNode;
@@ -17,19 +22,40 @@ interface PageTransitionProps {
 }
 
 /**
- * Page transition wrapper component
- * Handles route changes with smooth animations
- * Fixed navigation remains static while page content animates
+ * Glassmorphism page transition wrapper component
+ * Implements premium three-phase overlay transition system
+ * Phase 1: Overlay slides up to cover screen
+ * Phase 2: Brief pause while content loads
+ * Phase 3: Overlay slides up and exits, revealing new content
  */
 export const PageTransition: React.FC<PageTransitionProps> = ({
   children,
   className = '',
-  mode = 'wait',
 }) => {
   const pathname = usePathname();
-  const { prefersReduced, transition: safeTransition } = useMotionSafe();
+  const { prefersReduced } = useMotionSafe();
+  const [prevPathname, setPrevPathname] = React.useState<string | null>(null);
   
-  // For reduced motion, render without animations
+  const {
+    isOverlayVisible,
+    isContentReady,
+    startTransition,
+    handleOverlayComplete,
+  } = useGlassmorphismTransition();
+  
+  // Detect route changes and trigger glassmorphism transition
+  useEffect(() => {
+    if (prevPathname === null) {
+      // First mount - just set the pathname without transition
+      setPrevPathname(pathname);
+    } else if (pathname !== prevPathname) {
+      // Route change detected - trigger transition
+      startTransition();
+      setPrevPathname(pathname);
+    }
+  }, [pathname, prevPathname, startTransition]);
+  
+  // For reduced motion, render simple static content
   if (prefersReduced) {
     return (
       <main className={className}>
@@ -38,42 +64,27 @@ export const PageTransition: React.FC<PageTransitionProps> = ({
     );
   }
   
-  // Page transition variants - optimized to prevent double animation
-  const pageVariants = {
-    initial: {
-      opacity: 0,
-      y: prefersReduced ? 0 : 16,
-    },
-    animate: {
-      opacity: 1,
-      y: 0,
-    },
-    exit: {
-      opacity: 0,
-      y: prefersReduced ? 0 : -16,
-    },
-  };
-  
-  // Page transition configuration
-  const pageTransition = {
-    duration: T.d.long,
-    ease: T.e.brand,
-  };
-  
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.main
-        key={pathname}
-        className={className}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        variants={pageVariants}
-        transition={pageTransition}
-      >
-        {children}
-      </motion.main>
-    </AnimatePresence>
+    <>
+      {/* Glassmorphism overlay */}
+      <GlassmorphismOverlay
+        isVisible={isOverlayVisible}
+        onComplete={handleOverlayComplete}
+      />
+      
+      {/* Page content with coordinated animation */}
+      <AnimatePresence mode="wait" initial={false}>
+        <GlassmorphismContent
+          key={pathname}
+          isReady={isContentReady}
+          className={className}
+        >
+          <main>
+            {children}
+          </main>
+        </GlassmorphismContent>
+      </AnimatePresence>
+    </>
   );
 };
 
@@ -82,7 +93,7 @@ export const PageTransition: React.FC<PageTransitionProps> = ({
  * Use this for page-specific entrance sequences
  */
 export const usePageEntrance = () => {
-  const { prefersReduced, transition: safeTransition } = useMotionSafe();
+  const { prefersReduced } = useMotionSafe();
   
   if (prefersReduced) {
     return {
@@ -105,7 +116,10 @@ export const usePageEntrance = () => {
         },
       },
     },
-    transition: safeTransition.medium,
+    transition: {
+      duration: T.d.medium,
+      ease: T.e.brand,
+    },
   };
 };
 

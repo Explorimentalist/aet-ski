@@ -83,7 +83,7 @@ export default function HomePageClient() {
       <MarqueeRebrand />
 
       {/* The Transfers Section */}
-      <section className="py-24">
+      <section className="py-24 bg-background-primary">
         <Grid container className="gap-grid-mobile tablet:gap-grid-tablet desktop:gap-grid-desktop">
           {/* Left Column - Content (3/3/4 columns) */}
           <div className="col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3">
@@ -223,7 +223,7 @@ export default function HomePageClient() {
               <CardSmall
                 icon={CheckCircle}
                 title="Reliable service"
-                description="We value your time and for that reason punctuality is paramount."
+                description="We have 90% returning customers that’s why we are so dependable"
                 className="flex-shrink-0"
                 variant="flex"
               />
@@ -232,7 +232,7 @@ export default function HomePageClient() {
               <CardSmall
                 icon={Bus}
                 title="Over 1700 journeys"
-                description="Over 10 years of experience bringing people to the joy of the slopes"
+                description="More than 10 years of experience bringing people to the joy of the slopes"
                 className="flex-shrink-0"
                 variant="flex"
               />
@@ -245,7 +245,7 @@ export default function HomePageClient() {
       <TestimonialsCarousel testimonials={testimonials} />
 
       {/* CTA Section */}
-      <section className="py-24 px-6">
+      <section className="py-24 px-6 bg-background-primary">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-heading text-3xl font-bold text-text-form mb-8">
             Ready to book your transfer?

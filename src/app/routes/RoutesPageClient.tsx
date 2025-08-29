@@ -34,7 +34,7 @@ export default function RoutesPageClient() {
       <Navigation onQuoteClick={handleOpenForm} />
       
       {/* Main Content */}
-      <PageWrapper className="pt-[72px]">
+      <PageWrapper className="pt-[72px] bg-background-primary">
         {/* Page Hero */}
         <PageHero
           heading="Airport Transfer Routes from Geneva, Lyon & Grenoble"

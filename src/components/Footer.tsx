@@ -74,14 +74,18 @@ export const Footer: React.FC<FooterProps> = ({ onQuoteClick }) => {
   const shouldAnimate = useMotionSafeSimple();
 
   return (
-    <footer 
-      className="bg-[#4F5B62] w-full relative"
-      role="contentinfo"
+    <div 
+      className="relative h-[500px]"
+      style={{clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)"}}
     >
+      <div className="fixed bottom-0 h-[500px] w-full">
+        <footer 
+          className="bg-[#4F5B62] w-full h-full"
+          role="contentinfo"
+        >
       <motion.div
         initial={shouldAnimate ? "hidden" : false}
-        whileInView={shouldAnimate ? "visible" : undefined}
-        viewport={{ once: true, margin: "-100px" }}
+        animate={shouldAnimate ? "visible" : undefined}
         variants={{
           hidden: {},
           visible: {
@@ -92,7 +96,7 @@ export const Footer: React.FC<FooterProps> = ({ onQuoteClick }) => {
           }
         }}
       >
-        <Grid container className="py-12 tablet:py-16" data-animate="true">
+        <Grid container className="py-20 tablet:py-24 h-full flex items-center" data-animate="true">
         {/* Navigation Links - Using our grid system */}
         <motion.div 
           className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-12 mb-16"
@@ -172,6 +176,8 @@ export const Footer: React.FC<FooterProps> = ({ onQuoteClick }) => {
         </Grid>
         </Grid>
       </motion.div>
-    </footer>
+        </footer>
+      </div>
+    </div>
   );
 };

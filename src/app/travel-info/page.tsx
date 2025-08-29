@@ -214,7 +214,7 @@ export default function TravelInfoPage() {
         <Navigation onQuoteClick={handleOpenForm} />
       
       {/* Main Content */}
-      <div className="pt-[72px]">
+      <div className="pt-[72px] bg-background-primary">
         {/* Page Hero */}
         <PageHero
           heading="Helpful travel information"

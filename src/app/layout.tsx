@@ -108,8 +108,10 @@ export default function RootLayout({
         </Script> */}
       </head>
       <body className={`${geist.className} antialiased`} suppressHydrationWarning>
-        <div className="min-h-screen bg-background-primary">
-          {children}
+        <div className="bg-background-primary relative">
+          <div className="min-h-screen">
+            {children}
+          </div>
         </div>
       </body>
     </html>

@@ -82,7 +82,7 @@ export default function ContactPageClient() {
       <Navigation onQuoteClick={handleOpenForm} />
 
       {/* Main Content */}
-      <PageWrapper className="pt-[72px] pb-0">
+      <PageWrapper className="pt-[72px] pb-0 bg-background-primary">
         <Grid container className="py-12 tablet:py-16 desktop:py-24">
           {/* Page Heading */}
           <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-12 mb-16">

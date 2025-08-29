@@ -1,3 +1,5 @@
+'use client';
+
 // src/components/MotionTest.tsx
 // Test component to verify motion system functionality
 
@@ -53,7 +55,7 @@ export const MotionTest: React.FC = () => {
           {[1, 2, 3, 4].map((i) => (
             <motion.div
               key={i}
-              variants={safeVariants.slideUp}
+              variants={T.variants.slideUp}
               className="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center font-bold"
             >
               {i}

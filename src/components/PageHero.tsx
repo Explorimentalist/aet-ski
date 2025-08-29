@@ -39,65 +39,68 @@ export const PageHero: React.FC<PageHeroProps> = ({
             }
           }}
         >
-          {/* Heading - 4 columns on all breakpoints */}
-          <motion.div 
-            className={`${GridLayouts.heroHeading} mb-10`}
-            variants={{
-              hidden: { 
-                opacity: 0, 
-                y: 32,
-                scale: 0.98
-              },
-              visible: { 
-                opacity: 1, 
-                y: 0,
-                scale: 1,
-                transition: {
-                  duration: motionTokens.d.medium,
-                  ease: motionTokens.e.brand
+          {/* Content Row - Heading and Description side by side on tablet/desktop */}
+          <div className="grid grid-cols-mobile tablet:grid-cols-tablet desktop:grid-cols-desktop gap-grid-mobile tablet:gap-grid-tablet desktop:gap-grid-desktop mb-5xl">
+            {/* Heading - Left column */}
+            <motion.div 
+              className={GridLayouts.heroHeading}
+              variants={{
+                hidden: { 
+                  opacity: 0, 
+                  y: 32,
+                  scale: 0.98
+                },
+                visible: { 
+                  opacity: 1, 
+                  y: 0,
+                  scale: 1,
+                  transition: {
+                    duration: motionTokens.d.medium,
+                    ease: motionTokens.e.brand
+                  }
                 }
-              }
-            }}
-          >
-            <h1 
-              className="text-4xl tablet:text-5xl desktop:text-6xl font-bold text-text-primary leading-[120%] tracking-[-0.011em]"
-              style={{
-                fontFamily: 'GT Walsheim Trial, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
               }}
             >
-              {heading}
-            </h1>
-          </motion.div>
+              <h1 
+                className="text-4xl tablet:text-5xl desktop:text-6xl font-bold text-text-primary leading-[120%] tracking-[-0.011em]"
+                style={{
+                  fontFamily: 'GT Walsheim Trial, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+                }}
+              >
+                {heading}
+              </h1>
+            </motion.div>
 
-          {/* Description - 4 columns on mobile/tablet, 6 columns on desktop starting from column 7 */}
-          <motion.div 
-            className={`${GridLayouts.heroBody} mb-5xl`}
-            variants={{
-              hidden: { 
-                opacity: 0, 
-                y: 24
-              },
-              visible: { 
-                opacity: 1, 
-                y: 0,
-                transition: {
-                  duration: motionTokens.d.medium,
-                  ease: motionTokens.e.brand
+            {/* Description - Right column */}
+            <motion.div 
+              className={GridLayouts.heroBody}
+              variants={{
+                hidden: { 
+                  opacity: 0, 
+                  y: 24
+                },
+                visible: { 
+                  opacity: 1, 
+                  y: 0,
+                  transition: {
+                    duration: motionTokens.d.medium,
+                    ease: motionTokens.e.brand
+                  }
                 }
-              }
-            }}
-          >
-            <p 
-              className="text-base font-normal text-text-primary leading-[150%] tracking-[0.0005em]"
-              style={{
-                fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
               }}
             >
-              {description}
-            </p>
-          </motion.div>
+              <p 
+                className="text-base font-normal text-text-primary leading-[150%] tracking-[0.0005em]"
+                style={{
+                  fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+                }}
+              >
+                {description}
+              </p>
+            </motion.div>
+          </div>
 
-          {/* Image - 4 columns on mobile, 8 columns on tablet, 12 columns on desktop */}
+          {/* Image - Full width below content */}
           <motion.div 
             className={GridLayouts.heroImage}
             variants={{
