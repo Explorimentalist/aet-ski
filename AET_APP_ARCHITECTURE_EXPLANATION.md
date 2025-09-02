@@ -59,18 +59,28 @@ Resend handles all email communications from your website:
 
 ---
 
-## 🗺️ **Maps & Location Services (MapTiler)**
+## 🗺️ **Maps & Route Visualization**
 
-### What is MapTiler?
-MapTiler provides the interactive maps showing:
+### Current Implementation
+Your website currently uses **static map images** stored in Cloudinary to show:
 - Transfer routes from airports to ski resorts
-- Distance and travel time calculations
 - Visual representation of your service area
+- Professional, branded route maps
 
-### How It Connects
-- Maps are embedded directly in your website
+### How It Works
+- **Static Maps**: High-quality, pre-designed route maps for each transfer route
+- **Cloudinary Storage**: All map images are stored and optimized in Cloudinary
+- **Fast Loading**: Static images load quickly and provide consistent visual experience
+- **Easy Updates**: New route maps can be added by uploading images to Cloudinary
+
+### Future Enhancement (Optional)
+The system is prepared for future interactive maps using MapTiler, which would provide:
 - Real-time route calculations
-- Professional, branded appearance
+- Interactive zoom and pan
+- Dynamic distance and travel time
+- Enhanced user experience
+
+*Note: This is currently not active and would require additional setup if desired.*
 
 ---
 
@@ -154,11 +164,11 @@ GitHub is where all your website code is stored and managed:
 ### Daily Operations Flow
 1. **Customer visits** your website at `aet-ski.com`
 2. **Website loads** content from Sanity database
-3. **Customer books** a transfer through your booking form
-4. **Form data** is processed and stored
-5. **Confirmation email** is sent via Resend
-6. **You receive** notification of the booking
-7. **Maps show** the exact route and pricing
+3. **Customer views** route maps and transfer information
+4. **Customer books** a transfer through your booking form
+5. **Form data** is processed and stored
+6. **Confirmation email** is sent via Resend
+7. **You receive** notification of the booking
 
 ### Content Updates Flow
 1. **You log into** Sanity Studio

@@ -80,25 +80,25 @@ export default function SideNavigation({
       {/* Desktop Side Navigation */}
       <div className="hidden md:block">
         <div className="bg-white rounded-lg shadow-md p-8">
-          <h3 className="text-xl font-bold text-gray-700 mb-7 leading-tight tracking-tight">
+          <h3 className="text-xl font-medium text-gray-700 mb-7 leading-tight tracking-tight">
             Content
           </h3>
           
           <nav className="space-y-4">
-            {items.map((item) => (
+            {items.map((item, index) => (
               <button
-                key={item.id}
+                key={`nav-desktop-${item.number}-${item.id || index}`}
                 onClick={() => handleItemClick(item.id)}
                 className={`w-full flex items-start gap-2 p-0 transition-colors duration-200 ${
                   item.isActive 
-                    ? 'text-gray-700 font-semibold' 
-                    : 'text-gray-700/60 font-semibold hover:text-gray-700'
+                    ? 'text-gray-700 font-medium' 
+                    : 'text-gray-700/60 font-medium hover:text-gray-700'
                 }`}
               >
-                <span className="text-base font-semibold leading-relaxed tracking-tight flex-shrink-0">
+                <span className="text-base font-medium leading-relaxed tracking-tight flex-shrink-0">
                   {item.number}
                 </span>
-                <span className="text-base font-semibold leading-relaxed tracking-tight text-left">
+                <span className="text-base font-medium leading-relaxed tracking-tight text-left">
                   {item.title}
                 </span>
               </button>
@@ -148,13 +148,13 @@ export default function SideNavigation({
             style={isSticky ? { top: `${stickyThreshold + 56}px` } : undefined}
           >
             <nav className="py-2 max-h-[60vh] overflow-y-auto">
-              {items.map((item) => (
+              {items.map((item, index) => (
                 <button
-                  key={item.id}
+                  key={`nav-mobile-${item.number}-${item.id || index}`}
                   onClick={() => handleItemClick(item.id)}
                   className={`w-full flex items-start gap-3 px-6 py-3 text-left transition-colors duration-200 ${
                     item.isActive 
-                      ? 'bg-gray-50 text-gray-700 font-semibold border-l-4 border-gray-700' 
+                      ? 'bg-gray-50 text-gray-700 font-medium border-l-4 border-gray-700' 
                       : 'text-gray-700/70 font-medium hover:bg-gray-50 hover:text-gray-700'
                   }`}
                 >

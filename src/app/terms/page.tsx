@@ -11,96 +11,198 @@ import { PDFGenerator } from '@/lib/pdfGenerator';
 import { Download } from 'lucide-react';
 import { BookingFormData } from '@/types';
 import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
+import { sanityClient, termsQuery } from '@/lib/sanity';
 
 interface TermsSection {
   id: string;
-  number: string;
+  number: number;
   title: string;
   content: string;
+  isActive: boolean;
 }
 
-const termsSections: TermsSection[] = [
+interface TermsData {
+  _id: string;
+  title: string;
+  lastUpdated: string;
+  version: string;
+  sections: TermsSection[];
+}
+
+// Fallback data in case Sanity is not available
+const fallbackTermsSections: TermsSection[] = [
   {
     id: 'definitions',
-    number: '1',
+    number: 1,
     title: 'Definitions',
-    content: 'Lead Passenger - person that has made the booking for them self or on behalf of the party travelling under the same reference number. Passenger Party - are the rest of the group under the same reference number as the Lead Passenger. AET – Alps en route Transfers SARL. Services - the provision of transfers of persons, luggage and equipment from one location to another as requested by the Lead Passenger. Partners - other transfer operators who from time to time may provide services on behalf of AET.'
+    content: 'Lead Passenger - person that has made the booking for them self or on behalf of the party travelling under the same reference number. Passenger Party - are the rest of the group under the same reference number as the Lead Passenger. AET – Alps en route Transfers SARL. Services - the provision of transfers of persons, luggage and equipment from one location to another as requested by the Lead Passenger. Partners - other transfer operators who from time to time may provide services on behalf of AET.',
+    isActive: true
   },
   {
     id: 'bookings',
-    number: '2',
+    number: 2,
     title: 'Bookings and reservations',
-    content: 'All bookings are to be made by email. AET will email the Lead Passenger with an invoice and its Terms and Conditions. Once the invoice has been paid in total, the booking is subject to, and the Lead Passenger accepts AET\'s Terms and Conditions. AET will then email the Lead Passenger with confirmation and the booking is reserved.'
+    content: 'All bookings are to be made by email. AET will email the Lead Passenger with an invoice and its Terms and Conditions. Once the invoice has been paid in total, the booking is subject to, and the Lead Passenger accepts AET\'s Terms and Conditions. AET will then email the Lead Passenger with confirmation and the booking is reserved.',
+    isActive: true
   },
   {
     id: 'cancellations',
-    number: '3',
+    number: 3,
     title: 'Cancellations/Refunds/Credits',
-    content: 'Any Cancellations must be e-mailed. Cancellations made 4 or more weeks before date of travel 75% refund. Cancellations made 2 to 4 weeks before date of travel 50% refund. Cancellations made 2 or less weeks before date of travel 100% loss. Cancelation refunds will be made via bank transfer if the Cancellation Credit is not accepted by the Lead Passenger. Local or Global pandemics forcing airports or resorts to close, in which Cancellations/Refunds/Credits section above comes into effect at AET\'s discretion.'
+    content: 'Any Cancellations must be e-mailed. Cancellations made 4 or more weeks before date of travel 75% refund. Cancellations made 2 to 4 weeks before date of travel 50% refund. Cancellations made 2 or less weeks before date of travel 100% loss. Cancelation refunds will be made via bank transfer if the Cancellation Credit is not accepted by the Lead Passenger. Local or Global pandemics forcing airports or resorts to close, in which Cancellations/Refunds/Credits section above comes into effect at AET\'s discretion.',
+    isActive: true
   },
   {
     id: 'data-security',
-    number: '4',
+    number: 4,
     title: 'Data security and privacy',
-    content: 'Only required details are held on file by AET for either contacting the lead passenger or important information regarding the completion of the paid services. AET will only supply Partners with relevant information should we need to book another service.'
+    content: 'Only required details are held on file by AET for either contacting the lead passenger or important information regarding the completion of the paid services. AET will only supply Partners with relevant information should we need to book another service.',
+    isActive: true
   },
   {
     id: 'flight-delays',
-    number: '5',
+    number: 5,
     title: 'Flight Delays, Cancellations and Diversions',
-    content: 'If your flight is delayed, we will attempt to monitor flights, but it is the responsibility of the Lead Passenger or a member of the Passenger Party to contact AET as soon as possible. Failure to contact AET may result in the driver unable to undergo the transfer. This will be at the cost of the Lead Passenger. Any delay over 1 hour is subject to 45€ per hour waiting time fee, payable to the driver upon arrival. AET will endeavour to arrange alternate travel if AET cannot wait for the delay. If alternate travel is not available then the transfer will be cancelled and no refund given. In the case you will need to pay for a substitute transfer you may be able to claim from insurances or the airline providing the receipt is kept. If a flight is diverted extra charges will apply, paid directly to the AET driver on arrival in cash. The driver will not leave the original arrival airport until there is an agreement between the lead passenger and AET.'
+    content: 'If your flight is delayed, we will attempt to monitor flights, but it is the responsibility of the Lead Passenger or a member of the Passenger Party to contact AET as soon as possible. Failure to contact AET may result in the driver unable to undergo the transfer. This will be at the cost of the Lead Passenger. Any delay over 1 hour is subject to 45€ per hour waiting time fee, payable to the driver upon arrival. AET will endeavour to arrange alternate travel if AET cannot wait for the delay. If alternate travel is not available then the transfer will be cancelled and no refund given. In the case you will need to pay for a substitute transfer you may be able to claim from insurances or the airline providing the receipt is kept. If a flight is diverted extra charges will apply, paid directly to the AET driver on arrival in cash. The driver will not leave the original arrival airport until there is an agreement between the lead passenger and AET.',
+    isActive: true
   },
   {
     id: 'property-baggage',
-    number: '6',
+    number: 6,
     title: 'Property and Baggage',
-    content: 'All of the AET vehicles are fully insured for passenger and third party claims. Whilst every care is always taken however, your property is carried entirely at your own risk and no responsibility can be accepted for loss or damage. Customers are therefore advised to check that their own travel insurance covers such damage and/or losses. Each person travelling are limited to two items of luggage including a ski or snowboard bag. Any excess luggage must be declared at the time of booking. In the event of a client having excess luggage, AET reserve the right to refuse to transport the items. If any excess baggage cannot travel AET holds the right to deny the travel of the excess baggage at the Lead Passenger\'s expense.'
+    content: 'All of the AET vehicles are fully insured for passenger and third party claims. Whilst every care is always taken however, your property is carried entirely at your own risk and no responsibility can be accepted for loss or damage. Customers are therefore advised to check that their own travel insurance covers such damage and/or losses. Each person travelling are limited to two items of luggage including a ski or snowboard bag. Any excess luggage must be declared at the time of booking. In the event of a client having excess luggage, AET reserve the right to refuse to transport the items. If any excess baggage cannot travel AET holds the right to deny the travel of the excess baggage at the Lead Passenger\'s expense.',
+    isActive: true
   },
   {
     id: 'child-seats',
-    number: '7',
+    number: 7,
     title: 'Baby, Child, and Booster Seats',
-    content: 'Baby, child, and booster seats are provided free of charge providing they are pre-booked by the customer at least 72 hours before travel. It is the responsibility of the Lead Passenger or the parent of the child to notify AET of the child\'s age, height and weight at least 72 hours before travel. Failure to do so could result in refusal to carry the child if the child is not in the correct seat required by law. Children of all ages are required by law to have their own appropriate seat.'
+    content: 'Baby, child, and booster seats are provided free of charge providing they are pre-booked by the customer at least 72 hours before travel. It is the responsibility of the Lead Passenger or the parent of the child to notify AET of the child\'s age, height and weight at least 72 hours before travel. Failure to do so could result in refusal to carry the child if the child is not in the correct seat required by law. Children of all ages are required by law to have their own appropriate seat.',
+    isActive: true
   },
   {
     id: 'failure-outside-control',
-    number: '8',
+    number: 8,
     title: 'Failure to provide confirmed Services due to reasons out of AET\'s control',
-    content: 'AET will use every reasonable means to ensure that the vehicle(s) arrives on time to begin the period of hire and that it reaches its destination on time. AET will not incur any liability whatsoever in the event of any delay due to causes beyond its control. However, circumstances beyond our control may prevent the achievement of this responsibility. The following are examples (not an exhaustive list) of circumstances which are not within our control: • Road accidents, road closures or un-predicted traffic delays. • Vehicle breakdown. • Restricted vehicular access. • Exceptional or severe weather conditions such as heavy snowfall, avalanche, or landslides. • Industrial action. • The vehicle being held or delayed by a police officer or government official. • Local or global pandemics forcing airports and/or resorts to close. • Other circumstances affecting passenger safety. • Previous customer problems or delays.'
+    content: 'AET will use every reasonable means to ensure that the vehicle(s) arrives on time to begin the period of hire and that it reaches its destination on time. AET will not incur any liability whatsoever in the event of any delay due to causes beyond its control. However, circumstances beyond our control may prevent the achievement of this responsibility. The following are examples (not an exhaustive list) of circumstances which are not within our control: • Road accidents, road closures or un-predicted traffic delays. • Vehicle breakdown. • Restricted vehicular access. • Exceptional or severe weather conditions such as heavy snowfall, avalanche, or landslides. • Industrial action. • The vehicle being held or delayed by a police officer or government official. • Local or global pandemics forcing airports and/or resorts to close. • Other circumstances affecting passenger safety. • Previous customer problems or delays.',
+    isActive: true
   },
   {
     id: 'failure-within-control',
-    number: '9',
+    number: 9,
     title: 'Failure to provide confirmed Services due to reasons within AET\'s control',
-    content: 'If AET fail for any reason within our control to deliver its passengers to their confirmed destination, AET will provide suitable alternative transport to carry its clients to their stated destination. Any reimbursement made by AET for the costs of an alternative means of transport incurred by the passenger to get to their ticketed destination shall be no more than the cost of getting to that destination by taxi.'
+    content: 'If AET fail for any reason within our control to deliver its passengers to their confirmed destination, AET will provide suitable alternative transport to carry its clients to their stated destination. Any reimbursement made by AET for the costs of an alternative means of transport incurred by the passenger to get to their ticketed destination shall be no more than the cost of getting to that destination by taxi.',
+    isActive: true
   },
   {
     id: 'damage-soiling',
-    number: '10',
+    number: 10,
     title: 'Damage and Soiling of Vehicles',
-    content: 'Any soiling that cannot be easily cleaned by the driver and needs to be professionally cleaned, will be charged to the Lead Passenger. Any other damage caused by a member of the party, the Lead Passenger is liable for any costs for repairs to the damage.'
+    content: 'Any soiling that cannot be easily cleaned by the driver and needs to be professionally cleaned, will be charged to the Lead Passenger. Any other damage caused by a member of the party, the Lead Passenger is liable for any costs for repairs to the damage.',
+    isActive: true
   },
   {
     id: 'refusal-carriage',
-    number: '11',
+    number: 11,
     title: 'Refusal of Carriage',
-    content: 'Smoking and alcohol are prohibited in any of AET\'s vehicles. AET can refuse carriage to any passenger or eject any party members at any point that are: displaying Covid related symptoms, violent, engaged in sexual acts, under the influence of alcohol or drugs. AET can refuse carriage to any passenger or eject any party members if there is any risk to the driver or AET property.'
+    content: 'Smoking and alcohol are prohibited in any of AET\'s vehicles. AET can refuse carriage to any passenger or eject any party members at any point that are: displaying Covid related symptoms, violent, engaged in sexual acts, under the influence of alcohol or drugs. AET can refuse carriage to any passenger or eject any party members if there is any risk to the driver or AET property.',
+    isActive: true
   }
 ];
 
 export default function TermsPage() {
-  const [navigationItems, setNavigationItems] = useState(
-    termsSections.map(section => ({
-      id: section.id,
-      number: section.number,
-      title: section.title,
-      isActive: section.id === 'definitions'
-    }))
-  );
+  const [termsData, setTermsData] = useState<TermsData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [navigationItems, setNavigationItems] = useState<any[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  // Fetch terms data from Sanity
+  useEffect(() => {
+    async function fetchTerms() {
+      try {
+        setLoading(true);
+        setError(null);
+        setTermsData(null);
+        setNavigationItems([]);
+        
+        if (sanityClient) {
+          console.log('Attempting to fetch from Sanity...');
+          const data = await sanityClient.fetch(termsQuery);
+          console.log('Sanity fetch result:', data);
+          
+          if (data && data.sections && data.sections.length > 0) {
+            console.log(`Using Sanity data with ${data.sections.length} sections`);
+            setTermsData(data);
+            // Initialize navigation items with only active sections
+            const activeSections = data.sections.filter((section: TermsSection) => section.isActive);
+            setNavigationItems(
+              activeSections.map((section: TermsSection) => ({
+                id: section.id,
+                number: section.number.toString(),
+                title: section.title,
+                isActive: section.id === 'definitions'
+              }))
+            );
+            return; // Exit early to prevent fallback
+          } else {
+            console.warn('No terms data found in Sanity, using fallback data');
+          }
+        } else {
+          console.warn('Sanity not configured, using fallback data');
+        }
+        
+        // Only use fallback data if Sanity fails or returns no data
+        console.log(`Using fallback data with ${fallbackTermsSections.length} sections`);
+        setTermsData({
+          _id: 'fallback',
+          title: 'Terms and conditions',
+          lastUpdated: new Date().toISOString(),
+          version: '1.0',
+          sections: fallbackTermsSections
+        });
+        setNavigationItems(
+          fallbackTermsSections.map(section => ({
+            id: section.id,
+            number: section.number.toString(),
+            title: section.title,
+            isActive: section.id === 'definitions'
+          }))
+        );
+        
+      } catch (err) {
+        console.error('Failed to fetch terms:', err);
+        console.log(`Error occurred, using fallback data with ${fallbackTermsSections.length} sections`);
+        setError('Failed to load terms and conditions');
+        
+        // Fallback to hardcoded data on error
+        setTermsData({
+          _id: 'fallback',
+          title: 'Terms and conditions',
+          lastUpdated: new Date().toISOString(),
+          version: '1.0',
+          sections: fallbackTermsSections
+        });
+        setNavigationItems(
+          fallbackTermsSections.map(section => ({
+            id: section.id,
+            number: section.number.toString(),
+            title: section.title,
+            isActive: section.id === 'definitions'
+          }))
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchTerms();
+  }, []);
 
   // Scroll spy functionality
   useEffect(() => {
+    if (!termsData?.sections) return;
+
     const observerOptions = {
       root: null,
       rootMargin: '-20% 0px -70% 0px', // Trigger when section is in the middle of viewport
@@ -111,6 +213,7 @@ export default function TermsPage() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const sectionId = entry.target.id;
+          console.log('Section in view:', sectionId);
           setNavigationItems(prev => 
             prev.map(item => ({
               ...item,
@@ -121,11 +224,17 @@ export default function TermsPage() {
       });
     }, observerOptions);
 
-    // Observe all section elements
-    termsSections.forEach(section => {
+    // Observe all active section elements
+    const activeSections = termsData.sections.filter(section => section.isActive);
+    console.log('Setting up scroll spy for sections:', activeSections.map(s => s.id));
+    
+    activeSections.forEach(section => {
       const element = document.getElementById(section.id);
       if (element) {
+        console.log('Observing section element:', section.id);
         observer.observe(element);
+      } else {
+        console.warn('Element not found for section:', section.id);
       }
     });
 
@@ -133,7 +242,7 @@ export default function TermsPage() {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [termsData]);
 
   const handleSectionClick = (sectionId: string) => {
     setNavigationItems(prev => 
@@ -160,6 +269,8 @@ export default function TermsPage() {
   };
 
   const handleDownloadPDF = async () => {
+    if (!termsData) return;
+
     try {
       // Show loading state
       const button = document.querySelector('[data-download-button]') as HTMLButtonElement;
@@ -168,8 +279,18 @@ export default function TermsPage() {
         button.innerHTML = '<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div> Generating PDF...';
       }
 
+      // Get only active sections for PDF
+      const activeSections = termsData.sections.filter(section => section.isActive);
+      
+      // Convert to format expected by PDFGenerator
+      const pdfSections = activeSections.map(section => ({
+        number: section.number.toString(),
+        title: section.title,
+        content: section.content
+      }));
+      
       // Generate PDF using optimized method (no DOM manipulation needed)
-      await PDFGenerator.generateTermsPDF(termsSections, {
+      await PDFGenerator.generateTermsPDF(pdfSections, {
         filename: 'aet-terms-and-conditions.pdf',
         format: 'a4',
         orientation: 'portrait'
@@ -211,18 +332,59 @@ export default function TermsPage() {
     // The MultiStepForm will show the success page, and user can close it
   }, []);
 
+  if (loading) {
+    return (
+      <>
+        <Navigation onQuoteClick={handleOpenForm} />
+        <PageWrapper className="pt-14 md:pt-[72px] bg-background-primary">
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            <div className="animate-pulse">
+              <div className="h-12 bg-gray-200 rounded mb-4"></div>
+              <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+            </div>
+          </div>
+        </PageWrapper>
+        <Footer onQuoteClick={handleOpenForm} />
+      </>
+    );
+  }
+
+  if (error && !termsData) {
+    return (
+      <>
+        <Navigation onQuoteClick={handleOpenForm} />
+        <PageWrapper className="pt-14 md:pt-[72px] bg-background-primary">
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            <div className="text-center">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-700 mb-4">
+                Error Loading Terms
+              </h1>
+              <p className="text-gray-600">
+                {error || 'Unable to load terms and conditions. Please try again later.'}
+              </p>
+            </div>
+          </div>
+        </PageWrapper>
+        <Footer onQuoteClick={handleOpenForm} />
+      </>
+    );
+  }
+
+  // Get active sections for display
+  const activeSections = termsData?.sections.filter(section => section.isActive) || [];
+
   return (
     <>
       {/* Fixed Navigation */}
       <Navigation onQuoteClick={handleOpenForm} />
 
       {/* Main Content with proper spacing for fixed navigation */}
-      <PageWrapper className="pt-14 md:pt-[72px] bg-background-primary"> {/* Add top padding to account for fixed navigation on all devices */}
+      <PageWrapper className="pt-14 md:pt-[72px] bg-background-primary">
         {/* Header */}
         <div>
           <div className="max-w-7xl mx-auto px-6 py-8">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-700 leading-tight tracking-tight">
-              Terms and conditions
+              {termsData?.title || 'Terms and conditions'}
             </h1>
           </div>
         </div>
@@ -244,9 +406,9 @@ export default function TermsPage() {
             {/* Content */}
             <div className="lg:col-start-7 lg:col-span-6">
               <div className="space-y-12">
-                {termsSections.map((section) => (
+                {activeSections.map((section, index) => (
                   <section 
-                    key={section.id}
+                    key={`${section.number}-${section.id || index}`}
                     id={section.id}
                     className="scroll-mt-32"
                   >
@@ -254,7 +416,7 @@ export default function TermsPage() {
                       {section.number}. {section.title}
                     </h2>
                     <div className="prose prose-gray max-w-none">
-                      <p className="text-base font-medium text-gray-700 leading-relaxed tracking-tight">
+                      <p className="text-base font-normal text-gray-700 leading-relaxed tracking-tight">
                         {section.content}
                       </p>
                     </div>
@@ -268,7 +430,8 @@ export default function TermsPage() {
                   onClick={handleDownloadPDF}
                   variant="primary"
                   size="lg"
-                  className="inline-flex items-center gap-2" data-download-button
+                  className="inline-flex items-center gap-2"
+                  data-download-button
                 >
                   <Download className="w-4 h-4" />
                   Download T&Cs in PDF

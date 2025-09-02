@@ -1,7 +1,7 @@
 // src/app/api/booking/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { BookingFormData } from '@/types';
-import { initializeEmailService, getEmailService, EmailConfig } from '@/lib/email';
+import { initializeEmailService, EmailConfig } from '@/lib/email';
 import { generateQuoteId } from '@/lib/utils';
 
 // Initialize email service with environment variables
@@ -108,6 +108,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Add additional email validation
+    if (!bookingData.passenger.email.includes('@')) {
+      return NextResponse.json(
+        { error: 'Please enter a valid email address' },
+        { status: 400 }
+      );
+    }
+
     if (!bookingData.journey?.collectionPoint || !bookingData.journey?.destinationPoint) {
       return NextResponse.json(
         { error: 'Collection and destination points are required' },
@@ -134,7 +142,6 @@ export async function POST(request: NextRequest) {
 
     // Send emails
     let emailSent = false;
-    let errorMessage = '';
 
     try {
       console.log('📧 Attempting to send emails directly via Resend...');
@@ -281,7 +288,9 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
       console.log('✅ Quote email sent successfully');
 
       // Send confirmation email
-      const confirmationEmailResponse = await fetch('https://api.resend.com/emails', {
+      let confirmationEmailSent = false;
+      try {
+        const confirmationEmailResponse = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${process.env.EMAIL_API_KEY}`,
@@ -289,9 +298,8 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
         },
         body: JSON.stringify({
           from: `${process.env.EMAIL_FROM_NAME || 'AET Ski Transfer'} <${process.env.EMAIL_FROM || 'onboarding@resend.dev'}>`,
-          // TESTING MODE: Override recipient to your verified email
-          // In production, this would be: to: [emailData.bookingData.passenger?.email || ''],
-          to: [process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com'],
+          // Send to customer's email address
+          to: [emailData.bookingData.passenger?.email || ''],
           subject: `Writing your quote ${emailData.bookingData.passenger?.name || ''} - AET Ski Transfer`,
           html: `
             <!DOCTYPE html>
@@ -384,20 +392,26 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
         throw new Error(`Confirmation email failed: ${confirmationEmailResponse.status} ${confirmationEmailResponse.statusText} - ${JSON.stringify(errorData)}`);
       }
 
-      console.log('✅ Confirmation email sent successfully');
-      emailSent = true;
+      console.log('✅ Confirmation email sent successfully to customer');
+      confirmationEmailSent = true;
+
+      } catch (confirmationError) {
+        console.error('❌ Confirmation email sending error:', confirmationError);
+        // Don't fail the entire booking process if confirmation email fails
+        // The quote email to admin will still be sent
+      }
+
+      // Update the emailSent flag to reflect both emails
+      emailSent = emailSent && confirmationEmailSent;
 
     } catch (emailError) {
       console.error('❌ Email sending error:', emailError);
       
       if (emailError instanceof Error && emailError.message.includes('403')) {
-        errorMessage = 'Resend API: 403 Forbidden - Check domain verification and sending permissions';
         console.error('🔍 403 Error Details:');
         console.error('  - Domain may not be verified');
         console.error('  - Sending limits may be exceeded');
         console.error('  - Account may need activation');
-      } else {
-        errorMessage = emailError instanceof Error ? emailError.message : 'Email service failed';
       }
     }
 

@@ -24,22 +24,18 @@ export const SuccessStep: React.FC<SuccessStepProps> = React.memo(({
         <X className="w-5 h-5" />
       </button>
 
-      {/* Main Content Container - Centered with responsive grid */}
+      {/* Main Content Container - Perfect vertical and horizontal centering */}
       <div className="
-        w-full h-full
-        px-3xl tablet:px-7xl desktop:px-9xl
-        grid grid-cols-4 tablet:grid-cols-8 desktop:grid-cols-12
-        gap-xl tablet:gap-2xl desktop:gap-3xl
+        w-full h-screen
         flex items-center justify-center
+        px-3xl tablet:px-7xl desktop:px-9xl
       ">
-        {/* Content Area - Middle 6/6/4 columns as specified */}
+        {/* Content Area - Centered content with proper spacing */}
         <div className="
-          col-span-4 
-          tablet:col-start-2 tablet:col-span-6 
-          desktop:col-start-4 desktop:col-span-6
+          w-full max-w-[624px]
           flex flex-col items-center justify-center
           gap-12
-          min-h-[312px]
+          text-center
         ">
           {/* Success Message */}
           <div className="text-center">
@@ -77,7 +73,7 @@ export const SuccessStep: React.FC<SuccessStepProps> = React.memo(({
           <div className="flex justify-center">
             <Button
               size="lg"
-              onClick={() => window.location.href = '/'}
+              onClick={onGoHome}
               className="
                 w-[154px]
                 h-[48px]

@@ -139,3 +139,5 @@ After restarting the development server, all logos should display correctly:
 The fix addresses the fundamental issue: **environment variable accessibility**, not the logo format mapping we implemented earlier.
 
 
+
+

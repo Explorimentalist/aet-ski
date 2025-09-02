@@ -74,6 +74,23 @@ export const siteSettingsQuery = `
   }
 `;
 
+// Add terms query
+export const termsQuery = `
+  *[_type == "terms"][0] {
+    _id,
+    title,
+    lastUpdated,
+    version,
+    sections[] {
+      "id": id.current,
+      number,
+      title,
+      content,
+      isActive
+    }
+  }
+`;
+
 // Image URL builder with null check
 const builder = sanityClient ? imageUrlBuilder(sanityClient) : null;
 

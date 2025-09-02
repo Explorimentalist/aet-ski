@@ -170,3 +170,5 @@ curl -I "https://res.cloudinary.com/dzrn3khsd/image/upload/logos/whitestorm35.sv
 **Next Review**: After testing in browser
 
 
+
+
