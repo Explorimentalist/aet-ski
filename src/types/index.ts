@@ -130,6 +130,9 @@ export interface FormStepProps {
   validation: FormValidation;
   onEditStep?: (step: number) => void;
   markFieldAsTouched: (fieldName: string) => void;
+  onValidationChange?: (isValid: boolean) => void;
+  isModalOpen?: boolean;
+  isFirstRender?: boolean;
 }
 
 // Booking form types (legacy - keeping for backward compatibility)

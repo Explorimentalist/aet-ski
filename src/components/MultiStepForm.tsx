@@ -6,6 +6,7 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { motionTokens, useMotionSafeSimple } from '@/motion';
 import { Modal } from '@/components/Modal';
+import { FormNavigation } from '@/components/FormNavigation';
 import { JourneyStep } from '@/components/JourneyStep';
 import { DatesStep } from '@/components/DatesStep';
 import { PeopleStep } from '@/components/PeopleStep';
@@ -70,8 +71,39 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
     touched: {},
   });
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isFirstFormOpen, setIsFirstFormOpen] = useState(true);
+  const [isNavigationVisible, setIsNavigationVisible] = useState(false);
+  const [isNavigationFirstRender, setIsNavigationFirstRender] = useState(true);
+  const [stepValidationStates, setStepValidationStates] = useState<Record<number, boolean>>({});
 
   const totalSteps = 6;
+
+  // Track first form open for navigation animation
+  useEffect(() => {
+    if (isOpen && isFirstFormOpen) {
+      // Mark that we've opened the form for the first time
+      setIsFirstFormOpen(false);
+    }
+  }, [isOpen, isFirstFormOpen]);
+
+  // Control navigation visibility based on modal state
+  useEffect(() => {
+    if (isOpen) {
+      // Show navigation when modal opens
+      setIsNavigationVisible(true);
+      
+      // Allow navigation entrance animation on first render
+      if (isNavigationFirstRender) {
+        // Delay marking as not first render to allow entrance animation
+        setTimeout(() => {
+          setIsNavigationFirstRender(false);
+        }, motionTokens.delay.medium * 1000 + motionTokens.d.short * 1000); // Wait for entrance animation to complete
+      }
+    } else {
+      // Hide navigation when modal closes
+      setIsNavigationVisible(false);
+    }
+  }, [isOpen, isNavigationFirstRender]);
 
   // Memoize step validation
   const validateCurrentStep = useCallback((data: Partial<BookingFormData>, touched: Record<string, boolean> = {}): FormValidation => {
@@ -165,6 +197,14 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
     setValidation(newValidation);
   }, [validation.touched, validateCurrentStep, formData]);
 
+  // Handle validation state changes from step components
+  const handleStepValidationChange = useCallback((step: number, isValid: boolean) => {
+    setStepValidationStates(prev => ({
+      ...prev,
+      [step]: isValid
+    }));
+  }, []);
+
   // Handle form submission (will be used in final step)
   const handleSubmit = useCallback(async () => {
     console.log('handleSubmit called, validation.isValid:', validation.isValid);
@@ -237,21 +277,37 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
 
   // Handle modal close
   const handleClose = useCallback(() => {
-    // Reset form state when closing
-    setCurrentStep(1);
-    setFormData({});
-    setValidation({ isValid: false, errors: {}, touched: {} });
-    setShowSuccess(false);
-    onClose();
+    // First, hide navigation to start its exit animation
+    setIsNavigationVisible(false);
+    
+    // Wait for navigation exit animation to complete, then close modal
+    setTimeout(() => {
+      // Reset form state when closing
+      setCurrentStep(1);
+      setFormData({});
+      setValidation({ isValid: false, errors: {}, touched: {} });
+      setShowSuccess(false);
+      setIsFirstFormOpen(true); // Reset for next time form opens
+      setIsNavigationFirstRender(true); // Reset navigation first render state
+      onClose();
+    }, motionTokens.d.short * 1000); // Convert to milliseconds
   }, [onClose]);
 
   // Handle go home (from success page)
   const handleGoHome = useCallback(() => {
-    setShowSuccess(false);
-    setCurrentStep(1);
-    setFormData({});
-    setValidation({ isValid: false, errors: {}, touched: {} });
-    onClose();
+    // First, hide navigation to start its exit animation
+    setIsNavigationVisible(false);
+    
+    // Wait for navigation exit animation to complete, then close modal
+    setTimeout(() => {
+      setShowSuccess(false);
+      setCurrentStep(1);
+      setFormData({});
+      setValidation({ isValid: false, errors: {}, touched: {} });
+      setIsFirstFormOpen(true); // Reset for next time form opens
+      setIsNavigationFirstRender(true); // Reset navigation first render state
+      onClose();
+    }, motionTokens.d.short * 1000); // Convert to milliseconds
   }, [onClose]);
 
   // Memoize the current step component
@@ -279,6 +335,9 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
       validation,
       onEditStep: handleEditStep,
       markFieldAsTouched,
+      onValidationChange: (isValid: boolean) => handleStepValidationChange(currentStep, isValid),
+      isModalOpen: isOpen,
+      isFirstRender: isFirstFormOpen,
     };
 
     switch (currentStep) {
@@ -382,6 +441,22 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
               </motion.div>
             </motion.div>
           </AnimatePresence>
+          
+          {/* Form Navigation - Controlled by separate visibility state */}
+          {!showSuccess && (
+            <FormNavigation
+              currentStep={currentStep}
+              totalSteps={totalSteps}
+              onNext={currentStep === totalSteps ? handleSubmit : handleNext}
+              onPrevious={handlePrevious}
+              isNextDisabled={!stepValidationStates[currentStep]}
+              isPreviousDisabled={currentStep === 1}
+              showProgressDots={currentStep < totalSteps}
+              isVisible={isNavigationVisible}
+              isFirstRender={isNavigationFirstRender}
+              nextButtonText={currentStep === totalSteps ? 'Get a quote' : 'Next'}
+            />
+          )}
         </div>
       </FormErrorBoundary>
     </Modal>

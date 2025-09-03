@@ -1,7 +1,7 @@
 // src/components/FormNavigation.tsx
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/Button';
 import { motionTokens, useMotionSafeSimple } from '@/motion';
@@ -16,6 +16,8 @@ export interface FormNavigationProps {
   nextButtonText?: string;
   previousButtonText?: string;
   showProgressDots?: boolean;
+  isVisible?: boolean;
+  isFirstRender?: boolean;
 }
 
 export const FormNavigation: React.FC<FormNavigationProps> = ({
@@ -28,19 +30,45 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
   nextButtonText = 'Next',
   previousButtonText = 'Previous',
   showProgressDots = true,
+  isVisible = true,
+  isFirstRender = false,
 }) => {
   const shouldAnimate = useMotionSafeSimple();
 
+  // Fixed bottom navigation variants with proper exit animation
+  const navigationVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 16,  // Slide up from bottom
+
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+
+    },
+    exit: { 
+      opacity: 0, 
+      y: 16,  // Slide down to bottom
+
+    }
+  };
+
   // Create portal to render outside Modal's scrollable context
   const navigationContent = (
-    <motion.div
-      initial={shouldAnimate ? "hidden" : false}
-      animate={shouldAnimate ? "visible" : undefined}
-      variants={motionTokens.patterns.entrance}
-      transition={{
-        duration: motionTokens.d.medium,
-        ease: motionTokens.e.brand
-      }}
+    <AnimatePresence mode="wait">
+      {isVisible && (
+        <motion.div
+          key="form-navigation"
+          initial={shouldAnimate && isFirstRender ? "hidden" : false}
+          animate={shouldAnimate && isFirstRender ? "visible" : undefined}
+          exit={shouldAnimate ? "exit" : undefined}
+          variants={navigationVariants}
+          transition={{
+            duration: motionTokens.d.short,
+            ease: motionTokens.e.brand,
+            delay: shouldAnimate && isFirstRender ? motionTokens.delay.medium : 0
+          }}
       className="
         fixed bottom-0 left-0 right-0 
         border-t border-border-secondary
@@ -115,7 +143,9 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
         </div>
         </div>
       </div>
-    </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 
   // Use portal to render outside Modal's scrollable context

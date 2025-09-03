@@ -42,6 +42,16 @@ export const motionTokens = {
     lg: 0.16,  // Large content sections
   },
   
+  // Delay tokens for coordinated animations
+  delay: {
+    micro: 0.04,   // Micro delays for immediate feedback
+    fast: 0.08,    // Fast delays for quick sequences
+    short: 0.12,   // Short delays for UI coordination
+    normal: 0.16,  // Normal delays for content reveals
+    medium: 0.24,  // Medium delays for section coordination
+    long: 0.32,    // Long delays for major transitions
+  },
+  
   // Scale tokens for consistent, brand-aligned scaling
   scale: {
     // Entrance/exit scales (warm and welcoming)
@@ -303,18 +313,18 @@ export const motionTokens = {
       },
       
       content: {
-        hidden: { opacity: 0, scale: 0.98, y: 16 },
+        hidden: { opacity: 0, scale: 0.98, y: 8 },
         visible: { opacity: 1, scale: 1, y: 0 },
-        exit: { opacity: 0, scale: 0.98, y: -10 }
+        exit: { opacity: 0, scale: 0.98, y: -8 }
       }
     },
     
     // Multi-step forms
     multiStep: {
       step: {
-        enter: { y: 20, opacity: 0, scale: 0.98 },
-        center: { y: 0, opacity: 1, scale: 1 },
-        exit: { y: -20, opacity: 0, scale: 0.98 }
+        enter: { y: 8, opacity: 0 },
+        center: { y: 0, opacity: 1 },
+        exit: { y: -8, opacity: 0 }
       },
       
       content: {

@@ -1,8 +1,8 @@
 // src/components/PeopleStep.tsx
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { NumberInput } from '@/components/NumberInput';
-import { FormNavigation } from '@/components/FormNavigation';
+
 import { FormStepProps } from '@/types';
 
 export interface PeopleStepComponentProps extends FormStepProps {
@@ -18,6 +18,9 @@ export const PeopleStep: React.FC<PeopleStepComponentProps> = React.memo(({
   currentStep,
   totalSteps,
   validation,
+  onValidationChange,
+  isModalOpen = true,
+  isFirstRender,
 }) => {
   const peopleData = useMemo(() => data.people || {
     adults: 1,
@@ -49,6 +52,13 @@ export const PeopleStep: React.FC<PeopleStepComponentProps> = React.memo(({
     return peopleData.adults >= 1 && peopleData.adults <= 20 && 
            peopleData.children >= 0 && peopleData.children <= 20;
   }, [peopleData]);
+
+  // Report validation state to parent
+  useEffect(() => {
+    if (onValidationChange) {
+      onValidationChange(isStepValid);
+    }
+  }, [isStepValid, onValidationChange]);
 
   // Handle next step
   const handleNext = useCallback(() => {
@@ -161,16 +171,7 @@ export const PeopleStep: React.FC<PeopleStepComponentProps> = React.memo(({
         </div>
       </div>
 
-      {/* Sticky Footer Navigation */}
-      <FormNavigation
-        currentStep={currentStep}
-        totalSteps={totalSteps}
-        onNext={handleNext}
-        onPrevious={onPrevious}
-        isNextDisabled={!isStepValid}
-        isPreviousDisabled={false}
-        showProgressDots={true}
-      />
+
     </div>
   );
 });

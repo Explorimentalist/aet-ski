@@ -155,7 +155,7 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: `${process.env.EMAIL_FROM_NAME || 'AET Ski Transfer'} <${process.env.EMAIL_FROM || 'onboarding@resend.dev'}>`,
+          from: `${process.env.EMAIL_FROM_NAME || 'AET Ski Transfer'} <${process.env.EMAIL_FROM || 'bookings@aet.ski'}>`,
           // TESTING MODE: Override recipient to your verified email
           // In production, this would be: to: [emailData.bookingData.passenger?.email || ''],
           to: [process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com'],
@@ -286,10 +286,21 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
       }
 
       console.log('✅ Quote email sent successfully');
+      emailSent = true; // Mark quote email as sent
 
       // Send confirmation email
       let confirmationEmailSent = false;
       try {
+        // Send confirmation email to customer's email (domain is verified)
+        const confirmationRecipient = emailData.bookingData.passenger?.email || '';
+        
+        if (!confirmationRecipient) {
+          console.error('❌ No customer email provided for confirmation');
+          throw new Error('Customer email is required for confirmation');
+        }
+        
+        console.log('📧 Sending confirmation email to customer:', confirmationRecipient);
+        
         const confirmationEmailResponse = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -297,9 +308,9 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: `${process.env.EMAIL_FROM_NAME || 'AET Ski Transfer'} <${process.env.EMAIL_FROM || 'onboarding@resend.dev'}>`,
-          // Send to customer's email address
-          to: [emailData.bookingData.passenger?.email || ''],
+          from: `${process.env.EMAIL_FROM_NAME || 'AET Ski Transfer'} <${process.env.EMAIL_FROM || 'bookings@aet.ski'}>`,
+          // Send to customer's email address (or admin in testing mode)
+          to: [confirmationRecipient],
           subject: `Writing your quote ${emailData.bookingData.passenger?.name || ''} - AET Ski Transfer`,
           html: `
             <!DOCTYPE html>

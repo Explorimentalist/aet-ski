@@ -69,8 +69,15 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
     
     const nextIndex = currentIndex + 1;
     
-    // Animate to the next position
-    await controls.start({
+    // Update currentIndex immediately to trigger visual effects
+    if (nextIndex >= testimonials.length) {
+      setCurrentIndex(0);
+    } else {
+      setCurrentIndex(nextIndex);
+    }
+    
+    // Start track animation simultaneously (no await - runs in parallel with visual effects)
+    const trackAnimation = controls.start({
       x: getTransformValue(nextIndex),
       transition: {
         type: "spring",
@@ -80,13 +87,12 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
       }
     });
     
+    // Wait for animation to complete before handling seamless reset
+    await trackAnimation;
+    
     // If we've reached the end of the first set, reset to beginning seamlessly
     if (nextIndex >= testimonials.length) {
-      // Instantly jump back to position 0 (which is visually identical to position testimonials.length)
       controls.set({ x: getTransformValue(0) });
-      setCurrentIndex(0);
-    } else {
-      setCurrentIndex(nextIndex);
     }
     
     setIsAnimating(false);
@@ -99,8 +105,12 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
     if (currentIndex === 0) {
       // If we're at the beginning, jump to the end of the first set and animate backwards
       const lastIndex = testimonials.length - 1;
-      controls.set({ x: getTransformValue(testimonials.length) }); // Position at duplicate of first item
       
+      // Update currentIndex immediately to trigger visual effects
+      setCurrentIndex(lastIndex);
+      
+      // Position at duplicate of first item and animate backwards
+      controls.set({ x: getTransformValue(testimonials.length) });
       await controls.start({
         x: getTransformValue(lastIndex),
         transition: {
@@ -110,10 +120,14 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
           duration: 0.4
         }
       });
-      setCurrentIndex(lastIndex);
     } else {
       // Normal previous slide
       const prevIndex = currentIndex - 1;
+      
+      // Update currentIndex immediately to trigger visual effects
+      setCurrentIndex(prevIndex);
+      
+      // Animate track movement simultaneously
       await controls.start({
         x: getTransformValue(prevIndex),
         transition: {
@@ -123,16 +137,15 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
           duration: 0.4
         }
       });
-      setCurrentIndex(prevIndex);
     }
     
     setIsAnimating(false);
   }, [currentIndex, testimonials.length, isAnimating, controls, getTransformValue]);
 
-  // Initialize animation position
+  // Initialize animation position only on screen size change, not currentIndex change
   useEffect(() => {
     controls.set({ x: getTransformValue(currentIndex) });
-  }, [screenSize, controls, currentIndex, getTransformValue]);
+  }, [screenSize, controls]); // Removed currentIndex and getTransformValue from dependencies
 
   // Auto-play functionality
   useEffect(() => {

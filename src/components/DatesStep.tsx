@@ -3,7 +3,7 @@ import React, { useMemo, useCallback, useState, useRef, useEffect } from 'react'
 import { X } from 'lucide-react';
 import { Calendar } from '@/components/Calendar';
 import { TimeSelector } from '@/components/TimeSelector';
-import { FormNavigation } from '@/components/FormNavigation';
+
 import { FormStepProps, DatesStepData } from '@/types';
 
 export interface DatesStepComponentProps extends FormStepProps {
@@ -19,6 +19,9 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
   currentStep,
   totalSteps,
   validation,
+  onValidationChange,
+  isModalOpen = true,
+  isFirstRender,
 }) => {
   const [showReturnSoonWarning, setShowReturnSoonWarning] = useState(false);
   const continueButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -107,6 +110,13 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
     
     return collectionValid && returnValid;
   }, [datesData, isReturnJourney]);
+
+  // Report validation state to parent
+  useEffect(() => {
+    if (onValidationChange) {
+      onValidationChange(isStepValid);
+    }
+  }, [isStepValid, onValidationChange]);
 
   // Handle next step
   const handleNext = useCallback(() => {
@@ -290,16 +300,7 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
         </div>
       </div>
 
-      {/* Sticky Footer Navigation */}
-      <FormNavigation
-        currentStep={currentStep}
-        totalSteps={totalSteps}
-        onNext={handleNext}
-        onPrevious={onPrevious}
-        isNextDisabled={!isStepValid}
-        isPreviousDisabled={false}
-        showProgressDots={true}
-      />
+
 
       {showReturnSoonWarning && (
         <div

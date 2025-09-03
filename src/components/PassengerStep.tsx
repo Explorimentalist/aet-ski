@@ -1,9 +1,9 @@
 // src/components/PassengerStep.tsx
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Input } from '@/components/Input';
 // import { PhoneInput } from '@/components/PhoneInput';
-import { FormNavigation } from '@/components/FormNavigation';
+
 import { FormStepProps } from '@/types';
 
 export interface PassengerStepComponentProps extends FormStepProps {
@@ -20,6 +20,9 @@ export const PassengerStep: React.FC<PassengerStepComponentProps> = React.memo((
   totalSteps,
   validation,
   markFieldAsTouched,
+  onValidationChange,
+  isModalOpen = true,
+  isFirstRender,
 }) => {
   const passengerData = useMemo(() => data.passenger || {
     name: '',
@@ -53,6 +56,13 @@ export const PassengerStep: React.FC<PassengerStepComponentProps> = React.memo((
            passengerData.email.trim() !== '' &&
            passengerData.email.includes('@');
   }, [passengerData]);
+
+  // Report validation state to parent
+  useEffect(() => {
+    if (onValidationChange) {
+      onValidationChange(isStepValid);
+    }
+  }, [isStepValid, onValidationChange]);
 
   // Handle next step
   const handleNext = useCallback(() => {
@@ -177,16 +187,7 @@ export const PassengerStep: React.FC<PassengerStepComponentProps> = React.memo((
         </div>
       </div>
 
-      {/* Sticky Footer Navigation */}
-      <FormNavigation
-        currentStep={currentStep}
-        totalSteps={totalSteps}
-        onNext={handleNext}
-        onPrevious={onPrevious}
-        isNextDisabled={!isStepValid}
-        isPreviousDisabled={false}
-        showProgressDots={true}
-      />
+
     </div>
   );
 });

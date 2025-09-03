@@ -1,8 +1,8 @@
 // src/components/JourneyStep.tsx
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Select } from '@/components/Select';
-import { FormNavigation } from '@/components/FormNavigation';
+
 import { FormStepProps } from '@/types';
 import { locations } from '@/data/locations';
 import { filterDestinationOptions, validateDifferentLocations } from '@/utils/locationFilters';
@@ -19,6 +19,9 @@ export const JourneyStep: React.FC<JourneyStepComponentProps> = React.memo(({
   currentStep,
   totalSteps,
   validation,
+  onValidationChange,
+  isModalOpen = true,
+  isFirstRender,
 }) => {
   const journeyData = useMemo(() => data.journey || {
     type: 'one-way' as const,
@@ -112,10 +115,17 @@ export const JourneyStep: React.FC<JourneyStepComponentProps> = React.memo(({
 
   // Validate current step
   const isStepValid = useMemo(() => {
-    return journeyData.collectionPoint && 
-           journeyData.destinationPoint && 
-           journeyData.collectionPoint !== journeyData.destinationPoint;
+    return Boolean(journeyData.collectionPoint && 
+                   journeyData.destinationPoint && 
+                   journeyData.collectionPoint !== journeyData.destinationPoint);
   }, [journeyData]);
+
+  // Report validation state to parent
+  useEffect(() => {
+    if (onValidationChange) {
+      onValidationChange(isStepValid);
+    }
+  }, [isStepValid, onValidationChange]);
 
   // Handle next step
   const handleNext = useCallback(() => {
@@ -268,16 +278,7 @@ export const JourneyStep: React.FC<JourneyStepComponentProps> = React.memo(({
         </div>
       </div>
 
-      {/* Sticky Footer Navigation */}
-      <FormNavigation
-        currentStep={currentStep}
-        totalSteps={totalSteps}
-        onNext={handleNext}
-        onPrevious={() => {}} // No previous on first step
-        isNextDisabled={!isStepValid}
-        isPreviousDisabled={true}
-        showProgressDots={true}
-      />
+
     </div>
   );
 });

@@ -1,9 +1,9 @@
 // src/components/LuggageStep.tsx
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import { X, Briefcase } from 'lucide-react';
 import { NumberInput } from '@/components/NumberInput';
 import { Textarea } from '@/components/Textarea';
-import { FormNavigation } from '@/components/FormNavigation';
+
 import { FormStepProps } from '@/types';
 
 export interface LuggageStepComponentProps extends FormStepProps {
@@ -19,6 +19,9 @@ export const LuggageStep: React.FC<LuggageStepComponentProps> = React.memo(({
   currentStep,
   totalSteps,
   validation,
+  onValidationChange,
+  isModalOpen = true,
+  isFirstRender,
 }) => {
   const luggageData = useMemo(() => data.luggage || {
     skis: 0,
@@ -96,6 +99,13 @@ export const LuggageStep: React.FC<LuggageStepComponentProps> = React.memo(({
   const isStepValid = useMemo(() => {
     return true; // All luggage fields are optional
   }, []);
+
+  // Report validation state to parent
+  useEffect(() => {
+    if (onValidationChange) {
+      onValidationChange(isStepValid);
+    }
+  }, [isStepValid, onValidationChange]);
 
   // Handle next step
   const handleNext = useCallback(() => {
@@ -266,16 +276,7 @@ export const LuggageStep: React.FC<LuggageStepComponentProps> = React.memo(({
         </div>
       </div>
 
-      {/* Sticky Footer Navigation */}
-      <FormNavigation
-        currentStep={currentStep}
-        totalSteps={totalSteps}
-        onNext={handleNext}
-        onPrevious={onPrevious}
-        isNextDisabled={!isStepValid}
-        isPreviousDisabled={false}
-        showProgressDots={true}
-      />
+
     </div>
   );
 });

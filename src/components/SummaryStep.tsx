@@ -1,8 +1,8 @@
 // src/components/SummaryStep.tsx
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { X, Edit } from 'lucide-react';
 import { Textarea } from '@/components/Textarea';
-import { FormNavigation } from '@/components/FormNavigation';
+
 import { FormStepProps } from '@/types';
 
 export interface SummaryStepComponentProps extends FormStepProps {
@@ -18,6 +18,9 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
   currentStep,
   totalSteps,
   onSubmit,
+  onValidationChange,
+  isModalOpen = true,
+  isFirstRender,
 }) => {
   const journeyData = useMemo(() => data.journey || { type: 'one-way', collectionPoint: '', destinationPoint: '' }, [data.journey]);
   const datesData = useMemo(() => data.dates || { collectionDate: null, collectionTime: '', isCollectionFlexible: false, isReturnFlexible: false }, [data.dates]);
@@ -33,6 +36,18 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
       handLuggage: totalPeople,
     };
   }, [peopleData]);
+
+  // Validate current step (always valid as it's the final step)
+  const isStepValid = useMemo(() => {
+    return true; // Summary step is always valid
+  }, []);
+
+  // Report validation state to parent
+  useEffect(() => {
+    if (onValidationChange) {
+      onValidationChange(isStepValid);
+    }
+  }, [isStepValid, onValidationChange]);
 
   // Format date for display
   const formatDate = useCallback((date: Date | null | undefined): string => {
@@ -273,17 +288,7 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
         </div>
       </div>
 
-      {/* Sticky Footer Navigation */}
-      <FormNavigation
-        currentStep={currentStep}
-        totalSteps={totalSteps}
-        onNext={handleSubmit}
-        onPrevious={() => {}} // No previous on final step
-        isNextDisabled={isSubmitting}
-        isPreviousDisabled={true}
-        nextButtonText={isSubmitting ? 'Submitting...' : 'Get a quote'}
-        showProgressDots={false}
-      />
+
     </div>
   );
 });
