@@ -2,57 +2,39 @@
 name: Feature request
 about: Suggest an idea for this project
 title: '[FEATURE] '
-labels: ['enhancement', 'needs-triage']
+labels: enhancement
 assignees: ''
+
 ---
 
-## 🚀 Feature Description
-A clear and concise description of the feature you'd like to see implemented.
+**Is your feature request related to a problem? Please describe.**
+A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 
-## 🎯 Problem Statement
-A clear and concise description of what problem this feature would solve. For example: "I'm always frustrated when [...]"
-
-## 💡 Proposed Solution
+**Describe the solution you'd like**
 A clear and concise description of what you want to happen.
 
-## 🔄 Alternative Solutions
+**Describe alternatives you've considered**
 A clear and concise description of any alternative solutions or features you've considered.
 
-## 📱 User Impact
-How would this feature benefit AET-ski users? Consider:
-- Booking conversion rates
-- User experience improvements
-- Operational efficiency
-- Brand alignment
+**Feature Category**
+- [ ] User Interface/Experience
+- [ ] Booking System
+- [ ] Payment Processing
+- [ ] Route Planning
+- [ ] Email Notifications
+- [ ] Mobile Experience
+- [ ] Performance
+- [ ] Security
+- [ ] Analytics
+- [ ] Admin Panel
+- [ ] Other
 
-## 🎨 Design Considerations
-If applicable, describe any design requirements or considerations:
-- Visual design elements
-- User interface changes
-- Accessibility requirements
-- Mobile responsiveness
+**Additional context**
+Add any other context or screenshots about the feature request here.
 
-## 🔧 Technical Considerations
-If applicable, describe any technical requirements:
-- API integrations needed
-- Database changes
-- Performance implications
-- Security considerations
-
-## 📋 Acceptance Criteria
-List the specific requirements that would make this feature complete:
-- [ ] Criterion 1
-- [ ] Criterion 2
-- [ ] Criterion 3
-
-## 📸 Mockups/Wireframes
-If applicable, add mockups, wireframes, or design references.
-
-## 🔗 Related Issues
-Link any related issues or discussions.
-
-## 📋 Checklist
-- [ ] I have searched existing issues for duplicates
-- [ ] This feature aligns with AET-ski's brand and goals
-- [ ] I have provided clear acceptance criteria
-- [ ] This feature would provide value to users 
+**Business Impact**
+- [ ] This feature will increase conversions
+- [ ] This feature will improve user experience
+- [ ] This feature will reduce support requests
+- [ ] This feature will improve operational efficiency
+- [ ] This feature will enhance security

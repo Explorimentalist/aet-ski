@@ -1,50 +1,35 @@
-## 📝 Description
-A clear and concise description of what this pull request does.
+# Pull Request
 
-## 🎯 Type of Change
-- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
-- [ ] ✨ New feature (non-breaking change which adds functionality)
-- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] 📚 Documentation update
-- [ ] 🎨 Style/UI changes
-- [ ] ♻️ Refactoring (no functional changes)
-- [ ] ⚡ Performance improvements
-- [ ] 🧪 Test additions or updates
+## Description
+Brief description of the changes made in this PR.
 
-## 🔗 Related Issues
-Closes #[issue number]
-Related to #[issue number]
+## Type of Change
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Documentation update
+- [ ] Performance improvement
+- [ ] Code refactoring
 
-## 🧪 Testing
-- [ ] I have tested this change locally
-- [ ] I have added/updated unit tests
-- [ ] I have added/updated E2E tests
-- [ ] All tests pass locally
-- [ ] I have tested on multiple browsers/devices
+## Changes Made
+- 
+- 
+- 
 
-## 📱 Browser Testing
-- [ ] Chrome (latest)
-- [ ] Firefox (latest)
-- [ ] Safari (latest)
-- [ ] Edge (latest)
-- [ ] Mobile Safari
-- [ ] Mobile Chrome
+## Testing
+- [ ] I have tested these changes locally
+- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] New and existing unit tests pass locally with my changes
+- [ ] I have tested the application on different screen sizes
+- [ ] I have tested the booking form functionality
+- [ ] I have verified the deployment works correctly
 
-## 📸 Screenshots
-If applicable, add screenshots to show the changes.
+## Screenshots (if applicable)
+<!-- Add screenshots to help explain your changes -->
 
-### Before
-<!-- Add screenshot here -->
-
-### After
-<!-- Add screenshot here -->
-
-## 🔧 Implementation Details
-Describe the technical implementation of your changes.
-
-## 📋 Checklist
-- [ ] My code follows the project's style guidelines
-- [ ] I have performed a self-review of my code
+## Checklist
+- [ ] My code follows the project's coding standards
+- [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have made corresponding changes to the documentation
 - [ ] My changes generate no new warnings
@@ -52,25 +37,15 @@ Describe the technical implementation of your changes.
 - [ ] New and existing unit tests pass locally with my changes
 - [ ] Any dependent changes have been merged and published
 
-## 🚀 Deployment Notes
+## Deployment Notes
 - [ ] This change requires environment variable updates
 - [ ] This change requires database migrations
-- [ ] This change requires API changes
-- [ ] This change affects the build process
+- [ ] This change affects the booking system
+- [ ] This change affects the payment processing
+- [ ] This change requires manual deployment steps
 
-## 📊 Performance Impact
-- [ ] No performance impact
-- [ ] Performance improvement
-- [ ] Performance regression (explain below)
+## Related Issues
+Fixes #(issue number)
 
-If there's a performance impact, please describe:
-
-## 🔒 Security Considerations
-- [ ] No security implications
-- [ ] Security improvement
-- [ ] Security concern (explain below)
-
-If there are security implications, please describe:
-
-## 📝 Additional Notes
-Any additional information that reviewers should know about this pull request. 
+## Additional Notes
+Any additional information that reviewers should know.
