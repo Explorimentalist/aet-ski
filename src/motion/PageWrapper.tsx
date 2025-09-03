@@ -111,13 +111,13 @@ export const PageSection: React.FC<{
   animation?: keyof typeof T.variants;
   delay?: number;
 }> = ({ children, className = '', animation = 'slideUp', delay = 0 }) => {
-  const { prefersReduced, variants: safeVariants } = useMotionSafe();
+  const { prefersReduced } = useMotionSafe();
   
   if (prefersReduced) {
     return <section className={className}>{children}</section>;
   }
   
-  const baseVariants = safeVariants[animation];
+  const baseVariants = T.variants[animation];
   
   const variants = {
     hidden: baseVariants.hidden,

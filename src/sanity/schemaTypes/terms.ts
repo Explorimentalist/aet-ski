@@ -121,7 +121,7 @@ export const termsType = defineType({
     prepare(selection) {
       const { title, lastUpdated, sectionCount } = selection
       const date = lastUpdated ? new Date(lastUpdated).toLocaleDateString() : 'No date'
-      const activeSections = sectionCount ? sectionCount.filter((s: any) => s.isActive).length : 0
+      const activeSections = sectionCount ? sectionCount.filter((s: Record<string, unknown>) => s.isActive).length : 0
       const totalSections = sectionCount ? sectionCount.length : 0
       return {
         title: title || 'Terms and Conditions',

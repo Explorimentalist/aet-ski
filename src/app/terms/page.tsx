@@ -114,7 +114,12 @@ export default function TermsPage() {
   const [termsData, setTermsData] = useState<TermsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [navigationItems, setNavigationItems] = useState<any[]>([]);
+  const [navigationItems, setNavigationItems] = useState<Array<{
+    id: string;
+    number: string;
+    title: string;
+    isActive?: boolean;
+  }>>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   // Fetch terms data from Sanity

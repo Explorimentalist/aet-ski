@@ -85,12 +85,12 @@ export const logoFormats: Record<string, 'svg' | 'png' | 'auto'> = {
   'merinet': 'svg',
   'welove2ski': 'png', // Placeholder created as PNG
   'courchnet': 'svg',
-  'snowheads': 'gif', // Placeholder created as GIF
+  'snowheads': 'png', // Placeholder created as PNG (converted from GIF)
   'natives': 'png', // Placeholder created as PNG
   'unplugged-courchevel': 'png', // Placeholder created as PNG
   
   // Self catering - Mixed formats (some are placeholders)
-  'extreme-cuisine': 'jpg', // Placeholder created as JPG
+  'extreme-cuisine': 'png', // Placeholder created as PNG (converted from JPG)
 };
 
 // Helper function to get logo format with fallback

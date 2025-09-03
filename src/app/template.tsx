@@ -56,7 +56,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
               y: '-100%',           // Exit upward
               transition: {
                 duration: T.glassmorphism.timing.slideOut,
-                ease: T.glassmorphism.overlay_variants.exit.transition.ease,
+                ease: 'easeInOut',
                 type: 'tween',
               }
             }}
@@ -75,7 +75,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
         }}
         transition={{
           duration: T.glassmorphism.timing.slideOut,
-          ease: T.glassmorphism.overlay_variants.exit.transition.ease,
+          ease: 'easeInOut',
           delay: showContent ? 0.1 : 0,
         }}
       >

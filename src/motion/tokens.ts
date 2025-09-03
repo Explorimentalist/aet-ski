@@ -215,8 +215,7 @@ export const motionTokens = {
         opacity: 1,
         transition: {
           duration: 0.48,
-          ease: [0.25, 0.90, 0.30, 1],  // Brand easing
-          type: 'tween',
+          ease: [0.25, 0.90, 0.30, 1] as [number, number, number, number],
         }
       },
       exit: {
@@ -224,8 +223,7 @@ export const motionTokens = {
         opacity: 1,
         transition: {
           duration: 0.48,
-          ease: [0.25, 0.90, 0.30, 1],  // Brand easing
-          type: 'tween',
+          ease: [0.25, 0.90, 0.30, 1] as [number, number, number, number],
           delay: 0.24,                  // Pause duration
         }
       }
@@ -244,7 +242,7 @@ export const motionTokens = {
         scale: 1,
         transition: {
           duration: 0.48,
-          ease: [0.25, 0.90, 0.30, 1],
+          ease: [0.25, 0.90, 0.30, 1] as [number, number, number, number],
           delay: 0.72,                  // After overlay covers + pause
         }
       }

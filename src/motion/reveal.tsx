@@ -81,7 +81,7 @@ export const Reveal: React.FC<RevealProps> = ({
     if (customVariants) return customVariants;
     
     const animationType = getAnimationType();
-    const baseVariants = safeVariants[animationType];
+    const baseVariants = T.variants[animationType];
     
           // Add stagger support for children
       if (staggerType) {
@@ -103,7 +103,7 @@ export const Reveal: React.FC<RevealProps> = ({
         ...baseVariants.visible,
         transition: {
           duration: duration || T.transitions.medium.duration,
-          ease: ease || T.transitions.medium.ease,
+          ease: (ease as [number, number, number, number] | string) || T.e.brand,
           delay,
         },
       },
