@@ -118,7 +118,7 @@ export default function HomePageClient() {
                     <span className="text-[40px] leading-none font-light text-text-form">2</span>
                   </div>
                   <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.001em]">
-                    We cover all the resorts of Les 3 Vallées as well as Val d&apos;Isère, Tignes, Les Arcs, La Plagne and others in their surrounding areas.
+                  We cover all the resorts of Les 3 Vallées as well as La Plagne, Les Arcs, Tignes, Val d'Isère and others in the surrounding areas
                   </p>
                   <div className="col-span-2 h-px bg-border-secondary"></div>
                 </div>

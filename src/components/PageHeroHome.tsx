@@ -76,7 +76,7 @@ export const PageHeroHome: React.FC<PageHeroHomeProps> = ({ onQuoteClick }) => {
                     color: '#F5F5F5'
                   }}
                 >
-                  More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski
+                  More than 15 years experience of transferring people to Les 3 Vallées, Paradiski & Espace Killy
                 </p>
               </div>
             </div>
