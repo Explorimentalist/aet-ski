@@ -39,8 +39,13 @@ export default function RoutesPageClient() {
         <PageHero
           heading="Airport Transfer Routes from Geneva, Lyon & Grenoble"
           description="Deciding which airport to fly into can often be a simple case of choosing the most convenient flight from your local airport in the UK. You may find that the cost of the flight is the deciding factor but it's also important to understand the geography of where you'll arrive as well."
-          imageSrc="https://res.cloudinary.com/dzrn3khsd/image/upload/v1754484387/routes_top_map_scw9bx.png"
+          cloudinaryPublicId="v1754484387/routes_top_map_scw9bx"
           imageAlt="Map showing routes from various airports to ski resorts in the French Alps"
+          imageWidth={1200}
+          imageHeight={600}
+          deviceType="desktop"
+          format="auto"
+          priority={true}
         />
 
         {/* Geneva Transfer */}
@@ -54,7 +59,7 @@ export default function RoutesPageClient() {
             cost: "€€€"
           }}
           transferDescription={"Leaving Geneva airport by motorway to Annecy, we then travel south along the shores of Lake Annecy to the town of Albertville and then to Moutiers. Once at Moutiers it is a further:<ul><li>- <strong>30 mins</strong> to Meribel / Courchevel / St.Martin de Belleville.</li><li>- <strong>1 hour</strong> to Val Thorens / La Plagne / Les Arcs / Tignes / Val d'Isere.</li></ul>"}
-          mapImageSrc="https://res.cloudinary.com/dzrn3khsd/image/upload/v1754484486/Geneva_airport_-_Moutiers_jdaunu.png"
+          cloudinaryPublicId="v1754484486/Geneva_airport_-_Moutiers_jdaunu"
           mapImageAlt="Map showing transfer route from Geneva Airport to ski resorts"
         />
 
@@ -68,7 +73,7 @@ export default function RoutesPageClient() {
             cost: "€€€€€"
           }}
           transferDescription={"Leaving Lyon airport the majority of the transfer is via motorway, heavy traffic is to be expected on Saturdays. Once at Moutiers it is a further:<ul><li>- <strong>30 mins</strong> to Meribel / Courchevel / St.Martin de Belleville.</li><li>- <strong>1 hour</strong> to Val Thorens / La Plagne / Les Arcs / Tignes / Val d'Isere.</li></ul>"}
-          mapImageSrc="https://res.cloudinary.com/dzrn3khsd/image/upload/v1755189874/3839c0a0-0adc-4f18-aa8c-230b485e033b.png"
+          cloudinaryPublicId="v1755189874/3839c0a0-0adc-4f18-aa8c-230b485e033b"
           mapImageAlt="Map showing transfer route from Lyon Airport to ski resorts"
         />
 
@@ -82,7 +87,7 @@ export default function RoutesPageClient() {
             cost: "€€€"
           }}
           transferDescription={"Leaving Chambery airport the majority of the transfer is via motorway, heavy traffic is to be expected on Saturdays and bad weather will shut the airport where your arriving will be redirected to the nearest available airport or departing flight be delayed/postponed. Once at Moutiers it is a further:<ul><li>- <strong>30 mins</strong> to Meribel / Courchevel / St.Martin de Belleville.</li><li>- <strong>1 hour</strong> to Val Thorens / La Plagne / Les Arcs / Tignes / Val d'Isere.</li></ul>"}
-          mapImageSrc="https://res.cloudinary.com/dzrn3khsd/image/upload/v1754484385/Chambery_airport_-_Moutiers_fgpzdw.png"
+          cloudinaryPublicId="v1754484385/Chambery_airport_-_Moutiers_fgpzdw"
           mapImageAlt="Map showing transfer route from Chambéry Airport to ski resorts"
         />
 
@@ -96,7 +101,7 @@ export default function RoutesPageClient() {
             cost: "€€€€€"
           }}
           transferDescription={"Leaving Grenoble airport the majority of the transfer is via motorway, heavy traffic is to be expected on Saturdays. Once at Moutiers it is a further:<ul><li>- <strong>30 mins</strong> to Meribel / Courchevel / St.Martin de Belleville.</li><li>- <strong>1 hour</strong> to Val Thorens / La Plagne / Les Arcs / Tignes / Val d'Isere.</li></ul>"}
-          mapImageSrc="https://res.cloudinary.com/dzrn3khsd/image/upload/v1754484486/Grenoble_airport_-_Moutiers_iggjgv.png"
+          cloudinaryPublicId="v1754484486/Grenoble_airport_-_Moutiers_iggjgv"
           mapImageAlt="Map showing transfer route from Grenoble Airport to ski resorts"
         />
 
@@ -110,7 +115,7 @@ export default function RoutesPageClient() {
             cost: "€"
           }}
           transferDescription={"A very popular transport hub with the Eurostar Snow train service operating from London, however finding transport from Moutiers to your resort can be challenging.<ul><li>- <strong>30 mins</strong> to Meribel / Courchevel / St.Martin de Belleville.</li><li>- <strong>1 hour</strong> to Val Thorens / La Plagne / Les Arcs / Tignes / Val d'Isere.</li></ul>"}
-          mapImageSrc="https://res.cloudinary.com/dzrn3khsd/image/upload/v1755189664/a3f3c9ce-f1ef-4476-8716-b533c3ca9f00.png"
+          cloudinaryPublicId="v1755189664/a3f3c9ce-f1ef-4476-8716-b533c3ca9f00"
           mapImageAlt="Map showing Eurostar and TGV routes to Moutiers Station"
         />
       </PageWrapper>

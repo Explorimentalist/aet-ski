@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { uploadAllLogos } from '@/utils/uploadLogos';
 import { Button } from '@/components/Button';
 import { getLogosForUpload } from '@/data/logos';
@@ -68,10 +69,15 @@ export default function UploadLogosPage() {
                 <div key={logo.publicId} className="border rounded p-4">
                   <h4 className="font-medium text-sm mb-2">{logo.name}</h4>
                   <p className="text-xs text-gray-500 mb-2">ID: {logo.publicId}</p>
-                  <img
+                  <Image
                     src={logo.url}
                     alt={logo.name}
+                    width={200}
+                    height={64}
                     className="w-full h-16 object-contain bg-gray-100 rounded"
+                    loading="lazy"
+                    sizes="200px"
+                    quality={75}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';

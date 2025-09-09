@@ -40,8 +40,13 @@ export default function GenevaToValDisereClient() {
         <PageHero
           heading="Private Transfer from Geneva to Val d&apos;Isère"
           description="Premium door-to-door airport transfer from Geneva Airport to Val d&apos;Isère ski resort. Professional drivers, comfortable vehicles, and reliable service for your ski holiday."
-          imageSrc="https://res.cloudinary.com/dzrn3khsd/image/upload/v1754484486/Geneva_airport_-_Moutiers_jdaunu.png"
+          cloudinaryPublicId="v1754484486/Geneva_airport_-_Moutiers_jdaunu"
           imageAlt="Map showing transfer route from Geneva Airport to Val d'Isère ski resort"
+          imageWidth={1200}
+          imageHeight={600}
+          deviceType="desktop"
+          format="auto"
+          priority={true}
         />
 
         {/* Breadcrumb Navigation */}
@@ -82,7 +87,7 @@ export default function GenevaToValDisereClient() {
               <li><strong>Moutiers</strong> → Val d&apos;Isère (final ascent to resort)</li>
             </ul>
           `}
-          mapImageSrc="https://res.cloudinary.com/dzrn3khsd/image/upload/v1754484486/Geneva_airport_-_Moutiers_jdaunu.png"
+          cloudinaryPublicId="v1754484486/Geneva_airport_-_Moutiers_jdaunu"
           mapImageAlt="Detailed map showing transfer route from Geneva Airport to Val d'Isère ski resort"
         />
 

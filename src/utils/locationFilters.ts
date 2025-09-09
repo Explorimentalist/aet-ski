@@ -33,7 +33,10 @@ export const filterDestinationOptions = (
               ...subcategory,
               children: filteredChildren
             }
-          : null;
+          : {
+              ...subcategory,
+              children: []
+            };
       }
       
       // For direct options, filter out the selected collection point
@@ -42,7 +45,7 @@ export const filterDestinationOptions = (
       }
       
       return subcategory;
-    }).filter(Boolean) // Remove null entries
+    }).filter((item): item is CategorizedOption => item !== null) // Remove null entries
   })).filter(category => 
     // Only return categories that have children after filtering
     category.children && category.children.length > 0

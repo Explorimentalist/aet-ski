@@ -1,5 +1,6 @@
 // src/components/MarqueeRebrand.tsx
 import React from 'react';
+import Image from 'next/image';
 import { Grid } from './Grid';
 import { Logo } from './Logo';
 
@@ -15,11 +16,15 @@ const MarqueeRebrand: React.FC = () => {
       /* Avoid flex gap rounding causing jitter by rounding subpixels via translateZ */
       style={{ gap: 'var(--spacing-2xl)', transform: 'translateZ(0)' }}
     >
-      <img
+      <Image
         src="/images/logo_white_to_black.png"
         alt="White to black logo"
+        width={24}
+        height={24}
         className="h-6 w-auto"
-        loading="lazy"
+        priority={true}
+        sizes="24px"
+        quality={90}
       />
       <span className="text-body text-base leading-[150%] tracking-[-0.011em] text-text-form">
         now operates as

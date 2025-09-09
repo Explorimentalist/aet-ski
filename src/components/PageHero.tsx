@@ -3,15 +3,25 @@
 // Features staggered entrance, image reveal, and overlay animations
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { motionTokens, useMotionSafeSimple } from '@/motion';
 import { Grid, GridLayouts } from './Grid';
+import { getAdvancedOptimizedUrl } from '@/lib/cloudinary';
 
 interface PageHeroProps {
   heading: string;
   description: string;
-  imageSrc: string;
+  imageSrc?: string;
   imageAlt: string;
+  // Next.js Image props
+  imageWidth?: number;
+  imageHeight?: number;
+  priority?: boolean;
+  // Phase 2: Advanced Cloudinary optimization
+  cloudinaryPublicId?: string;
+  deviceType?: 'mobile' | 'tablet' | 'desktop';
+  format?: 'auto' | 'webp' | 'avif' | 'jpg' | 'png';
 }
 
 export const PageHero: React.FC<PageHeroProps> = ({
@@ -19,7 +29,28 @@ export const PageHero: React.FC<PageHeroProps> = ({
   description,
   imageSrc,
   imageAlt,
+  imageWidth = 1200,
+  imageHeight = 600,
+  priority = true,
+  // Phase 2: Advanced Cloudinary optimization
+  cloudinaryPublicId,
+  deviceType = 'desktop',
+  format = 'auto',
 }) => {
+  // Phase 2: Generate optimized image URL
+  const optimizedImageSrc = React.useMemo(() => {
+    if (cloudinaryPublicId) {
+      return getAdvancedOptimizedUrl(cloudinaryPublicId, {
+        width: imageWidth,
+        height: imageHeight,
+        quality: 'auto',
+        format,
+        deviceType,
+        crop: 'fill'
+      });
+    }
+    return imageSrc || '';
+  }, [cloudinaryPublicId, imageSrc, imageWidth, imageHeight, format, deviceType]);
   const shouldAnimate = useMotionSafeSimple();
 
   return (
@@ -121,7 +152,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
             }}
           >
             <div className="relative overflow-hidden rounded-2xl">
-              <motion.picture
+              <motion.div
                 initial={shouldAnimate ? { scale: 1.1 } : false}
                 animate={shouldAnimate ? { scale: 1 } : undefined}
                 transition={{
@@ -130,13 +161,18 @@ export const PageHero: React.FC<PageHeroProps> = ({
                   delay: motionTokens.stagger.sm
                 }}
               >
-                {/* Default image */}
-                <img
-                  src={imageSrc}
+                {/* Hero image with Phase 2 Cloudinary optimization */}
+                <Image
+                  src={optimizedImageSrc}
                   alt={imageAlt}
+                  width={imageWidth}
+                  height={imageHeight}
                   className="w-full h-auto rounded-2xl"
+                  priority={priority}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
+                  quality={90}
                 />
-              </motion.picture>
+              </motion.div>
               
               {/* Animated gradient overlay */}
               <motion.div 

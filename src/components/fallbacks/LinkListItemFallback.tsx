@@ -1,11 +1,13 @@
-// src/components/LinkListItem.tsx
+// src/components/fallbacks/LinkListItemFallback.tsx
+// Fallback component with original <img> implementation
+// Phase 4: Performance Testing & Validation - Safety Measures
+
 import React from 'react';
-import Image from 'next/image';
-import { Grid } from './Grid';
+import { Grid } from '../Grid';
 import { ExternalLink } from 'lucide-react';
 import { getAdvancedOptimizedUrl } from '@/lib/cloudinary';
 
-interface LinkListItemProps {
+interface LinkListItemFallbackProps {
   /** Company logo as Cloudinary public ID or fallback URL */
   logo: string;
   /** Company name - used for alt text and display */
@@ -18,28 +20,25 @@ interface LinkListItemProps {
   logoWidth?: number;
   /** Logo height for responsive sizing */
   logoHeight?: number;
-  /** Priority loading for above-the-fold logos */
-  priority?: boolean;
   // Phase 2: Advanced Cloudinary optimization
   deviceType?: 'mobile' | 'tablet' | 'desktop';
   format?: 'auto' | 'webp' | 'avif' | 'jpg' | 'png';
 }
 
-export const LinkListItem: React.FC<LinkListItemProps> = ({
+export const LinkListItemFallback: React.FC<LinkListItemFallbackProps> = ({
   logo,
   companyName,
   url,
   description,
   logoWidth = 300,
   logoHeight = 40,
-  priority = false,
   // Phase 2: Advanced Cloudinary optimization
   deviceType = 'desktop',
   format = 'auto',
 }) => {
   const displayUrl = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
-    // Phase 2: Generate advanced optimized image URL using Cloudinary
+  // Phase 2: Generate advanced optimized image URL using Cloudinary
   const optimizedLogoUrl = React.useMemo(() => {
     // If it's already a full URL (fallback), use as-is
     if (logo.startsWith('http')) {
@@ -73,16 +72,14 @@ export const LinkListItem: React.FC<LinkListItemProps> = ({
         {/* Logo Section - 3 cols desktop, 2 cols tablet, full width mobile; fill column width up to 48px height */}
         <div className="col-mobile-4 tablet:col-tablet-2 desktop:col-desktop-3 flex items-center">
           <div className="min-h-12 flex items-center justify-start w-full">
-            <Image
+            {/* Fallback Image - Original implementation without lazy loading optimizations */}
+            <img
               src={optimizedLogoUrl}
               alt={altText}
               width={logoWidth}
               height={logoHeight}
               className="block h-auto max-h-12 max-w-full object-contain"
-              priority={priority}
-              loading={priority ? "eager" : "lazy"}
-              sizes="(max-width: 768px) 200px, (max-width: 1200px) 250px, 300px"
-              quality={85}
+              // No priority, loading, or fetchPriority attributes - original implementation
               style={{ objectPosition: 'left center', objectFit: 'contain' }}
             />
           </div>
@@ -139,3 +136,4 @@ export const LinkListItem: React.FC<LinkListItemProps> = ({
     </div>
   );
 };
+

@@ -30,6 +30,9 @@ jobs:
       - name: Run unit tests
         run: npm run test:ci
         
+      - name: Run performance tests
+        run: npm run test:performance
+        
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3
         if: always()
@@ -67,6 +70,14 @@ jobs:
           NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
           CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          
+      - name: Run Lighthouse CI
+        run: npm run lighthouse:ci
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          
+      - name: Setup rollback plan
+        run: npm run rollback:setup
           
       - name: Deploy to Ionos (Primary)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4

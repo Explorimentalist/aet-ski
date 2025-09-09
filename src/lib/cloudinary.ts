@@ -113,6 +113,151 @@ export function generateSrcSet(publicId: string, widths: number[] = [400, 768, 1
     .join(', ');
 }
 
+// Phase 2: Advanced format optimization with WebP/AVIF fallbacks
+export function getAdvancedOptimizedUrl(publicId: string, options: {
+  width?: number;
+  height?: number;
+  quality?: number | 'auto';
+  format?: 'auto' | 'webp' | 'avif' | 'jpg' | 'png';
+  crop?: 'scale' | 'fit' | 'fill' | 'crop';
+  deviceType?: 'mobile' | 'tablet' | 'desktop';
+} = {}) {
+  const { 
+    width, 
+    height, 
+    quality = 'auto', 
+    format = 'auto',
+    crop = 'scale',
+    deviceType = 'desktop'
+  } = options;
+  
+  // Handle fallback URLs (if publicId is already a full URL)
+  if (publicId.startsWith('http')) {
+    return publicId;
+  }
+  
+  let url = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload`;
+  
+  // Add transformations for Phase 2 optimizations
+  const transformations = [];
+  
+  if (width) transformations.push(`w_${width}`);
+  if (height) transformations.push(`h_${height}`);
+  if (crop) transformations.push(`c_${crop}`);
+  
+  // Phase 2: Device-specific quality optimization
+  let optimizedQuality = quality;
+  if (quality === 'auto') {
+    switch (deviceType) {
+      case 'mobile':
+        optimizedQuality = 75; // Lower quality for mobile to save bandwidth
+        break;
+      case 'tablet':
+        optimizedQuality = 80; // Medium quality for tablet
+        break;
+      case 'desktop':
+        optimizedQuality = 85; // Higher quality for desktop
+        break;
+    }
+  }
+  
+  // Phase 2: Advanced format optimization
+  transformations.push(`f_${format}`);
+  transformations.push(`q_${optimizedQuality}`);
+  
+  // Phase 2: Enhanced SEO optimizations
+  transformations.push('g_auto'); // Auto gravity for better cropping
+  transformations.push('fl_progressive'); // Progressive loading
+  transformations.push('fl_immutable_cache'); // Better caching
+  
+  if (transformations.length > 0) {
+    url += `/${transformations.join(',')}`;
+  }
+  
+  return `${url}/${publicId}`;
+}
+
+// Phase 2: Generate responsive srcSet with format optimization
+export function generateAdvancedSrcSet(publicId: string, options: {
+  widths?: number[];
+  formats?: ('webp' | 'avif' | 'auto')[];
+  deviceTypes?: ('mobile' | 'tablet' | 'desktop')[];
+} = {}) {
+  const { 
+    widths = [400, 768, 1200, 1600],
+    formats = ['avif', 'webp', 'auto'], // AVIF first, then WebP, then fallback
+    deviceTypes = ['mobile', 'tablet', 'desktop']
+  } = options;
+  
+  const srcSets: string[] = [];
+  
+  // Generate srcSet for each format
+  formats.forEach(format => {
+    const formatSrcSet = widths
+      .map((width, index) => {
+        const deviceType = deviceTypes[index] || 'desktop';
+        const url = getAdvancedOptimizedUrl(publicId, { 
+          width, 
+          quality: 'auto',
+          format,
+          deviceType
+        });
+        return `${url} ${width}w`;
+      })
+      .join(', ');
+    
+    srcSets.push(formatSrcSet);
+  });
+  
+  return srcSets;
+}
+
+// Phase 2: Generate picture element with format fallbacks
+export function generatePictureElement(publicId: string, options: {
+  alt: string;
+  className?: string;
+  widths?: number[];
+  mobileWidths?: number[];
+  tabletWidths?: number[];
+  desktopWidths?: number[];
+  priority?: boolean;
+}) {
+  const {
+    alt,
+    className = '',
+    widths = [400, 768, 1200, 1600],
+    mobileWidths = [400, 800],
+    tabletWidths = [800, 1200],
+    desktopWidths = [1200, 1600],
+    priority = false
+  } = options;
+  
+  // Generate srcSets for different formats
+  const avifSrcSet = generateAdvancedSrcSet(publicId, { 
+    widths, 
+    formats: ['avif'] 
+  })[0];
+  const webpSrcSet = generateAdvancedSrcSet(publicId, { 
+    widths, 
+    formats: ['webp'] 
+  })[0];
+  const fallbackSrcSet = generateAdvancedSrcSet(publicId, { 
+    widths, 
+    formats: ['auto'] 
+  })[0];
+  
+  return {
+    avifSrcSet,
+    webpSrcSet,
+    fallbackSrcSet,
+    fallbackUrl: getAdvancedOptimizedUrl(publicId, { 
+      width: 1200, 
+      quality: 'auto',
+      format: 'auto'
+    })
+  };
+}
+
 // Upload image by URL helper for external logos
 export async function uploadImageByUrl(imageUrl: string, options?: { 
   folder?: string; 

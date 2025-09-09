@@ -219,8 +219,13 @@ export default function TravelInfoPage() {
         <PageHero
           heading="Helpful travel information"
           description="We highlight companies who provide extremely successful services both in getting to les Trois Vallées and enhancing your enjoyment once here. Read more about the ways in which they can help you get more from your time on the slopes."
-          imageSrc="https://res.cloudinary.com/dzrn3khsd/image/upload/v1754489630/links_s1uucr.png"
+          cloudinaryPublicId="v1754489630/links_s1uucr"
           imageAlt="Travel information links and resources for skiing in the French Alps"
+          imageWidth={1200}
+          imageHeight={600}
+          deviceType="desktop"
+          format="auto"
+          priority={true}
         />
 
 

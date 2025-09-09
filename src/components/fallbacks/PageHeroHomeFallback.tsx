@@ -1,13 +1,16 @@
-// src/components/PageHeroHome.tsx
-import React from 'react';
-import { Grid, GridLayouts } from './Grid';
-import { Button } from './Button';
+// src/components/fallbacks/PageHeroHomeFallback.tsx
+// Fallback component with original <img> implementation
+// Phase 4: Performance Testing & Validation - Safety Measures
 
-interface PageHeroHomeProps {
+import React from 'react';
+import { Grid, GridLayouts } from '../Grid';
+import { Button } from '../Button';
+
+interface PageHeroHomeFallbackProps {
   onQuoteClick: () => void;
 }
 
-export const PageHeroHome: React.FC<PageHeroHomeProps> = ({ onQuoteClick }) => {
+export const PageHeroHomeFallback: React.FC<PageHeroHomeFallbackProps> = ({ onQuoteClick }) => {
   return (
     <section className="relative bg-background-primary">
       <Grid container>
@@ -16,32 +19,13 @@ export const PageHeroHome: React.FC<PageHeroHomeProps> = ({ onQuoteClick }) => {
           <div className="relative">
             {/* Responsive Image Container - Using custom aspect ratios */}
             <div className="relative w-full aspect-hero-mobile tablet:aspect-hero-desktop overflow-hidden rounded-lg tablet:rounded-xl desktop:rounded-2xl">
-              {/* Background Image - Enhanced Cloudinary with responsive images */}
-              <picture>
-                {/* Mobile version - portrait aspect ratio 392:520 */}
-                <source
-                  media="(max-width: 767px)"
-                  srcSet="https://res.cloudinary.com/dzrn3khsd/image/upload/w_400,h_530,c_fill,g_auto,f_auto,q_auto/v1754407276/AET.ski_pj8eld.png 400w,
-                          https://res.cloudinary.com/dzrn3khsd/image/upload/w_800,h_1060,c_fill,g_auto,f_auto,q_auto/v1754407276/AET.ski_pj8eld.png 800w"
-                  sizes="100vw"
-                />
-                {/* Tablet and Desktop version - landscape aspect ratio 1272:848 */}
-                <source
-                  media="(min-width: 768px)"
-                  srcSet="https://res.cloudinary.com/dzrn3khsd/image/upload/w_800,h_533,c_fill,g_auto,f_auto,q_auto/v1754407276/AET.ski_pj8eld.png 800w,
-                          https://res.cloudinary.com/dzrn3khsd/image/upload/w_1200,h_800,c_fill,g_auto,f_auto,q_auto/v1754407276/AET.ski_pj8eld.png 1200w,
-                          https://res.cloudinary.com/dzrn3khsd/image/upload/w_1600,h_1067,c_fill,g_auto,f_auto,q_auto/v1754407276/AET.ski_pj8eld.png 1600w"
-                  sizes="100vw"
-                />
-                {/* Fallback image for better browser support - Priority loading for above-the-fold */}
-                <img
-                  src="https://res.cloudinary.com/dzrn3khsd/image/upload/w_1200,h_800,c_fill,g_auto,f_auto,q_auto/v1754407276/AET.ski_pj8eld.png"
-                  alt="French Alps mountain landscape with snow-covered peaks and ski resorts"
-                  className="absolute inset-0 w-full h-full object-cover"
-                  loading="eager"
-                  fetchPriority="high"
-                />
-              </picture>
+              {/* Fallback Image - Original implementation without lazy loading optimizations */}
+              <img
+                src="https://res.cloudinary.com/dzrn3khsd/image/upload/w_1200,h_800,c_fill,g_auto,f_auto,q_auto/v1754407276/AET.ski_pj8eld.png"
+                alt="French Alps mountain landscape with snow-covered peaks and ski resorts"
+                className="absolute inset-0 w-full h-full object-cover"
+                // No loading or fetchPriority attributes - original implementation
+              />
               
               {/* Gradient Veil with Multiply Blend Mode - Updated to match design */}
               <div 
@@ -99,3 +83,4 @@ export const PageHeroHome: React.FC<PageHeroHomeProps> = ({ onQuoteClick }) => {
     </section>
   );
 };
+

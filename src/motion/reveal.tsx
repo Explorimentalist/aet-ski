@@ -103,7 +103,8 @@ export const Reveal: React.FC<RevealProps> = ({
         ...baseVariants.visible,
         transition: {
           duration: duration || T.transitions.medium.duration,
-          ease: (ease as [number, number, number, number] | string) || T.e.brand,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ease: (ease || T.transitions.medium.ease) as any,
           delay,
         },
       },
@@ -134,7 +135,6 @@ export const Reveal: React.FC<RevealProps> = ({
   
   return (
     <motion.div
-      as={Component}
       className={className}
       initial="hidden"
       whileInView="visible"
@@ -200,7 +200,8 @@ export const StaggerItem: React.FC<{
     return <div className={className}>{children}</div>;
   }
   
-  const baseVariants = safeVariants[animation];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const baseVariants = (safeVariants as any)[animation];
   
   const variants: Variants = {
     hidden: baseVariants.hidden,

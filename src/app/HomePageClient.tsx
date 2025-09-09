@@ -7,6 +7,7 @@ import { Clock, Shield, MapPin, CheckCircle, Bus } from 'lucide-react';
 import { Footer } from '@/components/Footer';
 import { Grid } from '@/components/Grid';
 import { CardSmall } from '@/components/CardSmall';
+import { CardImage } from '@/components/CardImage';
 import { TestimonialsCarousel } from '@/components/TestimonialsCarousel';
 import { MultiStepForm } from '@/components/MultiStepForm';
 import { PageHeroHome } from '@/components/PageHeroHome';
@@ -95,7 +96,7 @@ export default function HomePageClient() {
                   fontFamily: 'GT Walsheim Trial, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
                 }}
               >
-                The transfers
+                Our transfers
               </h2>
               
               {/* Service Features List - Numbered with separators */}
@@ -106,7 +107,7 @@ export default function HomePageClient() {
                     <span className="text-[40px] leading-none font-light text-text-form">1</span>
                   </div>
                   <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.011em]">
-                    We offer private transfers from Geneva, Lyon, Chambery and Grenoble airports
+                  We offer private transfers from Geneva, Chambery, Lyon, Grenoble & even Milan airports
                   </p>
                   <div className="col-span-2 h-px bg-border-secondary"></div>
                 </div>
@@ -145,10 +146,15 @@ export default function HomePageClient() {
           {/* Right Column - Static Map with veil (9/5/4 columns) */}
           <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9">
             <ImageWithGradient
-              src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1754484387/routes_top_map_scw9bx.png"
+              cloudinaryPublicId="v1754484387/routes_top_map_scw9bx"
               alt="Map showing transfer routes from airports to resorts"
               height="h-[528px]"
               className="rounded-2xl"
+              imageWidth={1200}
+              imageHeight={528}
+              deviceType="desktop"
+              format="auto"
+              priority={true}
             />
           </div>
 
@@ -236,6 +242,12 @@ export default function HomePageClient() {
                 className="flex-shrink-0"
                 variant="flex"
               />
+              <CardImage
+title="Well equipped vehicles"
+description="Checked regularly, our vans have what it takes to make your journey."
+imagePublicId="https://res.cloudinary.com/dzrn3khsd/image/upload/v1754497104/A693CE8C-F7BD-49C9-B3D6-D51B122DDC07_tdkl1n.jpg" // or a full Cloudinary URL
+variant="flex"
+/>
             </div>
           </div>
         </Grid>

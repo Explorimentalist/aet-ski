@@ -1,7 +1,9 @@
 // src/components/RouteTransfer.tsx
 import React from 'react';
+import Image from 'next/image';
 import { Grid } from './Grid';
 import { ShieldCheck } from 'lucide-react';
+import { getAdvancedOptimizedUrl } from '@/lib/cloudinary';
 
 interface TransferStats {
   departure: string;
@@ -14,10 +16,17 @@ interface RouteTransferProps {
   heading: string;
   transferStats: TransferStats;
   transferDescription: string;
-  mapImageSrc: string;
+  mapImageSrc?: string;
   mapImageAlt: string;
   isRecommended?: boolean;
   recommendedText?: string;
+  // Next.js Image props
+  mapImageWidth?: number;
+  mapImageHeight?: number;
+  // Phase 2: Advanced Cloudinary optimization
+  cloudinaryPublicId?: string;
+  deviceType?: 'mobile' | 'tablet' | 'desktop';
+  format?: 'auto' | 'webp' | 'avif' | 'jpg' | 'png';
 }
 
 export const RouteTransfer: React.FC<RouteTransferProps> = ({
@@ -28,7 +37,27 @@ export const RouteTransfer: React.FC<RouteTransferProps> = ({
   mapImageAlt,
   isRecommended = false,
   recommendedText = "90% go this way",
+  mapImageWidth = 800,
+  mapImageHeight = 400,
+  // Phase 2: Advanced Cloudinary optimization
+  cloudinaryPublicId,
+  deviceType = 'desktop',
+  format = 'auto',
 }) => {
+  // Phase 2: Generate optimized image URL
+  const optimizedMapImageSrc = React.useMemo(() => {
+    if (cloudinaryPublicId) {
+      return getAdvancedOptimizedUrl(cloudinaryPublicId, {
+        width: mapImageWidth,
+        height: mapImageHeight,
+        quality: 'auto',
+        format,
+        deviceType,
+        crop: 'fill'
+      });
+    }
+    return mapImageSrc || '';
+  }, [cloudinaryPublicId, mapImageSrc, mapImageWidth, mapImageHeight, format, deviceType]);
   return (
     <section className="py-16 tablet:py-20 desktop:py-24">
       <Grid container>
@@ -165,15 +194,21 @@ export const RouteTransfer: React.FC<RouteTransferProps> = ({
 
         {/* Map Image - 4 columns on mobile, 8 on tablet/desktop */}
         <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-8 desktop:col-start-4">
-          <div className="relative">
-            <img
-              src={mapImageSrc}
-              alt={mapImageAlt}
-              className="w-full h-auto rounded-xl"
-            />
-            {/* Gradient overlay with multiply blend mode */}
-            <div className="absolute inset-0 bg-gradient-hero mix-blend-multiply rounded-xl" />
-          </div>
+                          <div className="relative">
+                  <Image
+                    src={optimizedMapImageSrc}
+                    alt={mapImageAlt}
+                    width={mapImageWidth}
+                    height={mapImageHeight}
+                    className="w-full h-auto rounded-xl"
+                    loading="lazy"
+                    fetchPriority="low"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
+                    quality={85}
+                  />
+                  {/* Gradient overlay with multiply blend mode */}
+                  <div className="absolute inset-0 bg-gradient-hero mix-blend-multiply rounded-xl" />
+                </div>
         </div>
       </Grid>
     </section>
