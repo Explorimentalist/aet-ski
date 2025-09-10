@@ -397,7 +397,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
           </div>
         );
     }
-  }, [currentStep, formData, handleFormUpdate, handleNext, handlePrevious, validation, handleClose, handleEditStep, markFieldAsTouched, showSuccess, handleGoHome, handleSubmit]);
+  }, [currentStep, formData, handleFormUpdate, handleNext, handlePrevious, validation, handleClose, handleEditStep, markFieldAsTouched, showSuccess, handleGoHome, handleSubmit, handleStepValidationChange, isFirstFormOpen, isOpen]);
 
   const shouldAnimate = useMotionSafeSimple();
 

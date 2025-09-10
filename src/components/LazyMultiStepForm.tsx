@@ -59,7 +59,7 @@ export const LazyMultiStepForm: React.FC<LazyMultiStepFormProps> = ({
     if (!preloadOnInteraction) return;
 
     // Check connection quality
-    const connection = (navigator as any).connection;
+    const connection = (navigator as { connection?: { effectiveType?: string } }).connection;
     const isFastConnection = !connection || connection.effectiveType === '4g';
     
     if (isFastConnection) {
@@ -182,7 +182,7 @@ export const useMultiStepFormPreload = () => {
 export const withMultiStepFormPreload = <P extends object>(
   Component: React.ComponentType<P>
 ) => {
-  return React.forwardRef<any, P & { preloadMultiStepForm?: boolean }>((props, ref) => {
+  const MultiStepFormPreloadComponent = React.forwardRef<unknown, P & { preloadMultiStepForm?: boolean }>((props, ref) => {
     const { preload, preloadProps } = useMultiStepFormPreload();
     const { preloadMultiStepForm = true, ...componentProps } = props;
 
@@ -193,6 +193,9 @@ export const withMultiStepFormPreload = <P extends object>(
 
     return <Component {...enhancedProps as P} ref={ref} />;
   });
+  
+  MultiStepFormPreloadComponent.displayName = `withMultiStepFormPreload(${Component.displayName || Component.name || 'Component'})`;
+  return MultiStepFormPreloadComponent;
 };
 
 export default LazyMultiStepForm;

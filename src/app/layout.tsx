@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
-import { Geist, Inter } from 'next/font/google';
+import { Geist } from 'next/font/google';
 import '@/styles/globals.css';
 import { LocalBusinessSchema } from '@/components/LocalBusinessSchema';
 
 const geist = Geist({ subsets: ['latin'] });
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.aet.ski'),

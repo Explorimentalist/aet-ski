@@ -11,7 +11,7 @@ import { Button } from '@/components/Button';
 import { Grid } from '@/components/Grid';
 import { BookingFormData } from '@/types';
 import { Mail, MapPinned } from 'lucide-react';
-import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
+import { PageWrapper } from '@/motion/PageWrapper';
 
 interface ValidationErrors {
   name?: string;

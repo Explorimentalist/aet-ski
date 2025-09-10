@@ -16,8 +16,7 @@ import { ImageWithGradient } from '@/components/ImageWithGradient';
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookingFormData } from '@/types';
-import { TestimonialCard } from '@/components/CardLarge';
-import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
+import { PageWrapper } from '@/motion/PageWrapper';
 import PerformanceDashboard from '@/components/PerformanceDashboard';
 
 export default function HomePageClient() {
@@ -119,7 +118,7 @@ export default function HomePageClient() {
                     <span className="text-[40px] leading-none font-light text-text-form">2</span>
                   </div>
                   <p className="text-body text-base font-normal text-text-primary leading-[150%] tracking-[-0.001em]">
-                  We cover all the resorts of Les 3 Vallées as well as La Plagne, Les Arcs, Tignes, Val d'Isère and others in the surrounding areas
+                  We cover all the resorts of Les 3 Vallées as well as La Plagne, Les Arcs, Tignes, Val d&apos;Isère and others in the surrounding areas
                   </p>
                   <div className="col-span-2 h-px bg-border-secondary"></div>
                 </div>

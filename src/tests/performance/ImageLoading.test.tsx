@@ -11,7 +11,14 @@ import { PageHero } from '@/components/PageHero';
 
 // Mock Next.js Image component
 jest.mock('next/image', () => {
-  return function MockImage({ src, alt, priority, loading, fetchPriority, ...props }: any) {
+  return function MockImage({ src, alt, priority, loading, fetchPriority, ...props }: {
+    src: string;
+    alt: string;
+    priority?: boolean;
+    loading?: string;
+    fetchPriority?: string;
+    [key: string]: unknown;
+  }) {
     return (
       <img
         src={src}
@@ -28,8 +35,8 @@ jest.mock('next/image', () => {
 // Mock motion components
 jest.mock('motion/react', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
+    div: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>,
+    section: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => <section {...props}>{children}</section>,
   },
   useMotionSafeSimple: () => false,
   motionTokens: {
