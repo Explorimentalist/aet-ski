@@ -83,7 +83,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
     try {
       setSubmitting(true);
       const result = await onSubmit(values);
-      const success = result === true || (typeof result === 'object' && result !== null && (result as any).success === true);
+      const success = result === true || (typeof result === 'object' && result !== null && 'success' in result && (result as { success: boolean }).success === true);
       if (success) {
         resetForm();
       }

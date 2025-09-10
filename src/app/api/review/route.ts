@@ -98,9 +98,9 @@ export async function POST(request: NextRequest) {
       }
 
       emailSent = true;
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error('Failed to send review email:', e);
-      errorMessage = e?.message || 'Failed to send review email';
+      errorMessage = (e instanceof Error ? e.message : 'Failed to send review email');
     }
 
     return NextResponse.json({

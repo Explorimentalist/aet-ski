@@ -43,10 +43,10 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
   };
 
   // Calculate exact transform values for pixel-perfect positioning
-  const getTransformValue = (index: number) => {
+  const getTransformValue = useCallback((index: number) => {
     const { width, gap } = cardDimensions[screenSize];
     return -(index * (width + gap));
-  };
+  }, [screenSize, cardDimensions]);
 
   // Detect screen size for responsive transforms
   useEffect(() => {
@@ -147,7 +147,7 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
   // Initialize animation position only on screen size change, not currentIndex change
   useEffect(() => {
     controls.set({ x: getTransformValue(currentIndex) });
-  }, [screenSize, controls]); // Removed currentIndex and getTransformValue from dependencies
+  }, [screenSize, controls, currentIndex, getTransformValue]);
 
   // Auto-play functionality
   useEffect(() => {

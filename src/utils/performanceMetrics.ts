@@ -59,8 +59,9 @@ class PerformanceTracker {
               this.metrics.fid = (entry as PerformanceEventTiming).processingStart - entry.startTime;
               break;
             case 'layout-shift':
-              if (!(entry as any).hadRecentInput) {
-                this.metrics.cls = (this.metrics.cls || 0) + (entry as any).value;
+              const layoutShiftEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value: number };
+              if (!layoutShiftEntry.hadRecentInput) {
+                this.metrics.cls = (this.metrics.cls || 0) + layoutShiftEntry.value;
               }
               break;
             case 'navigation':
@@ -254,7 +255,7 @@ export const usePerformanceTracking = (componentName: string) => {
 };
 
 // Web Vitals integration
-export const reportWebVitals = (metric: any) => {
+export const reportWebVitals = (metric: { name: string; value: number; id: string; delta: number }) => {
   switch (metric.name) {
     case 'FCP':
       performanceTracker['metrics'].fcp = metric.value;

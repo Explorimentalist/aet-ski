@@ -8,7 +8,7 @@ import { PageHero } from '@/components/PageHero';
 import { LazyMultiStepForm as MultiStepForm } from '@/components/LazyMultiStepForm';
 import { useState, useCallback } from 'react';
 import { BookingFormData } from '@/types';
-import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
+import { PageWrapper } from '@/motion/PageWrapper';
 
 export default function RoutesPageClient() {
   const [isFormOpen, setIsFormOpen] = useState(false);

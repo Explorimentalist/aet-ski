@@ -10,7 +10,7 @@ import { LazyMultiStepForm as MultiStepForm } from '@/components/LazyMultiStepFo
 import { PDFGenerator } from '@/lib/pdfGenerator';
 import { Download } from 'lucide-react';
 import { BookingFormData } from '@/types';
-import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
+import { PageWrapper } from '@/motion/PageWrapper';
 import { sanityClient, termsQuery } from '@/lib/sanity';
 
 interface TermsSection {

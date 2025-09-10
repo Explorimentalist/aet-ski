@@ -3,10 +3,8 @@
 // src/app/HomePageClient.tsx
 import { Button } from '@/components/Button';
 import { Navigation } from '@/components/Navigation';
-import { Clock, Shield, MapPin, CheckCircle, Bus } from 'lucide-react';
 import { Footer } from '@/components/Footer';
 import { Grid } from '@/components/Grid';
-import { CardSmall } from '@/components/CardSmall';
 import { CardImage } from '@/components/CardImage';
 import { LazyTestimonialsCarousel as TestimonialsCarousel } from '@/components/LazyTestimonialsCarousel';
 import { LazyMultiStepForm as MultiStepForm } from '@/components/LazyMultiStepForm';

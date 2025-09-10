@@ -2,16 +2,16 @@
 // Reusable dynamic import utilities with retry logic and error handling
 
 import dynamic from 'next/dynamic';
-import { ComponentType, ReactNode } from 'react';
+import { ComponentType } from 'react';
 
 interface RetryableImportOptions {
   retries?: number;
   delay?: number;
 }
 
-interface LazyComponentOptions<P = {}> {
+interface LazyComponentOptions<P = Record<string, unknown>> {
   loader: () => Promise<{ default: ComponentType<P> }>;
-  loading?: ComponentType<any>;
+  loading?: ComponentType<Record<string, unknown>>;
   ssr?: boolean;
   retries?: number;
   componentName?: string;
@@ -50,7 +50,7 @@ export const createRetryableImport = <T,>(
 };
 
 // Enhanced dynamic import with retry logic
-export const createLazyComponent = <P extends {} = {}>({
+export const createLazyComponent = <P extends Record<string, unknown> = Record<string, unknown>>({
   loader,
   loading,
   ssr = false,
@@ -63,14 +63,14 @@ export const createLazyComponent = <P extends {} = {}>({
   return dynamic(
     async () => {
       try {
-        const module = await retryableLoader();
+        const loadedModule = await retryableLoader();
         
         // Track successful load
         if (process.env.NODE_ENV === 'development') {
           console.log(`✅ ${componentName} loaded successfully`);
         }
         
-        return module;
+        return loadedModule;
       } catch (error) {
         console.error(`❌ Failed to load ${componentName}:`, error);
         onError?.(error as Error);
@@ -99,7 +99,7 @@ export const createLazyComponent = <P extends {} = {}>({
 
 // Preload component for better UX
 export const preloadComponent = async (
-  importFn: () => Promise<any>,
+  importFn: () => Promise<{ default: ComponentType<unknown> }>,
   componentName = 'Component'
 ): Promise<void> => {
   try {
@@ -115,7 +115,7 @@ export const preloadComponent = async (
 // Batch preload multiple components
 export const preloadComponents = async (
   components: Array<{
-    loader: () => Promise<any>;
+    loader: () => Promise<{ default: ComponentType<unknown> }>;
     name: string;
   }>
 ): Promise<void> => {
@@ -128,7 +128,7 @@ export const preloadComponents = async (
 
 // Hook to preload component on user interaction
 export const usePreloadOnInteraction = (
-  importFn: () => Promise<any>,
+  importFn: () => Promise<{ default: ComponentType<unknown> }>,
   componentName = 'Component'
 ) => {
   const preload = () => preloadComponent(importFn, componentName);
