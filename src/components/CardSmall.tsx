@@ -21,7 +21,7 @@ export const CardSmall: React.FC<CardSmallProps> = ({
   return (
     <div className={cn(
       // Base styles from Figma card_sm_white
-      'flex flex-col items-center',
+      'flex flex-col items-center self-stretch',
       'p-6xl', // Using design token for 48px padding
       'gap-4',
       'bg-background-secondary',

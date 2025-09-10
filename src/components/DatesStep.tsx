@@ -1,7 +1,7 @@
 // src/components/DatesStep.tsx
 import React, { useMemo, useCallback, useState, useRef, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { Calendar } from '@/components/Calendar';
+import { LazyCalendar as Calendar } from '@/components/LazyCalendar';
 import { TimeSelector } from '@/components/TimeSelector';
 
 import { FormStepProps, DatesStepData } from '@/types';

@@ -6,7 +6,7 @@ import SideNavigation from '@/components/SideNavigation';
 import { Button } from '@/components/Button';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
-import { MultiStepForm } from '@/components/MultiStepForm';
+import { LazyMultiStepForm as MultiStepForm } from '@/components/LazyMultiStepForm';
 import { PDFGenerator } from '@/lib/pdfGenerator';
 import { Download } from 'lucide-react';
 import { BookingFormData } from '@/types';

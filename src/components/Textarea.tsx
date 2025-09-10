@@ -6,6 +6,7 @@ export interface TextareaProps {
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
   required?: boolean;
   error?: string;
   helper?: string;
@@ -20,6 +21,7 @@ export const Textarea: React.FC<TextareaProps> = ({
   placeholder,
   value,
   onChange,
+  onBlur,
   required = false,
   error,
   helper,
@@ -47,6 +49,7 @@ export const Textarea: React.FC<TextareaProps> = ({
           id={textareaId}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
           placeholder={placeholder}
           rows={rows}
           maxLength={maxLength}

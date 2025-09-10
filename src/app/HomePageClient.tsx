@@ -8,8 +8,8 @@ import { Footer } from '@/components/Footer';
 import { Grid } from '@/components/Grid';
 import { CardSmall } from '@/components/CardSmall';
 import { CardImage } from '@/components/CardImage';
-import { TestimonialsCarousel } from '@/components/TestimonialsCarousel';
-import { MultiStepForm } from '@/components/MultiStepForm';
+import { LazyTestimonialsCarousel as TestimonialsCarousel } from '@/components/LazyTestimonialsCarousel';
+import { LazyMultiStepForm as MultiStepForm } from '@/components/LazyMultiStepForm';
 import { PageHeroHome } from '@/components/PageHeroHome';
 import MarqueeRebrand from '../components/MarqueeRebrand';
 import { ImageWithGradient } from '@/components/ImageWithGradient';
@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { BookingFormData } from '@/types';
 import { TestimonialCard } from '@/components/CardLarge';
 import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
+import PerformanceDashboard from '@/components/PerformanceDashboard';
 
 export default function HomePageClient() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -197,57 +198,50 @@ export default function HomePageClient() {
           
           {/* Cards Container - spans 9 columns */}
           <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-9">
-            <div className="flex flex-wrap gap-4 md:gap-5 lg:gap-6 justify-start">
+            {/* Stretch items so each row matches the tallest card height */}
+            <div className="flex flex-wrap items-stretch gap-4 md:gap-5 lg:gap-6 justify-start">
               {/* Card 1: Well equipped vehicles */}
-              <CardSmall
-                icon={Shield}
+              <CardImage
                 title="Well equipped vehicles"
                 description="Checked regularly, our vans have what it takes to make your journey."
-                className="flex-shrink-0"
+                imagePublicId="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757429374/interior_botneg.png" // or a full Cloudinary URL
                 variant="flex"
               />
-
-              {/* Card 2: Local knowledge */}
-              <CardSmall
-                icon={MapPin}
+              {/* CardImage 2: Local knowledge */}
+              <CardImage
                 title="Local knowledge"
-                description="Our local business advantages get you faster and affordably to your destination."
-                className="flex-shrink-0"
+                description="AET is a local Savoie based company, the advantages are local permissions & knowledge."
+                imagePublicId="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757429004/Jamie_front__van_iwmo0h.png"
                 variant="flex"
+                className="flex-shrink-0"
               />
 
-              {/* Card 3: Always on time */}
-              <CardSmall
-                icon={Clock}
+              {/* CardImage 3: Always on time */}
+              <CardImage
                 title="Always on time"
                 description="We value your time and for that reason punctuality is paramount."
-                className="flex-shrink-0"
+                imagePublicId="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757443669/on_time_mafaod.png"
                 variant="flex"
+                className="flex-shrink-0"
               />
 
-              {/* Card 4: Reliable service */}
-              <CardSmall
-                icon={CheckCircle}
-                title="Reliable service"
-                description="We have 90% returning customers that’s why we are so dependable"
-                className="flex-shrink-0"
-                variant="flex"
-              />
-
-              {/* Card 5: Your quote within a day */}
-              <CardSmall
-                icon={Bus}
-                title="Over 1700 journeys"
-                description="More than 10 years of experience bringing people to the joy of the slopes"
-                className="flex-shrink-0"
-                variant="flex"
-              />
+              {/* CardImage 4: Reliable service */}
               <CardImage
-title="Well equipped vehicles"
-description="Checked regularly, our vans have what it takes to make your journey."
-imagePublicId="https://res.cloudinary.com/dzrn3khsd/image/upload/v1754497104/A693CE8C-F7BD-49C9-B3D6-D51B122DDC07_tdkl1n.jpg" // or a full Cloudinary URL
-variant="flex"
-/>
+                title="Reliable service"
+                description="Life sometimes does not go the way we expect. AET is adaptive to the unexpected."
+                imagePublicId="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757428709/enhanced_people_ski_slope_pffksd.png"
+                variant="flex"
+                className="flex-shrink-0"
+              />
+
+              {/* CardImage 5: Over 1700 journeys */}
+              <CardImage
+                title="Over 1700 journeys"
+                description="More than 15 years experience bringing people to the joy of the mountains."
+                imagePublicId="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757428706/Jamies_van_side_nniut6.png"
+                variant="flex"
+                className="flex-shrink-0"
+              />
             </div>
           </div>
         </Grid>
@@ -260,10 +254,10 @@ variant="flex"
       <section className="py-24 px-6 bg-background-primary">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-heading text-3xl font-bold text-text-form mb-8">
-            Ready to book your transfer?
+            Ready to book your transfer ?
           </h2>
           <p className="text-body text-lg text-text-secondary mb-12">
-            Get a quote in the next 24h and secure your airport transfer to the French Alps
+          Secure your airport transfers to the French Alps  
           </p>
           <Button size="lg" className="mx-auto" onClick={handleOpenForm}>
             Get a quote now
@@ -281,9 +275,10 @@ variant="flex"
       <Footer onQuoteClick={handleOpenForm} />
       
       </PageWrapper> {/* Close PageWrapper */}
+      
+      {/* Development Performance Dashboard */}
+      <PerformanceDashboard />
     </>
   );
 }
-
-
 

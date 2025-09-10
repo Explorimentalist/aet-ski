@@ -5,7 +5,7 @@ import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { RouteTransfer } from '@/components/RouteTransfer';
 import { PageHero } from '@/components/PageHero';
-import { MultiStepForm } from '@/components/MultiStepForm';
+import { LazyMultiStepForm as MultiStepForm } from '@/components/LazyMultiStepForm';
 import { useState, useCallback } from 'react';
 import { BookingFormData } from '@/types';
 import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';

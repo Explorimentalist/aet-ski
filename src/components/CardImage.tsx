@@ -44,8 +44,8 @@ export const CardImage: React.FC<CardImageProps> = ({
   return (
     <div
       className={cn(
-        // Outer shell manages rounding and overflow so the image can go edge-to-edge
-        'bg-background-secondary rounded-xl overflow-hidden',
+        // Outer shell manages rounding and overflow; make it a column flex box so the image can stick to the bottom
+        'bg-background-secondary rounded-xl overflow-hidden flex flex-col self-stretch',
         // Match CardSmall responsive sizing behaviour
         variant === 'grid'
           ? 'w-full col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3'
@@ -54,17 +54,17 @@ export const CardImage: React.FC<CardImageProps> = ({
       )}
     >
       {/* Content padding area */}
-      <div className="flex flex-col items-center pt-6xl px-6xl pb-xl gap-4">
-        <h3 className="text-heading text-xl font-bold text-text-form text-center w-[160px]">
+      <div className="flex flex-col items-center pt-6xl px-6xl pb-xl gap-4 flex-1">
+        <h3 className="text-heading text-xl font-bold text-text-form text-center">
           {title}
         </h3>
-        <p className="text-body text-sm text-text-form text-center w-[160px]">
+        <p className="text-body text-sm text-text-form text-center">
           {description}
         </p>
       </div>
 
       {/* Image section – full width of the card, fixed 200px height */}
-      <div className="relative w-full h-[200px]">
+      <div className="relative w-full h-[200px] mt-auto">
         {/* Optimized image (falls back to empty if none provided) */}
         {imageUrl ? (
           <Image
@@ -81,9 +81,9 @@ export const CardImage: React.FC<CardImageProps> = ({
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            // Keep the very top fully opaque so the start of the image is never visible.
+            // Lighter fade: ~8px solid, then fade to 0 by ~35% (~70px of 200px)
             background:
-              'linear-gradient(180deg, rgba(255,255,255,1) 0px, rgba(255,255,255,1) 16px, rgba(255,255,255,0.92) 80px, rgba(255,255,255,0) 60%)',
+              'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 4%, rgba(255,255,255,0.85) 20%, rgba(255,255,255,0) 35%)',
           }}
           aria-hidden
         />
@@ -93,10 +93,10 @@ export const CardImage: React.FC<CardImageProps> = ({
 
         {/* Subtle bottom radial highlight to match Figma */}
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[90px]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[60px]"
           style={{
             background:
-              'radial-gradient(36.55% 79.71% at 50% 100%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 100%)',
+              'radial-gradient(36.55% 79.71% at 50% 100%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 100%)',
           }}
           aria-hidden
         />

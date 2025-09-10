@@ -5,8 +5,10 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, useAnimation } from 'motion/react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Grid } from '@/components/Grid';
+import { Button } from '@/components/Button';
 import { TestimonialCard } from '@/components/CardLarge';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 export interface TestimonialData {
   rating: number;
@@ -186,7 +188,7 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
       <Grid container className="gap-grid-mobile tablet:gap-grid-tablet desktop:gap-grid-desktop">
         {/* Section Heading - simplified */}
         <motion.div 
-          className="col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3"
+          className="col-mobile-4 tablet:col-tablet-3 desktop:col-desktop-3 flex flex-col h-full"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
@@ -200,6 +202,14 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
           >
             Testimonials
           </h2>
+          {/* Action: Leave a review - desktop/tablet only in header column */}
+          <div className="mt-auto hidden tablet:block">
+            <Link href="/review" className="inline-block" aria-label="Leave a review on AET">
+              <Button variant="secondary" size="md" className="w-fit">
+                Leave a review
+              </Button>
+            </Link>
+          </div>
         </motion.div>
 
         {/* Testimonials Cards Container - responsive column spans */}
@@ -323,6 +333,16 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
             </div>
           </div>
         </motion.div>
+      </Grid>
+      {/* Mobile-only: Leave a review button below the carousel */}
+      <Grid container className="tablet:hidden mt-6">
+        <div className="col-mobile-4 flex justify-center">
+          <Link href="/review" className="inline-block" aria-label="Leave a review on AET">
+            <Button variant="secondary" size="md" className="w-fit">
+              Leave a review
+            </Button>
+          </Link>
+        </div>
       </Grid>
     </section>
   );

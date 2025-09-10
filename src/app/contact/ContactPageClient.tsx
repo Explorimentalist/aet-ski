@@ -4,7 +4,7 @@
 import React, { useState, useCallback } from 'react';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
-import { MultiStepForm } from '@/components/MultiStepForm';
+import { LazyMultiStepForm as MultiStepForm } from '@/components/LazyMultiStepForm';
 import { Input } from '@/components/Input';
 import { Textarea } from '@/components/Textarea';
 import { Button } from '@/components/Button';
@@ -13,6 +13,18 @@ import { BookingFormData } from '@/types';
 import { Mail, MapPinned } from 'lucide-react';
 import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
 
+interface ValidationErrors {
+  name?: string;
+  email?: string;
+  message?: string;
+}
+
+interface TouchedFields {
+  name: boolean;
+  email: boolean;
+  message: boolean;
+}
+
 export default function ContactPageClient() {
   const [formData, setFormData] = useState({
     name: '',
@@ -20,17 +32,148 @@ export default function ContactPageClient() {
     message: '',
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
+  const [touchedFields, setTouchedFields] = useState<TouchedFields>({
+    name: false,
+    email: false,
+    message: false,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Validation helper functions
+  const validateName = (name: string): string | undefined => {
+    if (!name.trim()) {
+      return 'Name is required';
+    }
+    if (name.trim().length < 2) {
+      return 'Name must be at least 2 characters';
+    }
+    if (name.trim().length > 100) {
+      return 'Name must be less than 100 characters';
+    }
+    if (!/^[a-zA-Z\s\-']+$/.test(name.trim())) {
+      return 'Name can only contain letters, spaces, hyphens, and apostrophes';
+    }
+    return undefined;
+  };
+
+  const validateEmail = (email: string): string | undefined => {
+    if (!email.trim()) {
+      return 'Email is required';
+    }
+    if (email.length > 254) {
+      return 'Email is too long';
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email address';
+    }
+    return undefined;
+  };
+
+  const validateMessage = (message: string): string | undefined => {
+    if (!message.trim()) {
+      return 'Message is required';
+    }
+    if (message.trim().length < 10) {
+      return 'Message must be at least 10 characters';
+    }
+    if (message.trim().length > 1000) {
+      return 'Message must be less than 1000 characters';
+    }
+    return undefined;
+  };
+
+  // Validate single field
+  const validateField = (fieldName: string, value: string): string | undefined => {
+    switch (fieldName) {
+      case 'name':
+        return validateName(value);
+      case 'email':
+        return validateEmail(value);
+      case 'message':
+        return validateMessage(value);
+      default:
+        return undefined;
+    }
+  };
+
+  // Validate entire form
+  const validateForm = (): ValidationErrors => {
+    return {
+      name: validateName(formData.name),
+      email: validateEmail(formData.email),
+      message: validateMessage(formData.message),
+    };
+  };
+
+  // Check if form is valid
+  const isFormValid = (): boolean => {
+    const errors = validateForm();
+    return !errors.name && !errors.email && !errors.message;
+  };
 
   const handleInputChange = (field: string, value: string) => {
+    // Update form data
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+
+    // Clear error for this field when user starts typing
+    if (validationErrors[field as keyof ValidationErrors]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [field]: undefined
+      }));
+    }
+  };
+
+  const handleInputBlur = (field: string) => {
+    // Mark field as touched
+    setTouchedFields(prev => ({
+      ...prev,
+      [field]: true
+    }));
+
+    // Validate field on blur
+    const error = validateField(field, formData[field as keyof typeof formData]);
+    if (error) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [field]: error
+      }));
+    }
   };
 
   const handleSubmit = async () => {
+    console.log('Starting contact form submission...');
+    console.log('Form data:', formData);
+
+    // Mark all fields as touched
+    setTouchedFields({
+      name: true,
+      email: true,
+      message: true,
+    });
+
+    // Validate entire form
+    const errors = validateForm();
+    setValidationErrors(errors);
+
+    // Check if form has any errors
+    if (errors.name || errors.email || errors.message) {
+      console.log('Form validation failed:', errors);
+      alert('Please fix the errors in the form before submitting.');
+      return;
+    }
+
+    // Set submitting state
+    setIsSubmitting(true);
+
     try {
       // Send contact form data to API
+      console.log('Making fetch request to /api/contact...');
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -39,25 +182,58 @@ export default function ContactPageClient() {
         body: JSON.stringify(formData),
       });
 
+      console.log('Response received:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries())
+      });
+
       if (response.ok) {
+        console.log('Response is OK, parsing JSON...');
         const result = await response.json();
         console.log('Contact form submitted successfully:', result);
-        alert('Thank you! Your message has been sent successfully.');
         
-        // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          message: '',
-        });
+        if (result.success) {
+          alert('Thank you! Your message has been sent successfully.');
+          // Reset form
+          setFormData({
+            name: '',
+            email: '',
+            message: '',
+          });
+          // Reset validation states
+          setValidationErrors({});
+          setTouchedFields({
+            name: false,
+            email: false,
+            message: false,
+          });
+        } else {
+          console.error('API returned success=false:', result);
+          alert(result.message || 'Failed to send message. Please try again.');
+        }
       } else {
-        const error = await response.json();
-        console.error('Contact form submission failed:', error);
-        alert('Failed to send message. Please try again.');
+        console.log('Response not OK, parsing error...');
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch (parseError) {
+          console.error('Failed to parse error response as JSON:', parseError);
+          errorData = { error: 'Unknown error' };
+        }
+        console.error('Contact form submission failed:', errorData);
+        alert(errorData.message || 'Failed to send message. Please try again.');
       }
     } catch (error) {
-      console.error('Error submitting contact form:', error);
+      console.error('Error submitting contact form (full error object):', error);
+      console.error('Error name:', error instanceof Error ? error.name : 'Unknown');
+      console.error('Error message:', error instanceof Error ? error.message : String(error));
+      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
       alert('Network error. Please check your connection and try again.');
+    } finally {
+      // Always reset submitting state
+      setIsSubmitting(false);
     }
   };
 
@@ -108,6 +284,8 @@ export default function ContactPageClient() {
                     required
                     value={formData.name}
                     onChange={(value) => handleInputChange('name', value)}
+                    onBlur={() => handleInputBlur('name')}
+                    error={touchedFields.name ? validationErrors.name : undefined}
                     placeholder="Enter your name"
                   />
 
@@ -118,6 +296,8 @@ export default function ContactPageClient() {
                     required
                     value={formData.email}
                     onChange={(value) => handleInputChange('email', value)}
+                    onBlur={() => handleInputBlur('email')}
+                    error={touchedFields.email ? validationErrors.email : undefined}
                     placeholder="Enter your email"
                   />
 
@@ -127,8 +307,11 @@ export default function ContactPageClient() {
                     required
                     value={formData.message}
                     onChange={(value) => handleInputChange('message', value)}
+                    onBlur={() => handleInputBlur('message')}
+                    error={touchedFields.message ? validationErrors.message : undefined}
                     placeholder="Write your message here"
                     rows={4}
+                    maxLength={1000}
                   />
 
                   {/* Submit Button */}
@@ -137,9 +320,11 @@ export default function ContactPageClient() {
                       variant="primary"
                       size="lg"
                       onClick={handleSubmit}
+                      disabled={isSubmitting || !isFormValid()}
+                      loading={isSubmitting}
                       className="w-auto"
                     >
-                      Send
+                      {isSubmitting ? 'Sending...' : 'Send'}
                     </Button>
                   </div>
                 </form>
