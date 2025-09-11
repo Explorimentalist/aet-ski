@@ -30,7 +30,6 @@ export async function POST(request: NextRequest) {
     const fromName = process.env.EMAIL_FROM_NAME || 'AET Ski Transfer';
 
     let emailSent = false;
-    let errorMessage = '';
 
     try {
       if (!apiKey) throw new Error('Missing EMAIL_API_KEY');
@@ -100,7 +99,6 @@ export async function POST(request: NextRequest) {
       emailSent = true;
     } catch (e: unknown) {
       console.error('Failed to send review email:', e);
-      errorMessage = (e instanceof Error ? e.message : 'Failed to send review email');
     }
 
     return NextResponse.json({

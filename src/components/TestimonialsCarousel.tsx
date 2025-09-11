@@ -35,18 +35,17 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
   // Create extended array for seamless infinite scrolling
   const extendedTestimonials = [...testimonials, ...testimonials];
 
-  // Calculate card dimensions for different screen sizes
-  const cardDimensions = {
-    mobile: { width: 280, gap: 24 },
-    tablet: { width: 360, gap: 20 },
-    desktop: { width: 408, gap: 24 },
-  };
-
   // Calculate exact transform values for pixel-perfect positioning
   const getTransformValue = useCallback((index: number) => {
+    // Calculate card dimensions for different screen sizes
+    const cardDimensions = {
+      mobile: { width: 280, gap: 24 },
+      tablet: { width: 360, gap: 20 },
+      desktop: { width: 408, gap: 24 },
+    };
     const { width, gap } = cardDimensions[screenSize];
     return -(index * (width + gap));
-  }, [screenSize, cardDimensions]);
+  }, [screenSize]);
 
   // Detect screen size for responsive transforms
   useEffect(() => {

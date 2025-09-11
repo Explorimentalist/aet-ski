@@ -8,7 +8,7 @@ import { motion } from 'motion/react';
 import { motionTokens as T, useMotionSafe } from '@/motion';
 
 export const MotionTest: React.FC = () => {
-  const { prefersReduced, variants: safeVariants } = useMotionSafe();
+  const { prefersReduced } = useMotionSafe();
   
   return (
     <div className="p-8 space-y-8">

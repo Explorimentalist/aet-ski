@@ -2,7 +2,7 @@
 // Reusable dynamic import utilities with retry logic and error handling
 
 import dynamic from 'next/dynamic';
-import { ComponentType } from 'react';
+import React, { ComponentType } from 'react';
 
 interface RetryableImportOptions {
   retries?: number;
@@ -11,7 +11,7 @@ interface RetryableImportOptions {
 
 interface LazyComponentOptions<P = Record<string, unknown>> {
   loader: () => Promise<{ default: ComponentType<P> }>;
-  loading?: ComponentType<Record<string, unknown>>;
+  loading?: () => React.ReactElement;
   ssr?: boolean;
   retries?: number;
   componentName?: string;

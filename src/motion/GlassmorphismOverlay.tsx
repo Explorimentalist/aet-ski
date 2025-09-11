@@ -114,7 +114,7 @@ export const GlassmorphismContent: React.FC<{
   isReady: boolean;
   className?: string;
 }> = ({ children, isReady, className = '' }) => {
-  const { prefersReduced, variants: safeVariants } = useMotionSafe();
+  const { prefersReduced } = useMotionSafe();
   
   // For reduced motion, always show content
   if (prefersReduced) {

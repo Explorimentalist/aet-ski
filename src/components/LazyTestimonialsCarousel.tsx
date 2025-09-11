@@ -43,7 +43,7 @@ export const LazyTestimonialsCarousel: React.FC<LazyTestimonialsCarouselProps> =
   // Trigger loading when near viewport
   useEffect(() => {
     if (isIntersecting && !shouldLoad) {
-      const loadStartTime = trackLazyLoadStart('TestimonialsCarousel');
+      const loadStartTime = trackLazyLoadStart();
       setStartTime(loadStartTime);
       setShouldLoad(true);
     }
@@ -62,7 +62,7 @@ export const LazyTestimonialsCarousel: React.FC<LazyTestimonialsCarouselProps> =
   }, [shouldLoad, startTime]);
 
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef as React.RefObject<HTMLDivElement>}>
       {shouldLoad ? (
         <TestimonialsCarousel {...props} />
       ) : (

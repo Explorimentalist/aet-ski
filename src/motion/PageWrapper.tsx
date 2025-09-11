@@ -26,7 +26,7 @@ export const PageWrapper: React.FC<PageWrapperProps> = ({
   animation = 'slideUp',
   delay = 0,
 }) => {
-  const { prefersReduced, shouldAnimate } = useMotionSafe();
+  const { prefersReduced } = useMotionSafe();
   
   // For reduced motion, render without animations
   if (prefersReduced) {

@@ -14,14 +14,11 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
   data,
   onUpdate,
   onNext,
-  onPrevious,
   onClose,
   currentStep,
   totalSteps,
   validation,
   onValidationChange,
-  isModalOpen = true,
-  isFirstRender,
 }) => {
   const [showReturnSoonWarning, setShowReturnSoonWarning] = useState(false);
   const continueButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -151,10 +148,6 @@ export const DatesStep: React.FC<DatesStepComponentProps> = React.memo(({
     onNext();
   }, [isStepValid, onNext, isReturnJourney, datesData]);
 
-  // Handle previous step
-  const handlePrevious = useCallback(() => {
-    onPrevious();
-  }, [onPrevious]);
 
   // Handle key navigation
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {

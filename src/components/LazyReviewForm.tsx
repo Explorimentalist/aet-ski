@@ -1,7 +1,7 @@
 // src/components/LazyReviewForm.tsx
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { ReviewFormFallback } from '@/components/fallbacks/ReviewFormFallback';
@@ -31,10 +31,8 @@ export const LazyReviewForm: React.FC<LazyReviewFormProps> = (props) => {
   const [shouldLoad, setShouldLoad] = useState(false);
   const [hasInteraction, setHasInteraction] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  
   // Use intersection observer with moderate margins since it's main page content
-  const { isIntersecting } = useIntersectionObserver(containerRef, {
+  const { ref: containerRef, isIntersecting } = useIntersectionObserver({
     threshold: 0,
     rootMargin: '300px 0px', // Start loading when 300px away
   });
@@ -42,7 +40,7 @@ export const LazyReviewForm: React.FC<LazyReviewFormProps> = (props) => {
   // Trigger loading on intersection OR user interaction
   useEffect(() => {
     if ((isIntersecting || hasInteraction) && !shouldLoad) {
-      const loadStartTime = trackLazyLoadStart('ReviewForm');
+      const loadStartTime = trackLazyLoadStart();
       setStartTime(loadStartTime);
       setShouldLoad(true);
     }
@@ -68,7 +66,7 @@ export const LazyReviewForm: React.FC<LazyReviewFormProps> = (props) => {
 
   return (
     <div 
-      ref={containerRef}
+      ref={containerRef as React.RefObject<HTMLDivElement>}
       onMouseOver={handleInteraction}
       onFocus={handleInteraction}
       onTouchStart={handleInteraction}

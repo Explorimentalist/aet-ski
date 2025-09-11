@@ -5,7 +5,6 @@ import React, { useCallback, useState } from 'react';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { LazyMultiStepForm as MultiStepForm } from '@/components/LazyMultiStepForm';
-import { Button } from '@/components/Button';
 import { Grid } from '@/components/Grid';
 import { PageWrapper } from '@/motion/PageWrapper';
 import { BookingFormData } from '@/types';

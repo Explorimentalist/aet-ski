@@ -3,6 +3,7 @@
 // Phase 4: Performance Testing & Validation - Safety Measures
 
 import React from 'react';
+import Image from 'next/image';
 import { Grid } from '../Grid';
 import { ExternalLink } from 'lucide-react';
 import { getAdvancedOptimizedUrl } from '@/lib/cloudinary';
@@ -73,13 +74,12 @@ export const LinkListItemFallback: React.FC<LinkListItemFallbackProps> = ({
         <div className="col-mobile-4 tablet:col-tablet-2 desktop:col-desktop-3 flex items-center">
           <div className="min-h-12 flex items-center justify-start w-full">
             {/* Fallback Image - Original implementation without lazy loading optimizations */}
-            <img
+            <Image
               src={optimizedLogoUrl}
               alt={altText}
               width={logoWidth}
               height={logoHeight}
               className="block h-auto max-h-12 max-w-full object-contain"
-              // No priority, loading, or fetchPriority attributes - original implementation
               style={{ objectPosition: 'left center', objectFit: 'contain' }}
             />
           </div>

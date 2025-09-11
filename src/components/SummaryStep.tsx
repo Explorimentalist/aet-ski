@@ -1,5 +1,5 @@
 // src/components/SummaryStep.tsx
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import { X, Edit } from 'lucide-react';
 import { Textarea } from '@/components/Textarea';
 
@@ -19,8 +19,6 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
   totalSteps,
   onSubmit,
   onValidationChange,
-  isModalOpen = true,
-  isFirstRender,
 }) => {
   const journeyData = useMemo(() => data.journey || { type: 'one-way', collectionPoint: '', destinationPoint: '' }, [data.journey]);
   const datesData = useMemo(() => data.dates || { collectionDate: null, collectionTime: '', isCollectionFlexible: false, isReturnFlexible: false }, [data.dates]);
@@ -76,12 +74,8 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
     }
   }, [onEditStep]);
 
-  // Handle form submission
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const handleSubmit = useCallback(() => {
     console.log('SummaryStep: handleSubmit called - delegating to parent');
-    setIsSubmitting(true);
     
     // Simply call onSubmit - let the parent handle the API call
     // This prevents duplicate API calls

@@ -14,15 +14,12 @@ export const PassengerStep: React.FC<PassengerStepComponentProps> = React.memo((
   data,
   onUpdate,
   onNext,
-  onPrevious,
   onClose,
   currentStep,
   totalSteps,
   validation,
   markFieldAsTouched,
   onValidationChange,
-  isModalOpen = true,
-  isFirstRender,
 }) => {
   const passengerData = useMemo(() => data.passenger || {
     name: '',
@@ -71,10 +68,6 @@ export const PassengerStep: React.FC<PassengerStepComponentProps> = React.memo((
     }
   }, [isStepValid, onNext]);
 
-  // Handle previous step
-  const handlePrevious = useCallback(() => {
-    onPrevious();
-  }, [onPrevious]);
 
   // Handle key navigation
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {

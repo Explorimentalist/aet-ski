@@ -2,7 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { getAdvancedOptimizedUrl, generateAdvancedSrcSet } from '@/lib/cloudinary';
+import { getAdvancedOptimizedUrl } from '@/lib/cloudinary';
 
 interface ImageWithGradientProps {
   src?: string;

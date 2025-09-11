@@ -17,7 +17,6 @@ interface RevealProps {
   // Data attribute support
   'data-reveal'?: string;
   'data-stagger'?: string;
-  'data-modal'?: string;
   
   // Animation variants
   variants?: Variants;
@@ -43,7 +42,6 @@ export const Reveal: React.FC<RevealProps> = ({
   as: Component = 'div',
   'data-reveal': revealType = 'slideUp',
   'data-stagger': staggerType,
-  'data-modal': modalType,
   variants: customVariants,
   delay = 0,
   duration,
@@ -53,7 +51,7 @@ export const Reveal: React.FC<RevealProps> = ({
   margin = '0px',
   ...props
 }) => {
-  const { prefersReduced, variants: safeVariants, viewport: safeViewport } = useMotionSafe();
+  const { prefersReduced } = useMotionSafe();
   
   // Determine animation type from data attributes
   const getAnimationType = () => {
@@ -194,14 +192,13 @@ export const StaggerItem: React.FC<{
   animation?: keyof typeof T.variants;
   delay?: number;
 }> = ({ children, className = '', animation = 'slideUp', delay = 0 }) => {
-  const { prefersReduced, variants: safeVariants } = useMotionSafe();
+  const { prefersReduced } = useMotionSafe();
   
   if (prefersReduced) {
     return <div className={className}>{children}</div>;
   }
   
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const baseVariants = (safeVariants as any)[animation];
+  const baseVariants = T.variants[animation];
   
   const variants: Variants = {
     hidden: baseVariants.hidden,
@@ -209,7 +206,7 @@ export const StaggerItem: React.FC<{
       ...baseVariants.visible,
       transition: {
         duration: T.transitions.short.duration,
-        ease: T.transitions.short.ease,
+        ease: T.transitions.short.ease as [number, number, number, number],
         delay,
       },
     },

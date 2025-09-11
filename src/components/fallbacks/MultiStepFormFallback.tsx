@@ -3,7 +3,6 @@
 
 import React from 'react';
 import { motion } from 'motion/react';
-import { LoadingSkeleton } from '../LazyWrapper';
 import { Modal } from '../Modal';
 
 interface MultiStepFormFallbackProps {

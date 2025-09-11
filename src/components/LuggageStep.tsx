@@ -14,14 +14,11 @@ export const LuggageStep: React.FC<LuggageStepComponentProps> = React.memo(({
   data,
   onUpdate,
   onNext,
-  onPrevious,
   onClose,
   currentStep,
   totalSteps,
   validation,
   onValidationChange,
-  isModalOpen = true,
-  isFirstRender,
 }) => {
   const luggageData = useMemo(() => data.luggage || {
     skis: 0,
@@ -114,10 +111,6 @@ export const LuggageStep: React.FC<LuggageStepComponentProps> = React.memo(({
     }
   }, [isStepValid, onNext]);
 
-  // Handle previous step
-  const handlePrevious = useCallback(() => {
-    onPrevious();
-  }, [onPrevious]);
 
   // Handle key navigation
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {

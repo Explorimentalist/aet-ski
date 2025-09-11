@@ -3,6 +3,7 @@
 // Phase 4: Performance Testing & Validation - Safety Measures
 
 import React from 'react';
+import Image from 'next/image';
 import { Grid, GridLayouts } from '../Grid';
 import { Button } from '../Button';
 
@@ -20,11 +21,13 @@ export const PageHeroHomeFallback: React.FC<PageHeroHomeFallbackProps> = ({ onQu
             {/* Responsive Image Container - Using custom aspect ratios */}
             <div className="relative w-full aspect-hero-mobile tablet:aspect-hero-desktop overflow-hidden rounded-lg tablet:rounded-xl desktop:rounded-2xl">
               {/* Fallback Image - Original implementation without lazy loading optimizations */}
-              <img
+              <Image
                 src="https://res.cloudinary.com/dzrn3khsd/image/upload/w_1200,h_800,c_fill,g_auto,f_auto,q_auto/v1754407276/AET.ski_pj8eld.png"
                 alt="French Alps mountain landscape with snow-covered peaks and ski resorts"
+                width={1200}
+                height={800}
                 className="absolute inset-0 w-full h-full object-cover"
-                // No loading or fetchPriority attributes - original implementation
+                priority
               />
               
               {/* Gradient Veil with Multiply Blend Mode - Updated to match design */}

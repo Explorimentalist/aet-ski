@@ -3,7 +3,7 @@
 
 import { PageHero } from '@/components/PageHero';
 import { Navigation } from '@/components/Navigation';
-import { PageWrapper, PageContent, PageSection } from '@/motion/PageWrapper';
+import { PageWrapper } from '@/motion/PageWrapper';
 
 export default function TestPageHero() {
   return (

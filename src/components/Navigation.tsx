@@ -8,7 +8,7 @@ import { Menu, X } from 'lucide-react';
 import { Button } from './Button';
 import { Logo } from './Logo';
 import { NavigationProps, NavigationItem } from '@/types';
-import { motion, AnimatePresence, useMotionSafeSimple, motionTokens } from '@/motion';
+import { motion, useMotionSafeSimple, motionTokens } from '@/motion';
 
 // Default navigation items matching Figma
 const defaultNavItems: NavigationItem[] = [

@@ -8,7 +8,6 @@ import { PageHero } from '@/components/PageHero';
 import { LinksList } from '@/components/LinksList';
 import { LazyMultiStepForm as MultiStepForm } from '@/components/LazyMultiStepForm';
 import { BookingFormData } from '@/types';
-import { getLogoUrl } from '@/lib/cloudinary';
 import { useEffect } from 'react';
 
 export default function TravelInfoPage() {

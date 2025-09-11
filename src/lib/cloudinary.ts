@@ -214,22 +214,10 @@ export function generateAdvancedSrcSet(publicId: string, options: {
 
 // Phase 2: Generate picture element with format fallbacks
 export function generatePictureElement(publicId: string, options: {
-  alt: string;
-  className?: string;
   widths?: number[];
-  mobileWidths?: number[];
-  tabletWidths?: number[];
-  desktopWidths?: number[];
-  priority?: boolean;
 }) {
   const {
-    alt,
-    className = '',
-    widths = [400, 768, 1200, 1600],
-    mobileWidths = [400, 800],
-    tabletWidths = [800, 1200],
-    desktopWidths = [1200, 1600],
-    priority = false
+    widths = [400, 768, 1200, 1600]
   } = options;
   
   // Generate srcSets for different formats

@@ -54,6 +54,7 @@ export const getMotionProps = <T extends MotionProps>(
 ): Partial<T> => {
   if (!shouldAnimate) {
     // Return only non-animation props for accessibility
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { animate, initial, exit, whileHover, whileFocus, whileTap, variants, transition, ...staticProps } = motionProps;
     return staticProps as Partial<T>;
   }

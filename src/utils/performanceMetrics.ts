@@ -75,7 +75,7 @@ class PerformanceTracker {
       // Observe different entry types
       try {
         this.observer.observe({ entryTypes: ['paint', 'largest-contentful-paint', 'first-input', 'layout-shift', 'navigation'] });
-      } catch (e) {
+      } catch {
         // Fallback for older browsers
         this.observer.observe({ entryTypes: ['paint', 'navigation'] });
       }
@@ -119,7 +119,7 @@ class PerformanceTracker {
         if (navTiming) {
           this.metrics.tti = navTiming.loadEventEnd - navTiming.fetchStart;
         }
-      } catch (e) {
+      } catch {
         // Ignore TTI calculation errors
       }
     }
@@ -236,7 +236,7 @@ class PerformanceTracker {
 export const performanceTracker = new PerformanceTracker();
 
 // Utility functions for easy usage
-export const trackLazyLoadStart = (componentName: string) => {
+export const trackLazyLoadStart = () => {
   return performance.now();
 };
 

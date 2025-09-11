@@ -18,10 +18,7 @@ export const JourneyStep: React.FC<JourneyStepComponentProps> = React.memo(({
   onClose,
   currentStep,
   totalSteps,
-  validation,
   onValidationChange,
-  isModalOpen = true,
-  isFirstRender,
 }) => {
   const journeyData = useMemo(() => data.journey || {
     type: 'one-way' as const,

@@ -1,6 +1,6 @@
 // src/app/api/contact/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { initializeEmailService, getEmailService, EmailConfig } from '@/lib/email';
+import { initializeEmailService, EmailConfig } from '@/lib/email';
 
 // Initialize email service with environment variables
 function initializeEmailServiceFromEnv(): void {
@@ -51,10 +51,8 @@ export async function POST(request: NextRequest) {
 
     // Send contact email
     let emailSent = false;
-    let errorMessage = '';
 
     try {
-      const emailService = getEmailService();
       
       // Send contact notification email
       const response = await fetch('https://api.resend.com/emails', {
@@ -141,7 +139,6 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
       }
     } catch (emailError) {
       console.error('Email service error:', emailError);
-      errorMessage = 'Email service not configured or failed';
     }
 
     // Store contact data (you can integrate with your database here)

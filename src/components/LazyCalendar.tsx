@@ -1,7 +1,7 @@
 // src/components/LazyCalendar.tsx
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { CalendarFallback } from '@/components/fallbacks/CalendarFallback';
@@ -39,10 +39,9 @@ export const LazyCalendar: React.FC<LazyCalendarProps> = (props) => {
   const [shouldLoad, setShouldLoad] = useState(false);
   const [hasInteraction, setHasInteraction] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   
   // Use intersection observer with smaller margins since it's inside a form
-  const { isIntersecting } = useIntersectionObserver(containerRef, {
+  const { ref: containerRef, isIntersecting } = useIntersectionObserver({
     threshold: 0,
     rootMargin: '200px 0px', // Start loading when 200px away
   });
@@ -50,7 +49,7 @@ export const LazyCalendar: React.FC<LazyCalendarProps> = (props) => {
   // Trigger loading on intersection OR user interaction
   useEffect(() => {
     if ((isIntersecting || hasInteraction) && !shouldLoad) {
-      const loadStartTime = trackLazyLoadStart('Calendar');
+      const loadStartTime = trackLazyLoadStart();
       setStartTime(loadStartTime);
       setShouldLoad(true);
     }
@@ -76,7 +75,7 @@ export const LazyCalendar: React.FC<LazyCalendarProps> = (props) => {
 
   return (
     <div 
-      ref={containerRef}
+      ref={containerRef as React.RefObject<HTMLDivElement>}
       onMouseOver={handleInteraction}
       onFocus={handleInteraction}
     >

@@ -13,14 +13,11 @@ export const PeopleStep: React.FC<PeopleStepComponentProps> = React.memo(({
   data,
   onUpdate,
   onNext,
-  onPrevious,
   onClose,
   currentStep,
   totalSteps,
   validation,
   onValidationChange,
-  isModalOpen = true,
-  isFirstRender,
 }) => {
   const peopleData = useMemo(() => data.people || {
     adults: 1,
@@ -67,10 +64,6 @@ export const PeopleStep: React.FC<PeopleStepComponentProps> = React.memo(({
     }
   }, [isStepValid, onNext]);
 
-  // Handle previous step
-  const handlePrevious = useCallback(() => {
-    onPrevious();
-  }, [onPrevious]);
 
   // Handle key navigation
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {

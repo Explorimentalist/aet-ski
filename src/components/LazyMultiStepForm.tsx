@@ -1,7 +1,7 @@
 // src/components/LazyMultiStepForm.tsx
 // Lazy-loaded wrapper for MultiStepForm with error boundaries and preloading
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, ComponentType } from 'react';
 import dynamic from 'next/dynamic';
 import { preloadComponent, trackLazyLoadError } from '@/utils/lazyHelpers';
 import { MultiStepFormFallback, StaticFormFallback } from './fallbacks';
@@ -39,11 +39,11 @@ export const LazyMultiStepForm: React.FC<LazyMultiStepFormProps> = ({
   const handlePreload = useCallback(async () => {
     if (isPreloaded || isLoading) return;
 
-    const startTime = trackLazyLoadStart('MultiStepForm-Preload');
+    const startTime = trackLazyLoadStart();
     
     try {
       await preloadComponent(
-        () => import('./MultiStepForm').then(module => ({ default: module.MultiStepForm })),
+        () => import('./MultiStepForm').then(module => ({ default: module.MultiStepForm as ComponentType<unknown> })),
         'MultiStepForm'
       );
       setIsPreloaded(true);
@@ -79,7 +79,7 @@ export const LazyMultiStepForm: React.FC<LazyMultiStepFormProps> = ({
     // If component isn't preloaded, show loading state
     if (!isPreloaded) {
       setIsLoading(true);
-      const startTime = trackLazyLoadStart('MultiStepForm');
+      const startTime = trackLazyLoadStart();
 
       // Track when component actually loads
       const checkLoaded = () => {
@@ -98,7 +98,7 @@ export const LazyMultiStepForm: React.FC<LazyMultiStepFormProps> = ({
   }, [handleFormOpen]);
 
   // Error handler
-  const handleError = useCallback((error: Error, errorInfo: React.ErrorInfo) => {
+  const handleError = useCallback((error: Error) => {
     setLoadError(error);
     trackLazyLoadError('MultiStepForm', error);
     
@@ -157,7 +157,7 @@ export const useMultiStepFormPreload = () => {
 
     try {
       await preloadComponent(
-        () => import('./MultiStepForm').then(module => ({ default: module.MultiStepForm })),
+        () => import('./MultiStepForm').then(module => ({ default: module.MultiStepForm as ComponentType<unknown> })),
         'MultiStepForm'
       );
       setIsPreloaded(true);
@@ -183,7 +183,7 @@ export const withMultiStepFormPreload = <P extends object>(
   Component: React.ComponentType<P>
 ) => {
   const MultiStepFormPreloadComponent = React.forwardRef<unknown, P & { preloadMultiStepForm?: boolean }>((props, ref) => {
-    const { preload, preloadProps } = useMultiStepFormPreload();
+    const { preloadProps } = useMultiStepFormPreload();
     const { preloadMultiStepForm = true, ...componentProps } = props;
 
     const enhancedProps = preloadMultiStepForm ? {
