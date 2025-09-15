@@ -57,6 +57,9 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
       nextErrors.rating = 'Please select a rating';
     }
 
+    const bookingNameRes = validateRequired(v.bookingName || '', 'Lead passenger booking name');
+    if (!bookingNameRes.isValid) nextErrors.bookingName = bookingNameRes.error || 'Lead passenger booking name is required';
+
     const nameRes = validateRequired(v.name, 'Name');
     if (!nameRes.isValid) nextErrors.name = nameRes.error || 'Name is required';
 
@@ -109,9 +112,27 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
         />
       </div>
 
+      {/* Booking Name */}
+      <Input
+        label="Lead passenger booking name (for verification only, not to be displayed)"
+        required
+        value={values.bookingName || ''}
+        onChange={(v) => {
+          setField('bookingName', v);
+          if (touched.bookingName) setErrors((prev) => ({ ...prev, bookingName: '' }));
+        }}
+        onBlur={() => {
+          markTouched('bookingName');
+          const nextErrors = validate(values);
+          setErrors((prev) => ({ ...prev, bookingName: nextErrors.bookingName }));
+        }}
+        placeholder="Enter Lead passenger booking name"
+        error={touched.bookingName ? errors.bookingName : ''}
+      />
+
       {/* Name */}
       <Input
-        label="Your name"
+        label="Your name (will be displayed in the review)"
         required
         value={values.name}
         onChange={(v) => {
