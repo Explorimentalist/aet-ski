@@ -50,7 +50,7 @@ export const collectionPoints: CategorizedOption[] = [
       },
       {
         type: 'option',
-        label: 'Moutiers Train Station',
+        label: 'Moûtiers Train Station',
         value: 'moutiers-station',
         icon: 'train-station'
       }
@@ -62,7 +62,7 @@ export const collectionPoints: CategorizedOption[] = [
     children: [
       {
         type: 'option',
-        label: 'Mutiers',
+        label: 'Moûtiers',
         value: 'mutiers',
         icon: 'ski-resort'
       },

@@ -200,7 +200,7 @@ export default function HomePageClient() {
               {/* Card 1: Well equipped vehicles */}
               <CardImage
                 title="Well equipped vehicles"
-                description="Checked regularly, our vans have what it takes to make your journey."
+                description="Checked regularly, modern & comfortable. Our vans have what it takes to make your journey."
                 imagePublicId="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757429374/interior_botneg.png" // or a full Cloudinary URL
                 variant="flex"
               />
@@ -236,6 +236,16 @@ export default function HomePageClient() {
                 title="Over 1700 journeys"
                 description="More than 15 years experience bringing people to the joy of the mountains."
                 imagePublicId="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757428706/Jamies_van_side_nniut6.png"
+                variant="flex"
+                className="flex-shrink-0"
+              />
+
+              {/* CardImage 6: Friendly drivers */}
+              <CardImage
+                title="Friendly drivers"
+                description="Our team of drivers will greet you with a smile and make your journey enjoyable & seamless."
+                imagePublicId="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757935281/family_laughing_mzvprp.png"
+                imageAlt="Family inside a Volkswagen Transporter T6 laughing while traveling through snowy scenery"
                 variant="flex"
                 className="flex-shrink-0"
               />
@@ -278,4 +288,3 @@ export default function HomePageClient() {
     </>
   );
 }
-

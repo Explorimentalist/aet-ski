@@ -27,6 +27,9 @@ interface RouteTransferProps {
   cloudinaryPublicId?: string;
   deviceType?: 'mobile' | 'tablet' | 'desktop';
   format?: 'auto' | 'webp' | 'avif' | 'jpg' | 'png';
+  // When true, only width is sent to Cloudinary so the
+  // original aspect ratio is preserved (no server-side crop)
+  preserveOriginalAspect?: boolean;
 }
 
 export const RouteTransfer: React.FC<RouteTransferProps> = ({
@@ -43,21 +46,25 @@ export const RouteTransfer: React.FC<RouteTransferProps> = ({
   cloudinaryPublicId,
   deviceType = 'desktop',
   format = 'auto',
+  preserveOriginalAspect = false,
 }) => {
   // Phase 2: Generate optimized image URL
   const optimizedMapImageSrc = React.useMemo(() => {
     if (cloudinaryPublicId) {
+      // If preserving aspect, omit height and avoid fill-crop
+      const height = preserveOriginalAspect ? undefined : mapImageHeight;
+      const crop = preserveOriginalAspect ? 'scale' : 'fill';
       return getAdvancedOptimizedUrl(cloudinaryPublicId, {
         width: mapImageWidth,
-        height: mapImageHeight,
+        height,
         quality: 'auto',
         format,
         deviceType,
-        crop: 'fill'
+        crop
       });
     }
     return mapImageSrc || '';
-  }, [cloudinaryPublicId, mapImageSrc, mapImageWidth, mapImageHeight, format, deviceType]);
+  }, [cloudinaryPublicId, mapImageSrc, mapImageWidth, mapImageHeight, format, deviceType, preserveOriginalAspect]);
   return (
     <section className="py-16 tablet:py-20 desktop:py-24">
       <Grid container>

@@ -166,7 +166,10 @@ export function getAdvancedOptimizedUrl(publicId: string, options: {
   transformations.push(`q_${optimizedQuality}`);
   
   // Phase 2: Enhanced SEO optimizations
-  transformations.push('g_auto'); // Auto gravity for better cropping
+  // Only add gravity when using a crop mode that supports it
+  if (crop === 'fill' || crop === 'crop') {
+    transformations.push('g_auto'); // Auto gravity for better cropping
+  }
   transformations.push('fl_progressive'); // Progressive loading
   transformations.push('fl_immutable_cache'); // Better caching
   

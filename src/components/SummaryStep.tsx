@@ -47,14 +47,23 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
     }
   }, [isStepValid, onValidationChange]);
 
-  // Format date for display
+  // Format date for display: e.g., "Monday 13 Sep 2025"
   const formatDate = useCallback((date: Date | null | undefined): string => {
     if (!date) return 'Not specified';
-    return date.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: '2-digit',
-    });
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    }).formatToParts(date);
+
+    const get = (type: string) => parts.find(p => p.type === type)?.value || '';
+    const weekday = get('weekday');
+    const day = get('day');
+    const month = get('month');
+    const year = get('year');
+
+    return [weekday, day, month, year].filter(Boolean).join(' ');
   }, []);
 
   // Handle additional information change
@@ -101,7 +110,7 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-5xl right-5xl w-5 h-5 tablet:w-7 tablet:h-7 desktop:w-10 desktop:h-10 flex items-center justify-center text-text-secondary hover:text-text-brand transition-colors z-10"
+        className="absolute top-3xl right-3xl tablet:top-7xl tablet:right-7xl desktop:top-9xl desktop:right-9xl w-5 h-5 tablet:w-7 tablet:h-7 desktop:w-10 desktop:h-10 flex items-center justify-center text-text-secondary hover:text-text-brand transition-colors z-10"
         aria-label="Close modal"
       >
         <X className="w-4 h-4 tablet:w-5 tablet:h-5 desktop:w-5 desktop:h-5" />

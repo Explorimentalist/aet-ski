@@ -268,7 +268,7 @@ export default function ContactPageClient() {
                 fontFamily: 'GT Walsheim Trial, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
               }}
             >
-              Contact AET for French Alps Transfer Bookings
+              Contact us for any questions you may have
             </h1>
           </div>
 

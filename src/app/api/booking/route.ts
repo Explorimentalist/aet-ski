@@ -145,7 +145,8 @@ export async function POST(request: NextRequest) {
 
     try {
       console.log('📧 Attempting to send emails directly via Resend...');
-      console.log('📧 SANDBOX MODE: Overriding recipient to', process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com');
+      console.log('📧 Quote email recipient (admin):', process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com');
+      console.log('📧 Confirmation email recipient (customer):', emailData.bookingData.passenger?.email || 'no email provided');
       
       // Send quote email directly via Resend (bypassing email service)
       const quoteEmailResponse = await fetch('https://api.resend.com/emails', {
@@ -156,8 +157,7 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({
           from: `${process.env.EMAIL_FROM_NAME || 'AET Ski Transfer'} <${process.env.EMAIL_FROM || 'bookings@aet.ski'}>`,
-          // TESTING MODE: Override recipient to your verified email
-          // In production, this would be: to: [emailData.bookingData.passenger?.email || ''],
+          // Send to admin for quote processing
           to: [process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com'],
           subject: `AET Quote request - ${emailData.quoteId}`,
           html: `
@@ -191,7 +191,6 @@ export async function POST(request: NextRequest) {
                 <div class="content">
                  
                   <h2>Quote Details</h2>
-                  <p><strong>Quote ID:</strong> ${emailData.quoteId}</p>
                   
                   <div class="quote-details">
                     <div class="section">
@@ -268,8 +267,6 @@ Snowboards: ${emailData.bookingData.luggage?.snowboards || 0}
 Suitcases: ${emailData.bookingData.luggage?.suitcases || 0}
 Prams: ${emailData.bookingData.luggage?.prams || 0}
 
-Quote ID: ${emailData.quoteId}
-
 Please review this request and provide a detailed quote to the client.
 
 ---
@@ -289,7 +286,6 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
       emailSent = true; // Mark quote email as sent
 
       // Send confirmation email
-      let confirmationEmailSent = false;
       try {
         // Send confirmation email to customer's email (domain is verified)
         const confirmationRecipient = emailData.bookingData.passenger?.email || '';
@@ -347,8 +343,7 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
                     <p>Thank you for choosing AET Ski Transfer. We've received your booking request and will process it shortly.</p>
                   </div>
                   
-                  <p><strong>Booking ID:</strong> ${emailData.quoteId}</p>
-                  
+                        
                   <p>We'll send you a detailed quote within 24 hours with:</p>
                   <ul>
                     <li>Final pricing</li>
@@ -377,8 +372,6 @@ Hello ${emailData.bookingData.passenger?.name || 'there'}, your quote informatio
 
 Thank you for choosing AET Ski Transfer. We've received your booking request and will process it shortly.
 
-Booking ID: ${emailData.quoteId}
-
 We'll send you a detailed quote within 24 hours with:
 - Final pricing
 - Driver details
@@ -404,7 +397,6 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
       }
 
       console.log('✅ Confirmation email sent successfully to customer');
-      confirmationEmailSent = true;
 
       } catch (confirmationError) {
         console.error('❌ Confirmation email sending error:', confirmationError);
@@ -412,8 +404,9 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
         // The quote email to admin will still be sent
       }
 
-      // Update the emailSent flag to reflect both emails
-      emailSent = emailSent && confirmationEmailSent;
+      // Update the emailSent flag - quote email is most important
+      // emailSent remains true if quote email succeeded, even if confirmation fails
+      // This ensures the booking process completes successfully
 
     } catch (emailError) {
       console.error('❌ Email sending error:', emailError);

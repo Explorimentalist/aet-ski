@@ -34,6 +34,17 @@ const getIcon = (iconType?: string) => {
   }
 };
 
+// Recursively check if an option or any of its descendants matches the search term
+const optionMatchesSearch = (option: CategorizedOption, term: string): boolean => {
+  const t = term.toLowerCase();
+  if (t === '') return true;
+  if (option.label.toLowerCase().includes(t)) return true;
+  if (option.children) {
+    return option.children.some(child => optionMatchesSearch(child, term));
+  }
+  return false;
+};
+
 const renderCategorizedOptions = (
   options: CategorizedOption[],
   searchTerm: string,
@@ -44,11 +55,7 @@ const renderCategorizedOptions = (
   const rendered: React.ReactNode[] = [];
 
   options.forEach((option) => {
-    const matchesSearch = searchTerm === '' || 
-      option.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (option.children && option.children.some(child => 
-        child.label.toLowerCase().includes(searchTerm.toLowerCase())
-      ));
+    const matchesSearch = optionMatchesSearch(option, searchTerm);
 
     if (!matchesSearch) return;
 
@@ -78,12 +85,8 @@ const renderCategorizedOptions = (
         </button>
       );
     } else if (option.type === 'category' || option.type === 'subcategory') {
-      // Only show category/subcategory if it has matching children or matches search
-      const hasMatchingChildren = option.children && option.children.some(child => 
-        child.label.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      
-      if (hasMatchingChildren || option.label.toLowerCase().includes(searchTerm.toLowerCase())) {
+      // Show category/subcategory headers when they or any descendant match
+      if (matchesSearch) {
         rendered.push(
           <div
             key={option.label}
