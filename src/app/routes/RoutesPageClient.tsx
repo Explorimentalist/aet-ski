@@ -39,7 +39,7 @@ export default function RoutesPageClient() {
         <PageHero
           heading="Airport Transfer Routes from Geneva, Chambery, Lyon & Grenoble"
           description="Deciding which airport to fly into can often be a simple case of choosing the most convenient flight from your local airport. You may find that the cost of the flight is the deciding factor but it's also important to understand the geography, cost and time of where you'll arrive as well."
-          cloudinaryPublicId="v1754484387/routes_top_map_scw9bx"
+          cloudinaryPublicId="v1758030551/routes_top_map_scw9bx"
           imageAlt="Map showing routes from various airports to ski resorts in the French Alps"
           imageWidth={1200}
           imageHeight={600}
@@ -111,12 +111,7 @@ export default function RoutesPageClient() {
 
         {/* Moutiers */}
         <RouteTransfer
-          heading={
-            <>
-              Eurostar &amp; TGV<br />
-              Moûtiers&nbsp;-&nbsp;Salins&nbsp;-&nbsp;Brides-les-Bains
-            </>
-          }
+          heading="Eurostar & TGV - Moûtiers - Salins - Brides-les-Bains"
           transferStats={{
             departure: "Moûtiers train station / Town",
             distance: "N/A",
