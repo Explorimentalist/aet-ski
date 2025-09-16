@@ -75,6 +75,8 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
   const [isNavigationVisible, setIsNavigationVisible] = useState(false);
   const [isNavigationFirstRender, setIsNavigationFirstRender] = useState(true);
   const [stepValidationStates, setStepValidationStates] = useState<Record<number, boolean>>({});
+  const [showReturnDateMismatchWarning, setShowReturnDateMismatchWarning] = useState(false);
+  const continueButtonRef = React.useRef<HTMLButtonElement | null>(null);
 
   const totalSteps = 6;
 
@@ -252,6 +254,36 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
   // Handle next step
   const handleNext = useCallback(() => {
     if (currentStep < totalSteps && validation.isValid) {
+      // Step-specific pre-next checks
+      if (currentStep === 2) {
+        const journeyType = formData.journey?.type || 'one-way';
+        const dates = formData.dates;
+        if (
+          journeyType === 'return' &&
+          dates?.collectionDate instanceof Date &&
+          dates?.returnDate instanceof Date &&
+          !dates.isCollectionFlexible &&
+          !dates.isReturnFlexible
+        ) {
+          const start = new Date(
+            dates.collectionDate.getFullYear(),
+            dates.collectionDate.getMonth(),
+            dates.collectionDate.getDate()
+          );
+          const end = new Date(
+            dates.returnDate.getFullYear(),
+            dates.returnDate.getMonth(),
+            dates.returnDate.getDate()
+          );
+          const msPerDay = 1000 * 60 * 60 * 24;
+          const diffDays = Math.round((end.getTime() - start.getTime()) / msPerDay);
+          if (diffDays !== 7) {
+            setShowReturnDateMismatchWarning(true);
+            return;
+          }
+        }
+      }
+
       if (currentStep === totalSteps) {
         // This is the final step, submit the form
         handleSubmit();
@@ -259,7 +291,14 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
         setCurrentStep(prev => prev + 1);
       }
     }
-  }, [currentStep, totalSteps, validation.isValid, handleSubmit]);
+  }, [currentStep, totalSteps, validation.isValid, handleSubmit, formData]);
+
+  // Focus the primary action when the warning opens
+  useEffect(() => {
+    if (showReturnDateMismatchWarning && continueButtonRef.current) {
+      continueButtonRef.current.focus();
+    }
+  }, [showReturnDateMismatchWarning]);
 
   // Handle edit step (for summary page)
   const handleEditStep = useCallback((step: number) => {
@@ -454,8 +493,66 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
               showProgressDots={currentStep < totalSteps}
               isVisible={isNavigationVisible}
               isFirstRender={isNavigationFirstRender}
-              nextButtonText={currentStep === totalSteps ? 'Get a quote' : 'Next'}
+              nextButtonText={currentStep === totalSteps ? 'Get your quote' : 'Next'}
             />
+          )}
+
+          {/* Warning overlay for non 7-day return trips */}
+          {showReturnDateMismatchWarning && (
+            <div
+              className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="return-warning-title"
+            >
+              <div className="bg-background-secondary text-text-primary rounded-md shadow-lg w-[92%] tablet:w-[560px] max-w-[90vw]">
+                <div className="px-4xl py-3xl border-b border-border-secondary">
+                  <h3 id="return-warning-title" className="text-lg font-bold">
+                    Please confirm your trip length
+                  </h3>
+                </div>
+                <div className="px-4xl py-3xl space-y-md">
+                  <p className="text-text-secondary">
+                    Your return is scheduled for{' '}
+                    <span className="font-medium text-text-primary">
+                      {formData.dates?.returnDate instanceof Date
+                        ? formData.dates.returnDate.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })
+                        : ''}
+                    </span>
+                    , which is not exactly 7 days after your collection date{' '}
+                    <span className="font-medium text-text-primary">
+                      {formData.dates?.collectionDate instanceof Date
+                        ? formData.dates.collectionDate.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })
+                        : ''}
+                    </span>
+                    .
+                  </p>
+                  <p className="text-text-secondary">
+                    Most ski trips are 7 days. If this is correct, continue; otherwise go back to adjust your dates.
+                  </p>
+                </div>
+                <div className="px-4xl py-3xl border-t border-border-secondary flex items-center justify-end gap-md">
+                  <button
+                    type="button"
+                    className="px-4 py-2 bg-background-secondary text-text-primary rounded-lg hover:bg-background-hover transition-colors"
+                    onClick={() => setShowReturnDateMismatchWarning(false)}
+                  >
+                    Go back
+                  </button>
+                  <button
+                    type="button"
+                    className="px-4 py-2 bg-text-primary text-white rounded-lg hover:bg-text-primary/90 transition-colors"
+                    onClick={() => {
+                      setShowReturnDateMismatchWarning(false);
+                      setCurrentStep(prev => prev + 1);
+                    }}
+                    ref={continueButtonRef}
+                  >
+                    Continue
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </FormErrorBoundary>

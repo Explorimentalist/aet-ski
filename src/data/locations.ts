@@ -68,7 +68,7 @@ export const collectionPoints: CategorizedOption[] = [
       },
       {
         type: 'subcategory',
-        label: 'Les 3 vallées',
+        label: 'Les 3 Vallées',
         children: [
           {
             type: 'option',
@@ -311,7 +311,7 @@ export const destinations: CategorizedOption[] = [
     children: [
       {
         type: 'subcategory',
-        label: 'Les 3 vallées',
+        label: 'Les 3 Vallées',
         children: [
           {
             type: 'option',

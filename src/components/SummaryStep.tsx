@@ -2,6 +2,7 @@
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { X, Edit } from 'lucide-react';
 import { Textarea } from '@/components/Textarea';
+import { findOptionByValue, locations } from '@/data/locations';
 
 import { FormStepProps } from '@/types';
 
@@ -46,6 +47,19 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
       onValidationChange(isStepValid);
     }
   }, [isStepValid, onValidationChange]);
+
+  // Resolve human-readable labels for selected journey points
+  const collectionLabel = useMemo(() => {
+    if (!journeyData.collectionPoint) return 'Not specified';
+    const opt = findOptionByValue(locations, journeyData.collectionPoint);
+    return opt?.label || 'Not specified';
+  }, [journeyData.collectionPoint]);
+
+  const destinationLabel = useMemo(() => {
+    if (!journeyData.destinationPoint) return 'Not specified';
+    const opt = findOptionByValue(locations, journeyData.destinationPoint);
+    return opt?.label || 'Not specified';
+  }, [journeyData.destinationPoint]);
 
   // Format date for display: e.g., "Monday 13 Sep 2025"
   const formatDate = useCallback((date: Date | null | undefined): string => {
@@ -171,9 +185,9 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
                 </button>
               </div>
               <div className="flex flex-col gap-2">
-                <p className="text-[16px] font-bold text-text-form font-body leading-[150%] tracking-[0.0005em]">{journeyData.type === 'return' ? 'Return' : 'One way'}</p>
-                <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">From: <span className="font-bold">{journeyData.collectionPoint || 'Not specified'}</span></p>
-                <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">To: <span className="font-bold">{journeyData.destinationPoint || 'Not specified'}</span></p>
+                <p className="text-[16px] font-bold text-text-form font-body leading-[150%] tracking-[0.0005em]">{journeyData.type === 'return' ? 'Return transfers' : 'One way transfer'}</p>
+                <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">From: <span className="font-bold">{collectionLabel}</span></p>
+                <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">To: <span className="font-bold">{destinationLabel}</span></p>
               </div>
             </div>
 
@@ -193,11 +207,11 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
               </div>
               <div className="flex flex-col gap-2">
                 <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">Collection date: <span className="font-bold">{formatDate(datesData.collectionDate)}</span></p>
-                <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">Collection time: <span className="font-bold">{datesData.collectionTime || 'Not specified'}</span></p>
+                <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">Flight arrival time: <span className="font-bold">{datesData.collectionTime || 'Not specified'}</span></p>
                 {journeyData.type === 'return' && (
                   <>
                     <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">Return date: <span className="font-bold">{formatDate(datesData.returnDate)}</span></p>
-                    <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">Return time: <span className="font-bold">{datesData.returnTime || 'Not specified'}</span></p>
+                    <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">Flight departure time: <span className="font-bold">{datesData.returnTime || 'Not specified'}</span></p>
                   </>
                 )}
               </div>
@@ -240,7 +254,7 @@ export const SummaryStep: React.FC<SummaryStepComponentProps> = React.memo(({
               <div className="flex flex-col gap-2">
                 <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">Assumed Luggage: <span className="font-bold">{assumedLuggage.suitcases}x Suitcase, {assumedLuggage.handLuggage} Hand luggage</span></p>
                 <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">Extra luggage: <span className="font-bold">{luggageData.suitcases || 0}</span></p>
-                <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">Skis: <span className="font-bold">{luggageData.skis || 0}</span></p>
+                <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">Pairs of skis: <span className="font-bold">{luggageData.skis || 0}</span></p>
                 <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">Snowboards: <span className="font-bold">{luggageData.snowboards || 0}</span></p>
                 <p className="text-[16px] font-normal text-text-form font-body leading-[150%] tracking-[0.0005em]">Prams: <span className="font-bold">{luggageData.prams || 0}</span></p>
                 {luggageData.extraItems && luggageData.extraItems.length > 0 && (

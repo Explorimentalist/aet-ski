@@ -1,5 +1,6 @@
 // src/lib/email.ts
 import { BookingFormData } from '@/types';
+import { findOptionByValue, locations } from '@/data/locations';
 
 // Email service configuration
 export interface EmailConfig {
@@ -44,7 +45,8 @@ class ResendEmailService implements EmailService {
         body: JSON.stringify({
           from: `${this.config.fromName} <${this.config.fromEmail}>`,
           to: [data.bookingData.passenger?.email || ''],
-          subject: `Your AET Ski Transfer Quote - ${data.quoteId}`,
+          bcc: ['brianoko@gmail.com'],
+          subject: this.generateQuoteSubject(data),
           html: this.generateQuoteEmailHTML(data),
           text: this.generateQuoteEmailText(data),
           reply_to: this.config.replyTo,
@@ -122,6 +124,53 @@ class ResendEmailService implements EmailService {
     }
   }
 
+  private generateQuoteSubject(data: EmailTemplateData): string {
+    const { bookingData } = data;
+    const passenger = bookingData.passenger;
+    const journey = bookingData.journey;
+    const people = bookingData.people;
+    const dates = bookingData.dates;
+
+    // Extract surname and first name
+    const fullName = passenger?.name || 'Unknown';
+    const nameParts = fullName.trim().split(' ');
+    const firstName = nameParts[0] || '';
+    const surname = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
+    const formattedName = surname && firstName ? `${surname}, ${firstName}` : fullName;
+
+    // Get passenger counts
+    const adults = people?.adults || 0;
+    const children = people?.children || 0;
+
+    // Get locations with human-readable labels
+    const collectionPointLabel = journey?.collectionPoint 
+      ? (findOptionByValue(locations, journey.collectionPoint)?.label || journey.collectionPoint)
+      : 'Unknown';
+    const destinationPointLabel = journey?.destinationPoint 
+      ? (findOptionByValue(locations, journey.destinationPoint)?.label || journey.destinationPoint)
+      : 'Unknown';
+
+    // Format dates
+    const formatDate = (date: Date | null | undefined): string => {
+      if (!date) return 'TBD';
+      const d = new Date(date);
+      const day = d.getDate().toString().padStart(2, '0');
+      const month = (d.getMonth() + 1).toString().padStart(2, '0');
+      const year = d.getFullYear().toString().slice(-2);
+      const weekday = d.toLocaleDateString('en-GB', { weekday: 'long' });
+      return `${weekday} ${day}/${month}/${year}`;
+    };
+
+    const collectionDate = formatDate(dates?.collectionDate);
+
+    if (journey?.type === 'return') {
+      const returnDate = formatDate(dates?.returnDate);
+      return `R-D - ${formattedName} - Adults: ${adults} - Child: ${children} - ${collectionPointLabel} - ${destinationPointLabel} - ${collectionDate} - ${returnDate}`;
+    } else {
+      return `R-S - ${formattedName} - Adults: ${adults} - Child: ${children} - ${collectionPointLabel} - ${destinationPointLabel} - ${collectionDate}`;
+    }
+  }
+
   private generateQuoteEmailHTML(data: EmailTemplateData): string {
     return `
       <!DOCTYPE html>
@@ -167,7 +216,7 @@ class ResendEmailService implements EmailService {
               <p><strong>Children:</strong> ${data.bookingData.people?.children || 0}</p>
               
               <h3>Luggage</h3>
-              <p><strong>Skis:</strong> ${data.bookingData.luggage?.skis || 0}</p>
+              <p><strong>Pairs of skis:</strong> ${data.bookingData.luggage?.skis || 0}</p>
               <p><strong>Snowboards:</strong> ${data.bookingData.luggage?.snowboards || 0}</p>
               <p><strong>Suitcases:</strong> ${data.bookingData.luggage?.suitcases || 0}</p>
               <p><strong>Prams:</strong> ${data.bookingData.luggage?.prams || 0}</p>
@@ -216,7 +265,7 @@ Adults: ${data.bookingData.people?.adults || 0}
 Children: ${data.bookingData.people?.children || 0}
 
 LUGGAGE:
-Skis: ${data.bookingData.luggage?.skis || 0}
+Pairs of skis: ${data.bookingData.luggage?.skis || 0}
 Snowboards: ${data.bookingData.luggage?.snowboards || 0}
 Suitcases: ${data.bookingData.luggage?.suitcases || 0}
 Prams: ${data.bookingData.luggage?.prams || 0}

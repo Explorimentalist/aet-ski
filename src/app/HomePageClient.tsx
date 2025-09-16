@@ -67,6 +67,10 @@ export default function HomePageClient() {
     router.push('/routes');
   }, [router]);
 
+  const handleSkiStorageContact = useCallback(() => {
+    router.push('/contact?interest=ski-storage');
+  }, [router]);
+
   return (
     <>
       {/* Fixed Navigation */}
@@ -144,7 +148,7 @@ export default function HomePageClient() {
           {/* Right Column - Static Map with veil (9/5/4 columns) */}
           <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9">
             <ImageWithGradient
-              cloudinaryPublicId="v1754484387/routes_top_map_scw9bx"
+              cloudinaryPublicId="v1758030551/routes_top_map_scw9bx"
               alt="Map showing transfer routes from airports to resorts"
               height="h-[528px]"
               className="rounded-2xl"
@@ -249,6 +253,144 @@ export default function HomePageClient() {
                 variant="flex"
                 className="flex-shrink-0"
               />
+            </div>
+          </div>
+        </Grid>
+      </section>
+
+      {/* Ski Equipment Storage Section */}
+      <section className="py-48 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #F5F5F5 0%, #CAE7FF 16%, #CAE7FF 84%, #F5F5F5 100%)' }}>
+        <Grid container className="gap-grid-mobile tablet:gap-grid-tablet desktop:gap-grid-desktop">
+          {/* Tag and Heading - Mobile: above image, Tablet: cols 1-4, Desktop: cols 2-4 */}
+          <div className="col-mobile-4 tablet:col-tablet-4 tablet:col-start-1 desktop:col-desktop-3 desktop:col-start-2 relative z-10 order-1 desktop:order-1 desktop:flex desktop:items-center">
+            <div className="flex flex-col gap-6 w-full">
+              {/* New Badge */}
+              <div className="inline-flex items-center px-3 py-2 bg-accent-primary h-[30px] max-w-fit" style={{ borderRadius: '15px' }}>
+                <span 
+                  className="text-xs font-normal text-text-muted leading-[120%] tracking-button whitespace-nowrap"
+                  style={{
+                    fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+                  }}
+                >
+                  New
+                </span>
+              </div>
+
+              {/* Heading */}
+              <h2 
+                className="text-heading text-3xl font-bold text-text-primary leading-[120%] tracking-[-0.011em]"
+                style={{
+                  fontFamily: 'GT Walsheim Trial, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+                }}
+              >
+                Ski Equipment Storage
+              </h2>
+              
+              {/* Content Container - Hidden on mobile, shown on tablet and desktop */}
+              <div className="hidden tablet:flex desktop:flex flex-col gap-5">
+                {/* Description */}
+                <p className="text-base font-normal leading-relaxed tracking-tight" style={{ color: '#000000', letterSpacing: '-0.011em' }}>
+                  If you return every year to the alps, consider keeping your storage safe, in our facilities. It is:
+                </p>
+                
+                {/* Benefits */}
+                <p className="text-base font-normal leading-relaxed tracking-tight" style={{ color: '#000000', letterSpacing: '-0.011em' }}>
+                  Affordable<br />
+                  Secure<br />
+                  Easy to retrieve
+                </p>
+                
+                {/* Call to action */}
+                <div className="flex flex-col gap-4 tablet:items-start desktop:items-start">
+                  <p className="text-base font-normal leading-relaxed tracking-tight" style={{ color: '#000000', letterSpacing: '-0.011em' }}>
+                    Find out more.
+                  </p>
+                  <Button
+                    variant="secondary"
+                    size="md"
+                    className="tablet:w-fit desktop:w-fit"
+                    onClick={handleSkiStorageContact}
+                    style={{
+                      background: 'transparent',
+                      border: '2px solid #1D4747',
+                      borderRadius: '8px',
+                      padding: '8px 16px',
+                      height: '40px',
+                      color: '#1D4747',
+                    }}
+                  >
+                    Contact us
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Image Column - Mobile: below content, Tablet: cols 5-8, Desktop: cols 7-10 */}
+          <div className="col-mobile-4 tablet:col-tablet-4 tablet:col-start-5 desktop:col-desktop-4 desktop:col-start-7 order-2 desktop:order-2 mb-8 desktop:mb-0 desktop:flex desktop:items-center tablet:flex tablet:items-center">
+            <div className="relative flex justify-center desktop:justify-center w-full">
+              {/* Main Image with Decorative Overlay */}
+              <div className="relative">
+                {/* Background Ski Storage Image */}
+                <img 
+                  src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1758021650/ski_service_ps34ym.png"
+                  alt="Ski equipment storage service - skier with gear in alpine setting"
+                  className="w-72 tablet:w-96 desktop:w-[407px] h-[410px] tablet:h-[545px] desktop:h-[580px] object-cover rounded-xl tablet:rounded-2xl relative z-10"
+                />
+                
+                {/* PNG Overlay - Positioned to align with top of image */}
+                <div className="absolute -top-8 -left-4 -right-4 pointer-events-none z-20">
+                  <img 
+                    src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1758023015/Clouds_dyj2t0.png"
+                    alt=""
+                    className="w-[160%] desktop:w-[220%] h-auto object-contain mx-auto"
+                    style={{ 
+                      mixBlendMode: 'normal',
+                      opacity: 1 
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Content Description - Mobile only: below image, Tablet/Desktop: hidden (combined with first column) */}
+          <div className="col-mobile-4 tablet:hidden desktop:hidden order-3">
+            <div className="flex flex-col gap-5">
+              {/* Description */}
+              <p className="text-base font-normal leading-relaxed tracking-tight" style={{ color: '#000000', letterSpacing: '-0.011em' }}>
+                If you return every year to the alps, consider keeping your storage safe, in our facilities. It is:
+              </p>
+              
+              {/* Benefits */}
+              <p className="text-base font-normal leading-relaxed tracking-tight" style={{ color: '#000000', letterSpacing: '-0.011em' }}>
+                Affordable<br />
+                Secure<br />
+                Easy to retrieve
+              </p>
+              
+              {/* Call to action */}
+              <div className="flex flex-col gap-4 tablet:items-center">
+                <p className="text-base font-normal leading-relaxed tracking-tight" style={{ color: '#000000', letterSpacing: '-0.011em' }}>
+                  Find out more.
+                </p>
+                <Button
+                  variant="secondary"
+                  size="md"
+                  className="tablet:w-full"
+                  onClick={handleOpenForm}
+                  style={{
+                    background: 'transparent',
+                    border: '2px solid #1D4747',
+                    borderRadius: '8px',
+                    padding: '8px 16px',
+                    height: '40px',
+                    color: '#1D4747',
+                  }}
+                >
+                  Contact us
+                </Button>
+              </div>
             </div>
           </div>
         </Grid>

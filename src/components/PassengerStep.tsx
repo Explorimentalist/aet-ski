@@ -140,7 +140,7 @@ export const PassengerStep: React.FC<PassengerStepComponentProps> = React.memo((
           {/* Passenger Details Fields */}
           <div className="space-y-4">
             <Input
-              label="Name"
+              label=" Full Name"
               placeholder="Enter your full name"
               value={passengerData.name}
               onChange={handleNameChange}

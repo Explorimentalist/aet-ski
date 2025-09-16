@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { BookingFormData } from '@/types';
 import { initializeEmailService, EmailConfig } from '@/lib/email';
-import { generateQuoteId } from '@/lib/utils';
+import { generateQuoteId, buildQuoteSubject } from '@/lib/utils';
 
 // Initialize email service with environment variables
 function initializeEmailServiceFromEnv(): void {
@@ -148,6 +148,9 @@ export async function POST(request: NextRequest) {
       console.log('📧 Quote email recipient (admin):', process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com');
       console.log('📧 Confirmation email recipient (customer):', emailData.bookingData.passenger?.email || 'no email provided');
       
+      // Build subject for admin quote email going to hq@aet.ski
+      const adminSubject = buildQuoteSubject(emailData.bookingData as BookingFormData);
+      
       // Send quote email directly via Resend (bypassing email service)
       const quoteEmailResponse = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -157,9 +160,9 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({
           from: `${process.env.EMAIL_FROM_NAME || 'AET Ski Transfer'} <${process.env.EMAIL_FROM || 'bookings@aet.ski'}>`,
-          // Send to admin for quote processing
-          to: [process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com'],
-          subject: `AET Quote request - ${emailData.quoteId}`,
+          // Send to HQ for quote processing
+          to: [process.env.EMAIL_HQ_TO || 'hq@aet.ski'],
+          subject: adminSubject,
           html: `
             <!DOCTYPE html>
             <html>
@@ -214,7 +217,7 @@ export async function POST(request: NextRequest) {
                     
                     <div class="section">
                       <h3>Luggage</h3>
-                      <p><strong>Skis:</strong> ${emailData.bookingData.luggage?.skis || 0}</p>
+                      <p><strong>Pairs of skis:</strong> ${emailData.bookingData.luggage?.skis || 0}</p>
                       <p><strong>Snowboards:</strong> ${emailData.bookingData.luggage?.snowboards || 0}</p>
                       <p><strong>Suitcases:</strong> ${emailData.bookingData.luggage?.suitcases || 0}</p>
                       <p><strong>Prams:</strong> ${emailData.bookingData.luggage?.prams || 0}</p>
@@ -262,7 +265,7 @@ Adults: ${emailData.bookingData.people?.adults || 0}
 Children: ${emailData.bookingData.people?.children || 0}
 
 LUGGAGE:
-Skis: ${emailData.bookingData.luggage?.skis || 0}
+Pairs of skis: ${emailData.bookingData.luggage?.skis || 0}
 Snowboards: ${emailData.bookingData.luggage?.snowboards || 0}
 Suitcases: ${emailData.bookingData.luggage?.suitcases || 0}
 Prams: ${emailData.bookingData.luggage?.prams || 0}

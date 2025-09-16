@@ -100,14 +100,18 @@ export const NumberInput: React.FC<NumberInputProps> = ({
           max={max}
           step={step}
           disabled={disabled}
+          inputMode="numeric"
           className={`
             form-input
             w-full text-center
+            appearance-none
             ${showButtons ? 'pl-12 pr-12' : ''}
             ${error ? 'border-border-error bg-background-error' : ''}
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
             [&::-webkit-inner-spin-button]:appearance-none
             [&::-webkit-outer-spin-button]:appearance-none
+            [-webkit-appearance:textfield]
+            [-moz-appearance:textfield]
             [&::-moz-inner-spin-button]:appearance-none
             [&::-moz-outer-spin-button]:appearance-none
           `}

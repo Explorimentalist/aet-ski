@@ -114,7 +114,7 @@ export const PeopleStep: React.FC<PeopleStepComponentProps> = React.memo(({
                 id="people-step-title"
                 className="text-2xl font-bold text-text-form"
               >
-                People
+                Passengers
               </h2>
             </div>
             <div className="flex items-center">
@@ -130,7 +130,7 @@ export const PeopleStep: React.FC<PeopleStepComponentProps> = React.memo(({
             aria-atomic="true" 
             className="sr-only"
           >
-            Step {currentStep} of {totalSteps}: People
+            Step {currentStep} of {totalSteps}: Passengers
           </div>
 
           {/* People Count Fields */}

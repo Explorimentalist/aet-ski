@@ -48,7 +48,7 @@ export const SuccessStep: React.FC<SuccessStepProps> = React.memo(({
               text-[#4F5B62]
               mb-0
             ">
-              Your submission was<br />
+              Your quote request was<br />
               successful
             </h1>
           </div>
@@ -64,8 +64,7 @@ export const SuccessStep: React.FC<SuccessStepProps> = React.memo(({
               text-[#4F5B62]
               max-w-[624px]
             ">
-              Thanks for your submission. Your quote would be ready<br />
-              and in your email in the next 24h.
+              Thank you for your enquiry, we will respond as soon as possible
             </p>
           </div>
 

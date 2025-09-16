@@ -215,7 +215,7 @@ export const LuggageStep: React.FC<LuggageStepComponentProps> = React.memo(({
             />
             
             <NumberInput
-              label="Skis"
+              label="Pairs of skis"
               value={luggageData.skis}
               onChange={handleSkisChange}
               min={0}

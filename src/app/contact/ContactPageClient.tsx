@@ -1,7 +1,8 @@
 'use client';
 
 // src/app/contact/ContactPageClient.tsx
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { LazyMultiStepForm as MultiStepForm } from '@/components/LazyMultiStepForm';
@@ -39,6 +40,21 @@ export default function ContactPageClient() {
     message: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const searchParams = useSearchParams();
+
+  // Pre-filled message for ski equipment storage
+  const skiStorageMessage = "Hello, I'm interested in learning more about your ski equipment storage services. Could you please provide me with details about pricing, security measures, accessibility, and the process for storing and retrieving my equipment? I would also like to know about the storage facility location and any requirements for using this service. Thank you for your time.";
+
+  // Check for URL parameters and pre-populate message
+  useEffect(() => {
+    const interest = searchParams.get('interest');
+    if (interest === 'ski-storage') {
+      setFormData(prev => ({
+        ...prev,
+        message: skiStorageMessage
+      }));
+    }
+  }, [searchParams, skiStorageMessage]);
 
   // Validation helper functions
   const validateName = (name: string): string | undefined => {
