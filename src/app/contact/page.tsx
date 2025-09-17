@@ -1,5 +1,6 @@
 // src/app/contact/page.tsx
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 import ContactPageClient from './ContactPageClient'
 
 export const metadata: Metadata = {
@@ -26,5 +27,9 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <ContactPageClient />
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ContactPageClient />
+    </Suspense>
+  )
 } 

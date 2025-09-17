@@ -13,6 +13,7 @@ import MarqueeRebrand from '../components/MarqueeRebrand';
 import { ImageWithGradient } from '@/components/ImageWithGradient';
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { BookingFormData } from '@/types';
 import { PageWrapper } from '@/motion/PageWrapper';
 import PerformanceDashboard from '@/components/PerformanceDashboard';
@@ -332,22 +333,30 @@ export default function HomePageClient() {
               {/* Main Image with Decorative Overlay */}
               <div className="relative">
                 {/* Background Ski Storage Image */}
-                <img 
+                <Image 
                   src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1758021650/ski_service_ps34ym.png"
                   alt="Ski equipment storage service - skier with gear in alpine setting"
+                  width={407}
+                  height={580}
                   className="w-72 tablet:w-96 desktop:w-[407px] h-[410px] tablet:h-[545px] desktop:h-[580px] object-cover rounded-xl tablet:rounded-2xl relative z-10"
+                  priority={false}
+                  loading="lazy"
                 />
                 
                 {/* PNG Overlay - Positioned to align with top of image */}
                 <div className="absolute -top-8 -left-4 -right-4 pointer-events-none z-20">
-                  <img 
+                  <Image 
                     src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1758023015/Clouds_dyj2t0.png"
                     alt=""
+                    width={800}
+                    height={400}
                     className="w-[160%] desktop:w-[220%] h-auto object-contain mx-auto"
                     style={{ 
                       mixBlendMode: 'normal',
                       opacity: 1 
                     }}
+                    priority={false}
+                    loading="lazy"
                   />
                 </div>
               </div>
