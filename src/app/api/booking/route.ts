@@ -1,7 +1,7 @@
 // src/app/api/booking/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { BookingFormData } from '@/types';
-import { initializeEmailService, EmailConfig } from '@/lib/email';
+import { initializeEmailService, EmailConfig, createEmailService } from '@/lib/email';
 import { generateQuoteId, buildQuoteSubject } from '@/lib/utils';
 
 // Initialize email service with environment variables
@@ -144,14 +144,26 @@ export async function POST(request: NextRequest) {
     let emailSent = false;
 
     try {
-      console.log('📧 Attempting to send emails directly via Resend...');
-      console.log('📧 Quote email recipient (admin):', process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com');
-      console.log('📧 Confirmation email recipient (customer):', emailData.bookingData.passenger?.email || 'no email provided');
+      console.log('📧 Attempting to send emails using email service...');
+      console.log('📧 Quote email recipient (admin):', process.env.EMAIL_HQ_TO || 'hq@aet.ski');
+      console.log('📧 Customer email:', emailData.bookingData.passenger?.email || 'no email provided');
       
-      // Build subject for admin quote email going to hq@aet.ski
+      // Create email service instance
+      const emailConfig: EmailConfig = {
+        provider: 'resend',
+        apiKey: process.env.EMAIL_API_KEY || '',
+        fromEmail: process.env.EMAIL_FROM || 'bookings@aet.ski',
+        fromName: process.env.EMAIL_FROM_NAME || 'AET Ski Transfer',
+        replyTo: process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com',
+      };
+      
+      const emailService = createEmailService(emailConfig);
+      
+      // Send quote email to admin/HQ using the new template
       const adminSubject = buildQuoteSubject(emailData.bookingData as BookingFormData);
+      const quoteEmailHtml = (emailService as any).generateQuoteEmailHTML(emailData);
+      const quoteEmailText = (emailService as any).generateQuoteEmailText(emailData);
       
-      // Send quote email directly via Resend (bypassing email service)
       const quoteEmailResponse = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -163,120 +175,9 @@ export async function POST(request: NextRequest) {
           // Send to HQ for quote processing
           to: [process.env.EMAIL_HQ_TO || 'hq@aet.ski'],
           subject: adminSubject,
-          html: `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>AET Quote request</title>
-              <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #4F5B62; color: white; padding: 30px; text-align: center; }
-                .content { padding: 30px; background: #f9f9f9; }
-                .quote-details { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; }
-                .section { margin-bottom: 20px; }
-                .section:last-child { margin-bottom: 0; }
-                .section h3 { margin: 0 0 12px 0; color: #4F5B62; font-size: 18px; }
-                .section p { margin: 0 0 8px 0; }
-                .section p:last-child { margin-bottom: 0; }
-                .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <div class="header">
-                  <h1>AET Quote request</h1>
-                  <p>Transfer quote information</p>
-                </div>
-                
-                <div class="content">
-                 
-                  <h2>Quote Details</h2>
-                  
-                  <div class="quote-details">
-                    <div class="section">
-                      <h3>Journey Details</h3>
-                      <p><strong>Type:</strong> ${emailData.bookingData.journey?.type === 'return' ? 'Return' : 'One Way'}</p>
-                      <p><strong>From:</strong> ${emailData.bookingData.journey?.collectionPoint}</p>
-                      <p><strong>To:</strong> ${emailData.bookingData.journey?.destinationPoint}</p>
-                    </div>
-                    
-                    <div class="section">
-                      <h3>Travel Details</h3>
-                      <p><strong>Date:</strong> ${emailData.bookingData.dates?.collectionDate ? new Date(emailData.bookingData.dates.collectionDate).toLocaleDateString() : 'Flexible'}</p>
-                      <p><strong>Time:</strong> ${emailData.bookingData.dates?.collectionTime || 'Flexible'}</p>
-                    </div>
-                    
-                    <div class="section">
-                      <h3>Passengers</h3>
-                      <p><strong>Adults:</strong> ${emailData.bookingData.people?.adults || 0}</p>
-                      <p><strong>Children:</strong> ${emailData.bookingData.people?.children || 0}</p>
-                    </div>
-                    
-                    <div class="section">
-                      <h3>Luggage</h3>
-                      <p><strong>Pairs of skis:</strong> ${emailData.bookingData.luggage?.skis || 0}</p>
-                      <p><strong>Snowboards:</strong> ${emailData.bookingData.luggage?.snowboards || 0}</p>
-                      <p><strong>Suitcases:</strong> ${emailData.bookingData.luggage?.suitcases || 0}</p>
-                      <p><strong>Prams:</strong> ${emailData.bookingData.luggage?.prams || 0}</p>
-                    </div>
-
-                    <div class="section">
-                      <h3>Client Information</h3>
-                      <p><strong>Name:</strong> ${emailData.bookingData.passenger?.name || 'Not provided'}</p>
-                      <p><strong>Email:</strong> ${emailData.bookingData.passenger?.email || 'Not provided'}</p>
-                      <p><strong>Special Requests:</strong> ${emailData.bookingData.passenger?.specialRequests || 'Not provided'}</p>
-                    </div>
-                  </div>
-                  
-                  <p>Please review this request and provide a detailed quote to the client.</p>
-                </div>
-                
-                <div class="footer">
-                  <p>AET Ski Transfer<br>
-                  More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski</p>
-                </div>
-              </div>
-            </body>
-            </html>
-          `,
-          text: `
-AET Quote request - ${emailData.quoteId}
-
-CLIENT INFORMATION:
-Name: ${emailData.bookingData.passenger?.name || 'Not provided'}
-Email: ${emailData.bookingData.passenger?.email || 'Not provided'}
-
-BOOKING DETAILS:
-
-JOURNEY DETAILS:
-Type: ${emailData.bookingData.journey?.type === 'return' ? 'Return' : 'One Way'}
-From: ${emailData.bookingData.journey?.collectionPoint}
-To: ${emailData.bookingData.journey?.destinationPoint}
-
-TRAVEL DETAILS:
-Date: ${emailData.bookingData.dates?.collectionDate ? new Date(emailData.bookingData.dates.collectionDate).toLocaleDateString() : 'Flexible'}
-Time: ${emailData.bookingData.dates?.collectionTime || 'Flexible'}
-
-PASSENGERS:
-Adults: ${emailData.bookingData.people?.adults || 0}
-Children: ${emailData.bookingData.people?.children || 0}
-
-LUGGAGE:
-Pairs of skis: ${emailData.bookingData.luggage?.skis || 0}
-Snowboards: ${emailData.bookingData.luggage?.snowboards || 0}
-Suitcases: ${emailData.bookingData.luggage?.suitcases || 0}
-Prams: ${emailData.bookingData.luggage?.prams || 0}
-
-Please review this request and provide a detailed quote to the client.
-
----
-AET Ski Transfer
-More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski
-          `,
-          reply_to: process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com',
+          html: quoteEmailHtml,
+          text: quoteEmailText,
+          reply_to: emailData.bookingData.passenger?.email || 'brianoko@gmail.com',
         }),
       });
 
@@ -285,7 +186,7 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
         throw new Error(`Quote email failed: ${quoteEmailResponse.status} ${quoteEmailResponse.statusText} - ${JSON.stringify(errorData)}`);
       }
 
-      console.log('✅ Quote email sent successfully');
+      console.log('✅ Quote email sent successfully using new template');
       emailSent = true; // Mark quote email as sent
 
       // Send confirmation email
@@ -300,6 +201,10 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
         
         console.log('📧 Sending confirmation email to customer:', confirmationRecipient);
         
+        // Use email service template for confirmation email
+        const confirmationEmailHtml = (emailService as any).generateConfirmationEmailHTML(emailData);
+        const confirmationEmailText = (emailService as any).generateConfirmationEmailText(emailData);
+        
         const confirmationEmailResponse = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -311,86 +216,9 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
           // Send to customer's email address (or admin in testing mode)
           to: [confirmationRecipient],
           subject: `Writing your quote ${emailData.bookingData.passenger?.name || ''} - AET Ski Transfer`,
-          html: `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Writing your quote - AET Ski Transfer</title>
-              <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #4F5B62; color: white; padding: 30px; text-align: center; }
-                .content { padding: 30px; background: #f9f9f9; }
-                .confirmation { margin: 20px 0; }
-                .confirmation h2 { margin: 0 0 16px 0; color: #4F5B62; }
-                .confirmation p { margin: 0 0 16px 0; }
-                .content p { margin: 0 0 16px 0; }
-                .content ul { margin: 0 0 16px 0; padding-left: 20px; }
-                .content li { margin: 0 0 8px 0; }
-                .content li:last-child { margin-bottom: 0; }
-                .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <div class="header">
-                  <h1>Writing your quote</h1>
-                  <p>AET Ski Transfer</p>
-                </div>
-                
-                <div class="content">
-                  <div class="confirmation">
-                    <h2>Hello ${emailData.bookingData.passenger?.name || 'there'}, your quote information has been received!</h2>
-                    <p>Thank you for choosing AET Ski Transfer. We've received your booking request and will process it shortly.</p>
-                  </div>
-                  
-                        
-                  <p>We'll send you a detailed quote within 24 hours with:</p>
-                  <ul>
-                    <li>Final pricing</li>
-                    <li>Driver details</li>
-                    <li>Meeting point instructions</li>
-                    <li>Payment information</li>
-                  </ul>
-                  
-                  <p>If you have any urgent questions, please contact us immediately.</p>
-                  
-                  <p>Best regards,<br>The AET Team</p>
-                </div>
-                
-                <div class="footer">
-                  <p>AET Ski Transfer<br>
-                  More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski</p>
-                </div>
-              </div>
-            </body>
-            </html>
-          `,
-          text: `
-Writing your quote - AET Ski Transfer
-
-Hello ${emailData.bookingData.passenger?.name || 'there'}, your quote information has been received!
-
-Thank you for choosing AET Ski Transfer. We've received your booking request and will process it shortly.
-
-We'll send you a detailed quote within 24 hours with:
-- Final pricing
-- Driver details
-- Meeting point instructions
-- Payment information
-
-If you have any urgent questions, please contact us immediately.
-
-Best regards,
-The AET Team
-
----
-AET Ski Transfer
-More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski
-          `,
-          reply_to: process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com',
+          html: confirmationEmailHtml,
+          text: confirmationEmailText,
+          reply_to: emailData.bookingData.passenger?.email || 'brianoko@gmail.com',
         }),
       });
 
@@ -399,7 +227,7 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
         throw new Error(`Confirmation email failed: ${confirmationEmailResponse.status} ${confirmationEmailResponse.statusText} - ${JSON.stringify(errorData)}`);
       }
 
-      console.log('✅ Confirmation email sent successfully to customer');
+      console.log('✅ Confirmation email sent successfully to customer using new template');
 
       } catch (confirmationError) {
         console.error('❌ Confirmation email sending error:', confirmationError);

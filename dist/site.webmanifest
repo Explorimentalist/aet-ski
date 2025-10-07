@@ -1,6 +1,11 @@
 {
-  "name": "AET - Alpine Airport Transfers",
-  "short_name": "AET Ski",
+  "name": "AET Ski Transfers",
+  "short_name": "AET",
+  "description": "Premium private airport transfers to French Alps ski resorts",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1D4747",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -12,8 +17,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "theme_color": "#1D4747",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  ]
 }

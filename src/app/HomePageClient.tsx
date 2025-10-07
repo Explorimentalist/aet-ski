@@ -212,7 +212,7 @@ export default function HomePageClient() {
               {/* CardImage 2: Local knowledge */}
               <CardImage
                 title="Local knowledge"
-                description="AET is a local Savoie based company, the advantages are local permissions & knowledge."
+                description="AET is a local Savoie based company, the advantages are local knowledge & permissions."
                 imagePublicId="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757429004/Jamie_front__van_iwmo0h.png"
                 variant="flex"
                 className="flex-shrink-0"
@@ -273,7 +273,7 @@ export default function HomePageClient() {
                     fontFamily: 'Geist, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
                   }}
                 >
-                  New
+                  NEW
                 </span>
               </div>
 
@@ -284,21 +284,14 @@ export default function HomePageClient() {
                   fontFamily: 'GT Walsheim Trial, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
                 }}
               >
-                Ski Equipment Storage
+                Snow Equipment Storage
               </h2>
               
               {/* Content Container - Hidden on mobile, shown on tablet and desktop */}
               <div className="hidden tablet:flex desktop:flex flex-col gap-5">
                 {/* Description */}
                 <p className="text-base font-normal leading-relaxed tracking-tight" style={{ color: '#000000', letterSpacing: '-0.011em' }}>
-                  If you return every year to the alps, consider keeping your storage safe, in our facilities. It is:
-                </p>
-                
-                {/* Benefits */}
-                <p className="text-base font-normal leading-relaxed tracking-tight" style={{ color: '#000000', letterSpacing: '-0.011em' }}>
-                  Affordable<br />
-                  Secure<br />
-                  Easy to retrieve
+                If you are returning to the Alps why not remove some of the hassle of travelling. AET offers a storage facility for returning customers. Affordable Secure Easy to drop off & collect
                 </p>
                 
                 {/* Call to action */}

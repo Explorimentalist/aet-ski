@@ -49,7 +49,7 @@ class ResendEmailService implements EmailService {
           subject: this.generateQuoteSubject(data),
           html: this.generateQuoteEmailHTML(data),
           text: this.generateQuoteEmailText(data),
-          reply_to: this.config.replyTo,
+          reply_to: data.bookingData.passenger?.email || this.config.replyTo,
         }),
       });
 
@@ -79,7 +79,7 @@ class ResendEmailService implements EmailService {
           subject: `Booking Confirmation - AET Ski Transfer`,
           html: this.generateConfirmationEmailHTML(data),
           text: this.generateConfirmationEmailText(data),
-          reply_to: this.config.replyTo,
+          reply_to: data.bookingData.passenger?.email || this.config.replyTo,
         }),
       });
 
@@ -172,6 +172,12 @@ class ResendEmailService implements EmailService {
   }
 
   private generateQuoteEmailHTML(data: EmailTemplateData): string {
+    const passengerName = data.bookingData.passenger?.name || 'there';
+    const specialRequests = data.bookingData.passenger?.specialRequests?.trim() || '';
+    const extraItems = (data.bookingData.luggage?.extraItems || [])
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0);
+
     return `
       <!DOCTYPE html>
       <html>
@@ -180,62 +186,86 @@ class ResendEmailService implements EmailService {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Your AET Ski Transfer Quote</title>
         <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: #1D4747; color: white; padding: 30px; text-align: center; }
-          .content { padding: 30px; background: #f9f9f9; }
+          .header { background: #1D4747; color: white; padding: 15px 30px; text-align: center; }
+          .header h1 { margin: 0 0 6px; font-size: 24px; }
+          .header p { margin: 0; font-size: 16px; }
+          .content { padding: 24px; background: #f9f9f9; }
           .quote-details { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; }
-          .button { display: inline-block; background: #1D4747; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; }
-          .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; }
+          .details-table { width: 100%; border-collapse: collapse; }
+          .column { width: 50%; vertical-align: top; padding: 0 10px; }
+          .column h3 { margin-top: 0; margin-bottom: 10px; color: #1D4747; }
+          .column p { margin: 6px 0; }
+          .column-left { border-right: 1px solid #e0e0e0; }
+          .column-right { padding-left: 20px; }
+          .footer { text-align: center; padding: 16px 20px; }
+          .logo { display: inline-block; }
+          .logo svg { width: 140px; height: auto; }
+          @media only screen and (max-width: 480px) {
+            .details-table, .details-table tbody, .details-table tr, .details-table td { display: block; width: 100%; }
+            .column { border-right: none; padding: 0; }
+            .column-right { padding-top: 20px; }
+          }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <h1>AET Ski Transfer</h1>
-            <p>Your Transfer Quote</p>
+            <h1>AET Quote request</h1>
+            <p>Transfer quote information</p>
           </div>
           
           <div class="content">
-            <h2>Hello ${data.bookingData.passenger?.name || 'there'}!</h2>
-            
-            <p>Thank you for requesting a quote for your ski transfer. Here are your booking details:</p>
+            <h2>Quote Details</h2>
             
             <div class="quote-details">
-              <h3>Journey Details</h3>
-              <p><strong>Type:</strong> ${data.bookingData.journey?.type === 'return' ? 'Return' : 'One Way'}</p>
-              <p><strong>From:</strong> ${data.bookingData.journey?.collectionPoint}</p>
-              <p><strong>To:</strong> ${data.bookingData.journey?.destinationPoint}</p>
-              
-              <h3>Travel Details</h3>
-              <p><strong>Date:</strong> ${data.bookingData.dates?.collectionDate ? new Date(data.bookingData.dates.collectionDate).toLocaleDateString() : 'Flexible'}</p>
-              <p><strong>Time:</strong> ${data.bookingData.dates?.collectionTime || 'Flexible'}</p>
-              
-              <h3>Passengers</h3>
-              <p><strong>Adults:</strong> ${data.bookingData.people?.adults || 0}</p>
-              <p><strong>Children:</strong> ${data.bookingData.people?.children || 0}</p>
-              
-              <h3>Luggage</h3>
-              <p><strong>Pairs of skis:</strong> ${data.bookingData.luggage?.skis || 0}</p>
-              <p><strong>Snowboards:</strong> ${data.bookingData.luggage?.snowboards || 0}</p>
-              <p><strong>Suitcases:</strong> ${data.bookingData.luggage?.suitcases || 0}</p>
-              <p><strong>Prams:</strong> ${data.bookingData.luggage?.prams || 0}</p>
+              <table class="details-table" role="presentation" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td class="column column-left">
+                    <h3>Journey Details</h3>
+                    <p><strong>Type:</strong> ${data.bookingData.journey?.type === 'return' ? 'Return' : 'One Way'}</p>
+                    <p><strong>From:</strong> ${data.bookingData.journey?.collectionPoint}</p>
+                    <p><strong>To:</strong> ${data.bookingData.journey?.destinationPoint}</p>
+
+                    <h3>Travel Details</h3>
+                    <p><strong>Date:</strong> ${data.bookingData.dates?.collectionDate ? new Date(data.bookingData.dates.collectionDate).toLocaleDateString('en-GB') : 'Flexible'}</p>
+                    <p><strong>Time:</strong> ${data.bookingData.dates?.collectionTime || 'Flexible'}</p>
+
+                    <h3>Luggage</h3>
+                    <p><strong>Pairs of skis:</strong> ${data.bookingData.luggage?.skis || 0}</p>
+                    <p><strong>Snowboards:</strong> ${data.bookingData.luggage?.snowboards || 0}</p>
+                    <p><strong>Suitcases:</strong> ${data.bookingData.luggage?.suitcases || 0}</p>
+                    <p><strong>Prams:</strong> ${data.bookingData.luggage?.prams || 0}</p>
+                    ${extraItems.length ? `<p><strong>Extra items:</strong> ${extraItems.join(', ')}</p>` : ''}
+                  </td>
+                  <td class="column column-right">
+                    <h3>Client Information</h3>
+                    <p><strong>Name:</strong> ${data.bookingData.passenger?.name || 'N/A'}</p>
+                    <p><strong>Email:</strong> ${data.bookingData.passenger?.email || 'N/A'}</p>
+                    <p><strong>Phone:</strong> ${data.bookingData.passenger?.phone || 'N/A'}</p>
+                    ${specialRequests ? `<p><strong>Special requests:</strong> ${specialRequests}</p>` : ''}
+
+                    <h3>Passengers</h3>
+                    <p><strong>Adults:</strong> ${data.bookingData.people?.adults || 0}</p>
+                    <p><strong>Children:</strong> ${data.bookingData.people?.children || 0}</p>
+                  </td>
+                </tr>
+              </table>
             </div>
             
-            <p><strong>Quote ID:</strong> ${data.quoteId}</p>
-            
-            ${data.estimatedPrice ? `<p><strong>Estimated Price:</strong> ${data.currency || '€'}${data.estimatedPrice}</p>` : ''}
-            
-            <p>We'll review your request and send you a detailed quote within 24 hours.</p>
-            
-            <p>If you have any questions, please don't hesitate to contact us.</p>
-            
-            <p>Best regards,<br>The AET Team</p>
+            <p>Please review this request and provide a detailed quote to the client.</p>
           </div>
           
           <div class="footer">
-            <p>AET Ski Transfer<br>
-            More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski</p>
+            <div class="logo" role="img" aria-label="AET Ski Transfer">
+              <svg width="140" height="35" viewBox="0 0 96 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.4533 16.6167C17.4533 16.6167 0.840295 14.1116 9.14679 11.8701C9.14679 11.8701 -6.14771 14.3753 2.81803 16.8804C11.7838 19.3855 20.4858 21.7588 10.3334 24.0002C10.3334 24.0002 38.1536 20.5722 17.4533 16.6167Z" fill="#1D4747" />
+                <path d="M29.3196 15.1662C27.21 13.8477 23.5182 9.89219 21.5405 5.27747C19.5627 0.662746 19.1672 1.58569 16.9258 4.75007C14.6843 7.91445 15.2117 9.36479 13.234 7.12335C11.2562 4.88192 10.7288 11.6062 10.7288 11.6062C10.7288 11.6062 2.94974 13.3203 17.1894 15.4298C26.663 16.8333 28.0247 17.5949 27.875 17.9474C28.9068 17.4234 30.939 16.1783 29.3196 15.1662Z" fill="#1D4747" />
+                <path d="M47.8529 0L55.2347 19.74H50.7282L49.2353 15.3441H41.8535L40.3053 19.74H35.9094L43.4018 0H47.8529ZM45.5582 4.86588L42.9871 12.1094H48.1018L45.6135 4.86588H45.5582ZM74.8468 0V3.64941H64.4239V7.8794H73.9897V11.2523H64.4239V16.0906H75.068V19.74H60.0833V0H74.8468ZM95.7583 0V3.64941H89.8419V19.74H85.5013V3.64941H79.5848V0H95.7583Z" fill="#1D4747" />
+              </svg>
+            </div>
+            <p>More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski</p>
           </div>
         </div>
       </body>
@@ -257,7 +287,7 @@ From: ${data.bookingData.journey?.collectionPoint}
 To: ${data.bookingData.journey?.destinationPoint}
 
 TRAVEL DETAILS:
-Date: ${data.bookingData.dates?.collectionDate ? new Date(data.bookingData.dates.collectionDate).toLocaleDateString() : 'Flexible'}
+Date: ${data.bookingData.dates?.collectionDate ? new Date(data.bookingData.dates.collectionDate).toLocaleDateString('en-GB') : 'Flexible'}
 Time: ${data.bookingData.dates?.collectionTime || 'Flexible'}
 
 PASSENGERS:
@@ -287,36 +317,42 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
   }
 
   private generateConfirmationEmailHTML(data: EmailTemplateData): string {
+    const passengerName = data.bookingData.passenger?.name || 'there';
+    
     return `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Booking Confirmation - AET Ski Transfer</title>
+        <title>Writing your quote - AET Ski Transfer</title>
         <style>
           body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: #1D4747; color: white; padding: 30px; text-align: center; }
+          .header { background: #4F5B62; color: white; padding: 30px; text-align: center; }
           .content { padding: 30px; background: #f9f9f9; }
-          .confirmation { background: #d4edda; border: 1px solid #c3e6cb; padding: 20px; margin: 20px 0; border-radius: 8px; }
+          .confirmation { margin: 20px 0; }
+          .confirmation h2 { margin: 0 0 16px 0; color: #4F5B62; }
+          .confirmation p { margin: 0 0 16px 0; }
+          .content p { margin: 0 0 16px 0; }
+          .content ul { margin: 0 0 16px 0; padding-left: 20px; }
+          .content li { margin: 0 0 8px 0; }
+          .content li:last-child { margin-bottom: 0; }
           .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <h1>Booking Confirmed!</h1>
+            <h1>Writing your quote</h1>
             <p>AET Ski Transfer</p>
           </div>
           
           <div class="content">
             <div class="confirmation">
-              <h2>✅ Your booking has been received!</h2>
+              <h2>Hello ${passengerName}, your quote information has been received!</h2>
               <p>Thank you for choosing AET Ski Transfer. We've received your booking request and will process it shortly.</p>
             </div>
-            
-            <p><strong>Booking ID:</strong> ${data.quoteId}</p>
             
             <p>We'll send you a detailed quote within 24 hours with:</p>
             <ul>
