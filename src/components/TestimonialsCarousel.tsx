@@ -143,10 +143,13 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({
     setIsAnimating(false);
   }, [currentIndex, testimonials.length, isAnimating, controls, getTransformValue]);
 
-  // Initialize animation position only on screen size change, not currentIndex change
+  // Initialize/realign position when screen size changes.
+  // Important: do NOT depend on currentIndex here, otherwise clicking
+  // next/prev will instantly set the x without animating.
   useEffect(() => {
     controls.set({ x: getTransformValue(currentIndex) });
-  }, [screenSize, controls, currentIndex, getTransformValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [screenSize, getTransformValue]);
 
   // Auto-play functionality
   useEffect(() => {
