@@ -42,19 +42,20 @@ export default function ContactPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const searchParams = useSearchParams();
 
-  // Pre-filled message for ski equipment storage
-  const skiStorageMessage = "Hello, I'm interested in learning more about your ski equipment storage services. Could you please provide me with details about pricing, security measures, accessibility, and the process for storing and retrieving my equipment? I would also like to know about the storage facility location and any requirements for using this service. Thank you for your time.";
-
-  // Check for URL parameters and pre-populate message
+  // Check for URL parameters - no longer pre-populating message
   useEffect(() => {
     const interest = searchParams.get('interest');
+    // No longer pre-filling the message, just letting placeholder show
+  }, [searchParams]);
+
+  // Determine placeholder text based on context
+  const getMessagePlaceholder = () => {
+    const interest = searchParams.get('interest');
     if (interest === 'ski-storage') {
-      setFormData(prev => ({
-        ...prev,
-        message: skiStorageMessage
-      }));
+      return "Let us know what items you are considering to store.\nFor e.g. Skis x 3, Snowboard x 1, boots x 4, suitcase x 1 etc.";
     }
-  }, [searchParams, skiStorageMessage]);
+    return "Write your message here";
+  };
 
   // Validation helper functions
   const validateName = (name: string): string | undefined => {
@@ -325,7 +326,7 @@ export default function ContactPageClient() {
                     onChange={(value) => handleInputChange('message', value)}
                     onBlur={() => handleInputBlur('message')}
                     error={touchedFields.message ? validationErrors.message : undefined}
-                    placeholder="Write your message here"
+                    placeholder={getMessagePlaceholder()}
                     rows={4}
                     maxLength={1000}
                   />
