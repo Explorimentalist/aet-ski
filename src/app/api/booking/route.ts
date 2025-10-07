@@ -161,8 +161,8 @@ export async function POST(request: NextRequest) {
       
       // Send quote email to admin/HQ using the new template
       const adminSubject = buildQuoteSubject(emailData.bookingData as BookingFormData);
-      const quoteEmailHtml = (emailService as any).generateQuoteEmailHTML(emailData);
-      const quoteEmailText = (emailService as any).generateQuoteEmailText(emailData);
+      const quoteEmailHtml = emailService.generateQuoteEmailHTML(emailData);
+      const quoteEmailText = emailService.generateQuoteEmailText(emailData);
       
       const quoteEmailResponse = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -202,8 +202,8 @@ export async function POST(request: NextRequest) {
         console.log('📧 Sending confirmation email to customer:', confirmationRecipient);
         
         // Use email service template for confirmation email
-        const confirmationEmailHtml = (emailService as any).generateConfirmationEmailHTML(emailData);
-        const confirmationEmailText = (emailService as any).generateConfirmationEmailText(emailData);
+        const confirmationEmailHtml = emailService.generateConfirmationEmailHTML(emailData);
+        const confirmationEmailText = emailService.generateConfirmationEmailText(emailData);
         
         const confirmationEmailResponse = await fetch('https://api.resend.com/emails', {
         method: 'POST',

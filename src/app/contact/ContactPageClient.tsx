@@ -44,7 +44,6 @@ export default function ContactPageClient() {
 
   // Check for URL parameters - no longer pre-populating message
   useEffect(() => {
-    const interest = searchParams.get('interest');
     // No longer pre-filling the message, just letting placeholder show
   }, [searchParams]);
 

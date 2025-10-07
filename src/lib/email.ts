@@ -24,6 +24,10 @@ export interface EmailService {
   sendQuoteEmail(data: EmailTemplateData): Promise<boolean>;
   sendConfirmationEmail(data: EmailTemplateData): Promise<boolean>;
   sendErrorNotification(error: string, bookingData: BookingFormData): Promise<boolean>;
+  generateQuoteEmailHTML(data: EmailTemplateData): string;
+  generateQuoteEmailText(data: EmailTemplateData): string;
+  generateConfirmationEmailHTML(data: EmailTemplateData): string;
+  generateConfirmationEmailText(data: EmailTemplateData): string;
 }
 
 // Resend implementation (recommended)
@@ -171,8 +175,7 @@ class ResendEmailService implements EmailService {
     }
   }
 
-  private generateQuoteEmailHTML(data: EmailTemplateData): string {
-    const passengerName = data.bookingData.passenger?.name || 'there';
+  generateQuoteEmailHTML(data: EmailTemplateData): string {
     const specialRequests = data.bookingData.passenger?.specialRequests?.trim() || '';
     const extraItems = (data.bookingData.luggage?.extraItems || [])
       .map((item) => item.trim())
@@ -273,7 +276,7 @@ class ResendEmailService implements EmailService {
     `;
   }
 
-  private generateQuoteEmailText(data: EmailTemplateData): string {
+  generateQuoteEmailText(data: EmailTemplateData): string {
     return `
 AET Ski Transfer - Your Transfer Quote
 
@@ -316,7 +319,7 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
     `;
   }
 
-  private generateConfirmationEmailHTML(data: EmailTemplateData): string {
+  generateConfirmationEmailHTML(data: EmailTemplateData): string {
     const passengerName = data.bookingData.passenger?.name || 'there';
     
     return `
@@ -377,7 +380,7 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
     `;
   }
 
-  private generateConfirmationEmailText(data: EmailTemplateData): string {
+  generateConfirmationEmailText(data: EmailTemplateData): string {
     return `
 Booking Confirmed! - AET Ski Transfer
 
