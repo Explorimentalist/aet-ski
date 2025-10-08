@@ -262,7 +262,7 @@ class ResendEmailService implements EmailService {
           
           <div class="footer">
             <div class="logo" role="img" aria-label="AET Ski Transfer">
-              <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757529485/AET_logo_golden_somvxv.svg" alt="AET Ski Transfer" width="140" height="35" style="display: block; margin: 0 auto;" />
+              <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757529485/AET_logo_golden_somvxv.svg" alt="AET Ski Transfer" width="140" height="35" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px;" />
             </div>
             <p>Airport transfers to Les Trois Vallées</p>
           </div>
