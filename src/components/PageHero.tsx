@@ -20,6 +20,7 @@ interface PageHeroProps {
   priority?: boolean;
   // Phase 2: Advanced Cloudinary optimization
   cloudinaryPublicId?: string;
+  mobileCloudinaryPublicId?: string;
   deviceType?: 'mobile' | 'tablet' | 'desktop';
   format?: 'auto' | 'webp' | 'avif' | 'jpg' | 'png';
 }
@@ -34,11 +35,26 @@ export const PageHero: React.FC<PageHeroProps> = ({
   priority = true,
   // Phase 2: Advanced Cloudinary optimization
   cloudinaryPublicId,
+  mobileCloudinaryPublicId,
   deviceType = 'desktop',
   format = 'auto',
 }) => {
-  // Phase 2: Generate optimized image URL
-  const optimizedImageSrc = React.useMemo(() => {
+  // Phase 2: Generate optimized image URLs for different devices
+  const mobileOptimizedSrc = React.useMemo(() => {
+    if (mobileCloudinaryPublicId) {
+      return getAdvancedOptimizedUrl(mobileCloudinaryPublicId, {
+        width: imageWidth,
+        height: imageHeight,
+        quality: 'auto',
+        format,
+        deviceType: 'mobile',
+        crop: 'fill'
+      });
+    }
+    return null;
+  }, [mobileCloudinaryPublicId, imageWidth, imageHeight, format]);
+
+  const desktopOptimizedSrc = React.useMemo(() => {
     if (cloudinaryPublicId) {
       return getAdvancedOptimizedUrl(cloudinaryPublicId, {
         width: imageWidth,
@@ -161,13 +177,25 @@ export const PageHero: React.FC<PageHeroProps> = ({
                   delay: motionTokens.stagger.sm
                 }}
               >
-                {/* Hero image with Phase 2 Cloudinary optimization */}
+                {/* Hero images with responsive support */}
+                {mobileOptimizedSrc && (
+                  <Image
+                    src={mobileOptimizedSrc}
+                    alt={imageAlt}
+                    width={imageWidth}
+                    height={imageHeight}
+                    className="w-full h-auto rounded-2xl block tablet:hidden desktop:hidden"
+                    priority={priority}
+                    sizes="100vw"
+                    quality={90}
+                  />
+                )}
                 <Image
-                  src={optimizedImageSrc}
+                  src={desktopOptimizedSrc}
                   alt={imageAlt}
                   width={imageWidth}
                   height={imageHeight}
-                  className="w-full h-auto rounded-2xl"
+                  className={`w-full h-auto rounded-2xl ${mobileOptimizedSrc ? 'hidden tablet:block desktop:block' : ''}`}
                   priority={priority}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
                   quality={90}

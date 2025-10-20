@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
                 
                 <div class="footer">
                   <div class="logo" role="img" aria-label="AET Ski Transfer">
-                    <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757529485/AET_logo_golden_somvxv.svg" alt="AET Ski Transfer" width="263" height="66" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px;" />
+                    <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/c_scale,w_263,h_66,f_png,q_auto/v1757529485/AET_logo_golden_somvxv" alt="AET Ski Transfer" width="263" height="66" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px; max-width: 263px; height: auto;" />
                   </div>
                   <p>More than 15 years experience taking people to the French Alps</p>
                 </div>

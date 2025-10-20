@@ -150,6 +150,7 @@ export default function HomePageClient() {
           <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9">
             <ImageWithGradient
               cloudinaryPublicId="v1759846075/routes_top_map_scw9bx"
+              mobileCloudinaryPublicId="v1760987574/routes_top_map2-mobile_tld9lp"
               alt="Map showing transfer routes from airports to resorts"
               height="h-[400px] tablet:h-[360px] desktop:h-[528px]"
               className="rounded-2xl"

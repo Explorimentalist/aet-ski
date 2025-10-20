@@ -14,6 +14,7 @@ interface ImageWithGradientProps {
   gradientTo?: string;
   placeholder?: boolean;
   preserveAspectRatio?: boolean;
+  mobileObjectPosition?: string;
   // Next.js Image props
   imageWidth?: number;
   imageHeight?: number;
@@ -21,6 +22,7 @@ interface ImageWithGradientProps {
   sizes?: string;
   // Phase 2: Advanced Cloudinary optimization
   cloudinaryPublicId?: string;
+  mobileCloudinaryPublicId?: string;
   deviceType?: 'mobile' | 'tablet' | 'desktop';
   format?: 'auto' | 'webp' | 'avif' | 'jpg' | 'png';
 }
@@ -35,17 +37,33 @@ export const ImageWithGradient: React.FC<ImageWithGradientProps> = ({
   gradientTo = '#F5F5F5',
   placeholder = false,
   preserveAspectRatio = false,
+  mobileObjectPosition = 'center',
   imageWidth = 1200,
   imageHeight = 528,
   priority = false,
   sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px',
   // Phase 2: Advanced Cloudinary optimization
   cloudinaryPublicId,
+  mobileCloudinaryPublicId,
   deviceType = 'desktop',
   format = 'auto',
 }) => {
-  // Phase 2: Generate optimized image URL
-  const optimizedSrc = React.useMemo(() => {
+  // Phase 2: Generate optimized image URLs for different devices
+  const mobileOptimizedSrc = React.useMemo(() => {
+    if (mobileCloudinaryPublicId) {
+      return getAdvancedOptimizedUrl(mobileCloudinaryPublicId, {
+        width: imageWidth,
+        height: imageHeight,
+        quality: 'auto',
+        format,
+        deviceType: 'mobile',
+        crop: 'fit'
+      });
+    }
+    return null;
+  }, [mobileCloudinaryPublicId, imageWidth, imageHeight, format]);
+
+  const desktopOptimizedSrc = React.useMemo(() => {
     if (cloudinaryPublicId) {
       return getAdvancedOptimizedUrl(cloudinaryPublicId, {
         width: imageWidth,
@@ -74,17 +92,35 @@ export const ImageWithGradient: React.FC<ImageWithGradientProps> = ({
       />
       
       {/* Image or Placeholder */}
-      {optimizedSrc && !placeholder ? (
-        <Image
-          src={optimizedSrc}
-          alt={alt}
-          width={imageWidth}
-          height={imageHeight}
-          className="absolute inset-0 w-full h-full object-cover rounded-xl"
-          priority={priority}
-          sizes={sizes}
-          quality={85}
-        />
+      {(desktopOptimizedSrc || mobileOptimizedSrc) && !placeholder ? (
+        <>
+          {/* Mobile Image */}
+          {mobileOptimizedSrc && (
+            <Image
+              src={mobileOptimizedSrc}
+              alt={alt}
+              width={imageWidth}
+              height={imageHeight}
+              className="absolute inset-0 w-full h-full object-cover rounded-xl block tablet:hidden desktop:hidden"
+              priority={priority}
+              sizes="100vw"
+              quality={85}
+            />
+          )}
+          {/* Desktop/Tablet Image */}
+          {desktopOptimizedSrc && (
+            <Image
+              src={desktopOptimizedSrc}
+              alt={alt}
+              width={imageWidth}
+              height={imageHeight}
+              className="absolute inset-0 w-full h-full object-cover rounded-xl hidden tablet:block desktop:block"
+              priority={priority}
+              sizes={sizes}
+              quality={85}
+            />
+          )}
+        </>
       ) : (
         <div 
           className="absolute inset-0 rounded-xl opacity-50"

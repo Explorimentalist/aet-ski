@@ -40,6 +40,7 @@ export default function RoutesPageClient() {
           heading="Airport Transfer Routes from Geneva, Chambery, Lyon & Grenoble"
           description="Deciding which airport to fly into can often be a simple case of choosing the most convenient flight from your local airport. You may find that the cost of the flight is the deciding factor but it's also important to understand the geography, cost and time of where you'll arrive as well."
           cloudinaryPublicId="v1758030551/routes_top_map_scw9bx"
+          mobileCloudinaryPublicId="v1760987574/routes_top_map2-mobile_tld9lp"
           imageAlt="Map showing routes from various airports to ski resorts in the French Alps"
           imageWidth={1200}
           imageHeight={600}
