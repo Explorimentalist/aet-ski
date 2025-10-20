@@ -43,9 +43,18 @@ export const PageHeroHome: React.FC<PageHeroHomeProps> = ({ onQuoteClick }) => {
                 />
               </picture>
               
-              {/* Gradient Veil with Multiply Blend Mode - Updated to match design */}
+              {/* Gradient Veil with Multiply Blend Mode - Mobile uses darker blue */}
               <div 
-                className="absolute inset-0 rounded-lg tablet:rounded-xl desktop:rounded-2xl"
+                className="absolute inset-0 rounded-lg tablet:rounded-xl desktop:rounded-2xl tablet:hidden"
+                style={{
+                  background: 'linear-gradient(180deg, #3F698C 0%, #F5F5F5 100%)',
+                  mixBlendMode: 'multiply'
+                }}
+              />
+              
+              {/* Gradient Veil for Tablet and Desktop - Original light blue */}
+              <div 
+                className="hidden tablet:block absolute inset-0 rounded-lg tablet:rounded-xl desktop:rounded-2xl"
                 style={{
                   background: 'linear-gradient(180deg, #CFE0F6 0%, #F5F5F5 100%)',
                   mixBlendMode: 'multiply'

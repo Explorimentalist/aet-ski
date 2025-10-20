@@ -73,9 +73,33 @@ const EmailPreviewPage = () => {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="color-scheme" content="light dark">
+      <meta name="supported-color-schemes" content="light dark">
       <title>AET Contact form submission</title>
       <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        :root {
+          color-scheme: light dark;
+        }
+        body { 
+          font-family: Arial, sans-serif; 
+          line-height: 1.6; 
+          color: #333333;
+          background-color: #ffffff;
+        }
+        @media (prefers-color-scheme: dark) {
+          body {
+            color: #e2e8f0 !important;
+            background-color: #1a1a1a !important;
+          }
+          .content {
+            background: #2a2a2a !important;
+          }
+          .message-box {
+            background: #333333 !important;
+            color: #e2e8f0 !important;
+            border-left-color: #60a5fa !important;
+          }
+        }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .header { background: #1D4747; color: white; padding: 15px 30px; text-align: center; }
         .content { padding: 30px; background: #f9f9f9; }
@@ -105,7 +129,7 @@ const EmailPreviewPage = () => {
         
         <div class="footer">
           <div class="logo" role="img" aria-label="AET Ski Transfer">
-            <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757529485/AET_logo_golden_somvxv.svg" alt="AET Ski Transfer" width="140" height="35" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px;" />
+            <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757529485/AET_logo_golden_somvxv.svg" alt="AET Ski Transfer" width="263" height="66" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px;" />
           </div>
           <p>More than 15 years experience taking people to the French Alps</p>
         </div>
