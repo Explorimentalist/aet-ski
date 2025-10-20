@@ -149,15 +149,16 @@ export default function HomePageClient() {
           {/* Right Column - Static Map with veil (9/5/4 columns) */}
           <div className="col-mobile-4 tablet:col-tablet-5 desktop:col-desktop-9">
             <ImageWithGradient
-              cloudinaryPublicId="v1758030551/routes_top_map_scw9bx"
+              cloudinaryPublicId="v1759846075/routes_top_map_scw9bx"
               alt="Map showing transfer routes from airports to resorts"
-              height="h-[528px]"
+              height="h-[400px] tablet:h-[360px] desktop:h-[528px]"
               className="rounded-2xl"
               imageWidth={1200}
               imageHeight={528}
               deviceType="desktop"
               format="auto"
               priority={true}
+              preserveAspectRatio={true}
             />
           </div>
 
@@ -291,8 +292,14 @@ export default function HomePageClient() {
               <div className="hidden tablet:flex desktop:flex flex-col gap-5">
                 {/* Description */}
                 <p className="text-base font-normal leading-relaxed tracking-tight" style={{ color: '#000000', letterSpacing: '-0.011em' }}>
-                If you are returning to the Alps why not remove some of the hassle of travelling. AET offers a storage facility for returning customers. Affordable Secure Easy to drop off & collect
+                If you are returning to the Alps why not remove some of the hassle of travelling. AET offers a storage facility for returning customers:
                 </p>
+                
+                <ul className="text-base font-normal leading-relaxed tracking-tight" style={{ color: '#000000', letterSpacing: '-0.011em' }}>
+                  <li>• Easy to drop off & collect</li>
+                  <li>• Affordable</li>
+                  <li>• Secure</li>
+                </ul>
                 
                 {/* Call to action */}
                 <div className="flex flex-col gap-4 tablet:items-start desktop:items-start">
@@ -365,11 +372,11 @@ export default function HomePageClient() {
               </p>
               
               {/* Benefits */}
-              <p className="text-base font-normal leading-relaxed tracking-tight" style={{ color: '#000000', letterSpacing: '-0.011em' }}>
-                Affordable<br />
-                Secure<br />
-                Easy to retrieve
-              </p>
+              <ul className="text-base font-normal leading-relaxed tracking-tight" style={{ color: '#000000', letterSpacing: '-0.011em' }}>
+                <li>• Easy to drop off & collect</li>
+                <li>• Affordable</li>
+                <li>• Secure</li>
+              </ul>
               
               {/* Call to action */}
               <div className="flex flex-col gap-4 tablet:items-center">

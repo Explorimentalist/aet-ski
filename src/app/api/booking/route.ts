@@ -227,7 +227,7 @@ export async function POST(request: NextRequest) {
         throw new Error(`Confirmation email failed: ${confirmationEmailResponse.status} ${confirmationEmailResponse.statusText} - ${JSON.stringify(errorData)}`);
       }
 
-      console.log('✅ Confirmation email sent successfully to customer using new template');
+      console.log('✅ Confirmation email sent successfully to customer');
 
       } catch (confirmationError) {
         console.error('❌ Confirmation email sending error:', confirmationError);

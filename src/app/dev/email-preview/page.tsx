@@ -60,28 +60,110 @@ const EmailPreviewPage = () => {
 
   const emailService = createEmailService(previewConfig) as unknown as {
     generateQuoteEmailHTML: (data: EmailTemplateData) => string;
+    generateConfirmationEmailHTML: (data: EmailTemplateData) => string;
   };
 
   const emailHtml = emailService.generateQuoteEmailHTML(sampleEmailData);
+  const confirmationEmailHtml = emailService.generateConfirmationEmailHTML(sampleEmailData);
+
+  // Generate contact form email HTML
+  const contactFormHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>AET Contact form submission</title>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #1D4747; color: white; padding: 15px 30px; text-align: center; }
+        .content { padding: 30px; background: #f9f9f9; }
+        .message-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #4F5B62; }
+        .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>AET Contact form submission</h1>
+          <p>Contact details</p>
+        </div>
+        
+        <div class="content">
+      
+          <div class="message-box">
+            <p><strong>Name:</strong> John Smith</p>
+            <p><strong>Email:</strong> john.smith@example.com</p>
+            <p><strong>Message:</strong></p>
+            <p>Hi, I'm interested in booking a transfer from Geneva to Val d'Isère for 4 people. Could you please provide me with pricing and availability for the 15th of January? We'll have 2 pairs of skis and 4 suitcases. Thank you!</p>
+          </div>
+          
+          
+          <p>Please respond to the customer at: <a href="mailto:john.smith@example.com">john.smith@example.com</a></p>
+        </div>
+        
+        <div class="footer">
+          <div class="logo" role="img" aria-label="AET Ski Transfer">
+            <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757529485/AET_logo_golden_somvxv.svg" alt="AET Ski Transfer" width="140" height="35" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px;" />
+          </div>
+          <p>More than 15 years experience taking people to the French Alps</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
 
   return (
     <main style={{ padding: '2rem', minHeight: '100vh', background: '#0f172a' }}>
       <div style={{ maxWidth: '720px', margin: '0 auto', color: '#e2e8f0' }}>
         <header style={{ marginBottom: '1.5rem' }}>
-          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Quote Email Preview</h1>
+          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Email Preview</h1>
           <p style={{ margin: 0 }}>
-            The markup below is rendered using the current email template and a representative booking payload.
+            The markup below is rendered using the current email templates and representative data.
           </p>
         </header>
-        <section
-          style={{
-            background: '#ffffff',
-            borderRadius: '12px',
-            overflow: 'hidden',
-            boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.35)',
-          }}
-        >
-          <div dangerouslySetInnerHTML={{ __html: emailHtml }} />
+        
+        <section style={{ marginBottom: '3rem' }}>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#e2e8f0' }}>Quote Email Template</h2>
+          <div
+            style={{
+              background: '#ffffff',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.35)',
+            }}
+          >
+            <div dangerouslySetInnerHTML={{ __html: emailHtml }} />
+          </div>
+        </section>
+
+        <section style={{ marginBottom: '3rem' }}>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#e2e8f0' }}>Client Confirmation Email Template</h2>
+          <div
+            style={{
+              background: '#ffffff',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.35)',
+            }}
+          >
+            <div dangerouslySetInnerHTML={{ __html: confirmationEmailHtml }} />
+          </div>
+        </section>
+
+        <section>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#e2e8f0' }}>Contact Form Email Template</h2>
+          <div
+            style={{
+              background: '#ffffff',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.35)',
+            }}
+          >
+            <div dangerouslySetInnerHTML={{ __html: contactFormHtml }} />
+          </div>
         </section>
       </div>
     </main>

@@ -80,7 +80,7 @@ class ResendEmailService implements EmailService {
         body: JSON.stringify({
           from: `${this.config.fromName} <${this.config.fromEmail}>`,
           to: [data.bookingData.passenger?.email || ''],
-          subject: `Booking Confirmation - AET Ski Transfer`,
+          subject: `Booking Confirmation - AET French Alps Transfers`,
           html: this.generateConfirmationEmailHTML(data),
           text: this.generateConfirmationEmailText(data),
           reply_to: data.bookingData.passenger?.email || this.config.replyTo,
@@ -232,8 +232,12 @@ class ResendEmailService implements EmailService {
                     <p><strong>To:</strong> ${data.bookingData.journey?.destinationPoint}</p>
 
                     <h3>Travel Details</h3>
-                    <p><strong>Date:</strong> ${data.bookingData.dates?.collectionDate ? new Date(data.bookingData.dates.collectionDate).toLocaleDateString('en-GB') : 'Flexible'}</p>
-                    <p><strong>Time:</strong> ${data.bookingData.dates?.collectionTime || 'Flexible'}</p>
+                    <p><strong>Collection Date:</strong> ${data.bookingData.dates?.collectionDate ? new Date(data.bookingData.dates.collectionDate).toLocaleDateString('en-GB') : 'Flexible'}</p>
+                    <p><strong>Collection Time:</strong> ${data.bookingData.dates?.collectionTime || 'Flexible'}</p>
+                    ${data.bookingData.journey?.type === 'return' ? `
+                    <p><strong>Return Date:</strong> ${data.bookingData.dates?.returnDate ? new Date(data.bookingData.dates.returnDate).toLocaleDateString('en-GB') : 'Flexible'}</p>
+                    <p><strong>Return Time:</strong> ${data.bookingData.dates?.returnTime || 'Flexible'}</p>
+                    ` : ''}
 
                     <h3>Luggage</h3>
                     <p><strong>Pairs of skis:</strong> ${data.bookingData.luggage?.skis || 0}</p>
@@ -246,7 +250,6 @@ class ResendEmailService implements EmailService {
                     <h3>Client Information</h3>
                     <p><strong>Name:</strong> ${data.bookingData.passenger?.name || 'N/A'}</p>
                     <p><strong>Email:</strong> ${data.bookingData.passenger?.email || 'N/A'}</p>
-                    <p><strong>Phone:</strong> ${data.bookingData.passenger?.phone || 'N/A'}</p>
                     ${specialRequests ? `<p><strong>Special requests:</strong> ${specialRequests}</p>` : ''}
 
                     <h3>Passengers</h3>
@@ -256,15 +259,13 @@ class ResendEmailService implements EmailService {
                 </tr>
               </table>
             </div>
-            
-            <p>Please review this request and provide a detailed quote to the client.</p>
           </div>
           
           <div class="footer">
             <div class="logo" role="img" aria-label="AET Ski Transfer">
               <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757529485/AET_logo_golden_somvxv.svg" alt="AET Ski Transfer" width="140" height="35" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px;" />
             </div>
-            <p>Airport transfers to Les Trois Vallées</p>
+            <p>More than 15 years experience taking people to the French Alps</p>
           </div>
         </div>
       </body>
@@ -324,11 +325,11 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Writing your quote - AET Ski Transfer</title>
+        <title>Your quote - AET French Alps Transfers</title>
         <style>
           body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: #4F5B62; color: white; padding: 30px; text-align: center; }
+          .header { background: #1D4747; color: white; padding: 15px 30px; text-align: center; }
           .content { padding: 30px; background: #f9f9f9; }
           .confirmation { margin: 20px 0; }
           .confirmation h2 { margin: 0 0 16px 0; color: #4F5B62; }
@@ -343,32 +344,26 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
       <body>
         <div class="container">
           <div class="header">
-            <h1>Writing your quote</h1>
-            <p>AET Ski Transfer</p>
+            <h1>Your quote</h1>
+            <p>AET French Alps Transfers</p>
           </div>
           
           <div class="content">
             <div class="confirmation">
               <h2>Hello ${passengerName}, your quote information has been received!</h2>
-              <p>Thank you for choosing AET Ski Transfer. We've received your booking request and will process it shortly.</p>
+              <p>Thank you for your enquiry, we have received your booking request and will process it shortly. Your detailed quote will arrive within 24 hours.</p>
             </div>
             
-            <p>We'll send you a detailed quote within 24 hours with:</p>
-            <ul>
-              <li>Final pricing</li>
-              <li>Driver details</li>
-              <li>Meeting point instructions</li>
-              <li>Payment information</li>
-            </ul>
             
-            <p>If you have any urgent questions, please contact us immediately.</p>
             
-            <p>Best regards,<br>The AET Team</p>
+            <p>Yours sincerely,<br>Jamie Tingle & The Team</p>
           </div>
           
           <div class="footer">
-            <p>AET Ski Transfer<br>
-            More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski</p>
+            <div class="logo" role="img" aria-label="AET Ski Transfer">
+              <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757529485/AET_logo_golden_somvxv.svg" alt="AET Ski Transfer" width="140" height="35" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px;" />
+            </div>
+            <p>More than 15 years experience taking people to the French Alps</p>
           </div>
         </div>
       </body>

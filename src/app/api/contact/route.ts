@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
               <style>
                 body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
                 .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #4F5B62; color: white; padding: 30px; text-align: center; }
+                .header { background: #1D4747; color: white; padding: 15px 30px; text-align: center; }
                 .content { padding: 30px; background: #f9f9f9; }
                 .message-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #4F5B62; }
                 .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; }
@@ -97,14 +97,15 @@ export async function POST(request: NextRequest) {
                     <p>${message.replace(/\n/g, '<br>')}</p>
                   </div>
                   
-                  <p>This message was submitted through the AET Ski Transfer website contact form.</p>
                   
                   <p>Please respond to the customer at: <a href="mailto:${email}">${email}</a></p>
                 </div>
                 
                 <div class="footer">
-                  <p>AET Ski Transfer<br>
-                  More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski</p>
+                  <div class="logo" role="img" aria-label="AET Ski Transfer">
+                    <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/v1757529485/AET_logo_golden_somvxv.svg" alt="AET Ski Transfer" width="140" height="35" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px;" />
+                  </div>
+                  <p>More than 15 years experience taking people to the French Alps</p>
                 </div>
               </div>
             </body>
