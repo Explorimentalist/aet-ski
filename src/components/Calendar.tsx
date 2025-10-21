@@ -1,9 +1,11 @@
 // src/components/Calendar.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
 import { Button } from './Button';
+import { usePortalDropdown } from '@/hooks/usePortalDropdown';
+import type { PortalDropdownProps } from '@/types/dropdown';
 
-export interface CalendarProps {
+export interface CalendarProps extends PortalDropdownProps {
   label?: string;
   placeholder?: string;
   value?: Date | null;
@@ -29,51 +31,34 @@ export const Calendar: React.FC<CalendarProps> = ({
   minDate,
   maxDate,
   className = '',
+  portalConfig,
+  portalContainer,
+  disablePortal = false,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(value || new Date());
   const [isNotSure, setIsNotSure] = useState(false);
-  const [shouldOpenUpward, setShouldOpenUpward] = useState(false);
-  const calendarRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  
+  // Initialize portal dropdown hook
+  const { state, actions, triggerRef, renderPortal } = usePortalDropdown(
+    {
+      ...portalConfig,
+      portalContainer: disablePortal ? null : portalContainer,
+    },
+    {
+      onOpen: () => {
+        // Optional: Add any custom logic on open
+      },
+      onClose: () => {
+        // Optional: Add any custom logic on close
+      },
+    }
+  );
 
   useEffect(() => {
     if (value) {
       setIsNotSure(false);
     }
   }, [value]);
-
-  // Smart positioning logic
-  const calculatePosition = () => {
-    if (!triggerRef.current) return;
-    
-    const triggerRect = triggerRef.current.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const calendarHeight = 400; // Approximate height of calendar dropdown
-    const spaceBelow = viewportHeight - triggerRect.bottom;
-    const spaceAbove = triggerRect.top;
-    
-    // Open upward if there's not enough space below but enough space above
-    setShouldOpenUpward(spaceBelow < calendarHeight && spaceAbove > calendarHeight);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Calculate position when opening
-  useEffect(() => {
-    if (isOpen) {
-      calculatePosition();
-    }
-  }, [isOpen]);
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString('en-US', {
@@ -137,7 +122,7 @@ export const Calendar: React.FC<CalendarProps> = ({
     if (!isDisabled(date)) {
       setIsNotSure(false);
       onChange(date);
-      setIsOpen(false);
+      actions.close();
     }
   };
 
@@ -161,11 +146,11 @@ export const Calendar: React.FC<CalendarProps> = ({
         </label>
       )}
       
-      <div ref={calendarRef} className="relative">
+      <div className="relative">
         <button
           ref={triggerRef}
           type="button"
-          onClick={() => !disabled && setIsOpen(!isOpen)}
+          onClick={() => !disabled && actions.toggle()}
           className={`
             form-calendar
             w-full
@@ -181,11 +166,8 @@ export const Calendar: React.FC<CalendarProps> = ({
           <CalendarIcon className="w-5 h-5 text-text-form" />
         </button>
 
-        {isOpen && (
-          <div className={`
-            absolute z-50 w-80 bg-background-secondary border border-border-secondary rounded-sm shadow-lg p-4
-            ${shouldOpenUpward ? 'bottom-full mb-1' : 'top-full mt-1'}
-          `}>
+        {state.isOpen && renderPortal(
+          <div className="w-80 bg-background-secondary border border-border-secondary rounded-sm shadow-lg p-4">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <button
@@ -257,7 +239,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                 onClick={() => {
                   setIsNotSure(true);
                   onChange(null);
-                  setIsOpen(false);
+                  actions.close();
                 }}
               >
                 I&apos;m not sure

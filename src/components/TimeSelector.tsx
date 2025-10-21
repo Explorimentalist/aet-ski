@@ -1,8 +1,10 @@
 // src/components/TimeSelector.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { Clock } from 'lucide-react';
+import { usePortalDropdown } from '@/hooks/usePortalDropdown';
+import type { PortalDropdownProps } from '@/types/dropdown';
 
-export interface TimeSelectorProps {
+export interface TimeSelectorProps extends PortalDropdownProps {
   label?: string;
   placeholder?: string;
   value?: string; // e.g., '14:30'
@@ -28,20 +30,25 @@ export const TimeSelector: React.FC<TimeSelectorProps> = ({
   minTime,
   maxTime,
   className = '',
+  portalConfig,
+  portalContainer,
+  disablePortal = false,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const selectorRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (selectorRef.current && !selectorRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // Initialize portal dropdown hook
+  const { state, actions, triggerRef, renderPortal } = usePortalDropdown(
+    {
+      ...portalConfig,
+      portalContainer: disablePortal ? null : portalContainer,
+    },
+    {
+      onOpen: () => {
+        // Optional: Add any custom logic on open
+      },
+      onClose: () => {
+        // Optional: Add any custom logic on close
+      },
+    }
+  );
 
   const generateTimes = (): string[] => {
     const times: string[] = [];
@@ -65,7 +72,7 @@ export const TimeSelector: React.FC<TimeSelectorProps> = ({
   const handleTimeSelect = (time: string) => {
     if (!isDisabled(time)) {
       onChange(time);
-      setIsOpen(false);
+      actions.close();
     }
   };
 
@@ -80,10 +87,11 @@ export const TimeSelector: React.FC<TimeSelectorProps> = ({
         </label>
       )}
       
-      <div ref={selectorRef} className="relative">
+      <div className="relative">
         <button
+          ref={triggerRef}
           type="button"
-          onClick={() => !disabled && setIsOpen(!isOpen)}
+          onClick={() => !disabled && actions.toggle()}
           className={ `
             form-calendar // Reusing Calendar's class for consistency
             w-full
@@ -99,8 +107,8 @@ export const TimeSelector: React.FC<TimeSelectorProps> = ({
           <Clock className="w-5 h-5 text-text-form" /> {/* Using Lucide icon, like Calendar */}
         </button>
 
-        {isOpen && (
-          <div className="absolute z-10 w-80 mt-1 bg-background-secondary border border-border-secondary rounded-sm shadow-md p-4 max-h-64 overflow-y-auto">
+        {state.isOpen && renderPortal(
+          <div className="w-80 bg-background-secondary border border-border-secondary rounded-sm shadow-lg p-4 max-h-64 overflow-y-auto">
             {/* Header - Simple title, no month navigation needed for time */}
             <h3 className="text-base font-medium text-text-form mb-4">
               Select Time (24-hour format)
