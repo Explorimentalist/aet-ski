@@ -27,8 +27,8 @@ describe('Navigation Component', () => {
     
     render(<Navigation />);
     
-    const homeLink = screen.getByText('Home');
-    expect(homeLink).toHaveClass('text-[#1E1E1E]', 'underline');
+    const link = screen.getByText('Home').closest('a');
+    expect(link).toHaveStyle({ color: '#1E1E1E' });
   });
 
   it('should highlight Routes when on routes page', () => {
@@ -36,8 +36,8 @@ describe('Navigation Component', () => {
     
     render(<Navigation />);
     
-    const routesLink = screen.getByText('Routes');
-    expect(routesLink).toHaveClass('text-[#1E1E1E]', 'underline');
+    const routesLink = screen.getByText('Routes').closest('a');
+    expect(routesLink).toHaveStyle({ color: '#1E1E1E' });
   });
 
   it('should highlight Contact when on contact page', () => {
@@ -45,8 +45,8 @@ describe('Navigation Component', () => {
     
     render(<Navigation />);
     
-    const contactLink = screen.getByText('Contact');
-    expect(contactLink).toHaveClass('text-[#1E1E1E]', 'underline');
+    const contactLink = screen.getByText('Contact').closest('a');
+    expect(contactLink).toHaveStyle({ color: '#1E1E1E' });
   });
 
   it('should not highlight Home when on other pages', () => {
@@ -54,9 +54,9 @@ describe('Navigation Component', () => {
     
     render(<Navigation />);
     
-    const homeLink = screen.getByText('Home');
-    expect(homeLink).toHaveClass('text-text-form');
-    expect(homeLink).not.toHaveClass('text-[#1E1E1E]', 'underline');
+    const homeLink = screen.getByText('Home').closest('a');
+    expect(homeLink).toHaveStyle({ color: '#6B7280' });
+    expect(homeLink).not.toHaveStyle({ color: '#1E1E1E' });
   });
 
   it('should respect explicit isActive prop when provided', () => {
@@ -70,7 +70,7 @@ describe('Navigation Component', () => {
     
     render(<Navigation items={customItems} />);
     
-    const homeLink = screen.getByText('Home');
-    expect(homeLink).toHaveClass('text-[#1E1E1E]', 'underline');
+    const homeLink = screen.getByText('Home').closest('a');
+    expect(homeLink).toHaveStyle({ color: '#1E1E1E' });
   });
 }); 

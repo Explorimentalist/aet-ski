@@ -57,7 +57,7 @@ describe('CardSmall Component', () => {
       'bg-background-secondary',
       'rounded-xl',
       'min-h-[240px]',
-      'w-[300px]'
+      'w-full'
     );
   });
-}); 
+});

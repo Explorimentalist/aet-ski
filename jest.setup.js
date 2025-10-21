@@ -1,6 +1,18 @@
 // jest.setup.js
 import '@testing-library/jest-dom';
 
+// Mock Next.js Image globally to render a plain img
+jest.mock('next/image', () => {
+  return {
+    __esModule: true,
+    default: ({ src, alt, ...props }) => {
+      const resolvedSrc = typeof src === 'string' ? src : (src && src.src) || '';
+      // eslint-disable-next-line @next/next/no-img-element
+      return <img src={resolvedSrc} alt={alt} {...props} />;
+    },
+  };
+});
+
 // Mock Next.js router
 jest.mock('next/router', () => ({
   useRouter() {

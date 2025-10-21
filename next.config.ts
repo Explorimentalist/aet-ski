@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
+import path from 'path';
 
 const nextConfig: NextConfig = {
+  // Ensure Next uses this app directory as the workspace root
+  outputFileTracingRoot: path.join(__dirname),
   images: {
     // Use domains for Cloudinary
     domains: ['res.cloudinary.com', 'via.placeholder.com'],

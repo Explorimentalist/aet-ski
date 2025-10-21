@@ -20,14 +20,18 @@ jest.mock('next/image', () => {
     quality?: number;
     [key: string]: unknown;
   }) {
+    const derivedLoading = (loading ?? (priority ? 'eager' : 'lazy')) as any;
+    const derivedFetch = (fetchPriority ?? (priority ? 'high' : 'low')) as any;
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={src}
         alt={alt}
+        loading={derivedLoading}
+        fetchPriority={derivedFetch}
         data-priority={priority}
-        data-loading={loading}
-        data-fetch-priority={fetchPriority}
+        data-loading={derivedLoading}
+        data-fetch-priority={derivedFetch}
         data-sizes={sizes}
         data-quality={quality}
         {...props}
@@ -53,14 +57,23 @@ jest.mock('motion/react', () => ({
 
 describe('Component Performance Tests', () => {
   describe('Image Optimization', () => {
-    it('should have proper sizes attribute for responsive images', () => {
+    it('should have responsive sources and eager loading for hero image', () => {
       const mockOnQuoteClick = jest.fn();
-      render(<PageHeroHome onQuoteClick={mockOnQuoteClick} />);
-      
-      const heroImage = screen.getByAltText('French Alps mountain landscape with snow-covered peaks and ski resorts');
-      
-      // Check that the image has proper sizing attributes
-      expect(heroImage).toHaveAttribute('data-sizes');
+      const { container } = render(<PageHeroHome onQuoteClick={mockOnQuoteClick} />);
+
+      // Verify responsive <source> tags define sizes
+      const sources = Array.from(container.querySelectorAll('picture source'));
+      expect(sources.length).toBeGreaterThan(0);
+      sources.forEach((el) => {
+        expect(el.getAttribute('sizes')).toBeTruthy();
+      });
+
+      // Fallback <img> should be eager/high priority above-the-fold
+      const heroImage = screen.getByAltText(
+        'French Alps mountain landscape with snow-covered peaks and ski resorts'
+      );
+      expect(heroImage).toHaveAttribute('loading', 'eager');
+      expect(heroImage).toHaveAttribute('fetchPriority', 'high');
     });
 
     it('should have appropriate quality settings', () => {
@@ -216,10 +229,6 @@ describe('Component Performance Tests', () => {
     });
   });
 });
-
-
-
-
 
 
 
