@@ -131,7 +131,7 @@ export const LuggageStep: React.FC<LuggageStepComponentProps> = React.memo(({
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-3xl right-3xl tablet:top-7xl tablet:right-7xl desktop:top-9xl desktop:right-9xl w-5 h-5 tablet:w-7 tablet:h-7 desktop:w-10 desktop:h-10 flex items-center justify-center text-text-secondary hover:text-text-brand transition-colors z-10"
+        className="absolute top-3xl right-3xl tablet:top-7xl tablet:right-7xl desktop:right-9xl w-5 h-5 tablet:w-7 tablet:h-7 desktop:w-10 desktop:h-10 flex items-center justify-center text-text-secondary hover:text-text-brand transition-colors z-10"
         aria-label="Close modal"
       >
         <X className="w-4 h-4 tablet:w-5 tablet:h-5 desktop:w-5 desktop:h-5" />
@@ -141,7 +141,7 @@ export const LuggageStep: React.FC<LuggageStepComponentProps> = React.memo(({
       <div className="
         w-full h-full
         px-3xl tablet:px-7xl desktop:px-9xl
-        pt-10xl pb-6
+        pt-8xl desktop:pt-8-5xl pb-6
       ">
         {/* Content Area - spans same columns as navigation */}
         <div className="

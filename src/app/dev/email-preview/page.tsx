@@ -101,7 +101,7 @@ const EmailPreviewPage = () => {
           }
         }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: #1D4747; color: white; padding: 15px 30px; text-align: center; }
+        .header { background: #4F5B62; color: white; padding: 15px 30px; text-align: center; }
         .content { padding: 30px; background: #f9f9f9; }
         .message-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #4F5B62; }
         .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; }

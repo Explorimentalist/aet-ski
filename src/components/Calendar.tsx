@@ -33,13 +33,29 @@ export const Calendar: React.FC<CalendarProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(value || new Date());
   const [isNotSure, setIsNotSure] = useState(false);
+  const [shouldOpenUpward, setShouldOpenUpward] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (value) {
       setIsNotSure(false);
     }
   }, [value]);
+
+  // Smart positioning logic
+  const calculatePosition = () => {
+    if (!triggerRef.current) return;
+    
+    const triggerRect = triggerRef.current.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const calendarHeight = 400; // Approximate height of calendar dropdown
+    const spaceBelow = viewportHeight - triggerRect.bottom;
+    const spaceAbove = triggerRect.top;
+    
+    // Open upward if there's not enough space below but enough space above
+    setShouldOpenUpward(spaceBelow < calendarHeight && spaceAbove > calendarHeight);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -51,6 +67,13 @@ export const Calendar: React.FC<CalendarProps> = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Calculate position when opening
+  useEffect(() => {
+    if (isOpen) {
+      calculatePosition();
+    }
+  }, [isOpen]);
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString('en-US', {
@@ -140,6 +163,7 @@ export const Calendar: React.FC<CalendarProps> = ({
       
       <div ref={calendarRef} className="relative">
         <button
+          ref={triggerRef}
           type="button"
           onClick={() => !disabled && setIsOpen(!isOpen)}
           className={`
@@ -158,7 +182,10 @@ export const Calendar: React.FC<CalendarProps> = ({
         </button>
 
         {isOpen && (
-          <div className="absolute z-10 w-80 mt-1 bg-background-secondary border border-border-secondary rounded-sm shadow-md p-4">
+          <div className={`
+            absolute z-50 w-80 bg-background-secondary border border-border-secondary rounded-sm shadow-lg p-4
+            ${shouldOpenUpward ? 'bottom-full mb-1' : 'top-full mt-1'}
+          `}>
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <button

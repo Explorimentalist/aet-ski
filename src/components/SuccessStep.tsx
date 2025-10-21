@@ -18,7 +18,7 @@ export const SuccessStep: React.FC<SuccessStepProps> = React.memo(({
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-3xl right-3xl tablet:top-7xl tablet:right-7xl desktop:top-9xl desktop:right-9xl w-6 h-6 flex items-center justify-center text-[#1D1B20] hover:text-[#4F5B62] transition-colors z-10"
+        className="absolute top-3xl right-3xl tablet:top-7xl tablet:right-7xl desktop:right-9xl w-6 h-6 flex items-center justify-center text-[#1D1B20] hover:text-[#4F5B62] transition-colors z-10"
         aria-label="Close modal"
       >
         <X className="w-5 h-5" />

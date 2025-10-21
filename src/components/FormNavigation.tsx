@@ -73,7 +73,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
         fixed bottom-0 left-0 right-0 
         border-t border-border-secondary
         px-3xl tablet:px-7xl desktop:px-9xl
-        py-3xl tablet:py-6xl
+        py-3xl tablet:py-6xl desktop:py-3xl
         backdrop-blur-[24px]
         z-[60]
       "

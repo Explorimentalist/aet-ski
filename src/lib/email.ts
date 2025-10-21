@@ -219,14 +219,14 @@ class ResendEmailService implements EmailService {
             }
           }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: #1D4747; color: white; padding: 15px 30px; text-align: center; }
+          .header { background: #4F5B62; color: white; padding: 15px 30px; text-align: center; }
           .header h1 { margin: 0 0 6px; font-size: 24px; }
           .header p { margin: 0; font-size: 16px; }
           .content { padding: 24px; background: #f9f9f9; }
           .quote-details { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; }
           .details-table { width: 100%; border-collapse: collapse; }
           .column { width: 50%; vertical-align: top; padding: 0 10px; }
-          .column h3 { margin-top: 0; margin-bottom: 10px; color: #1D4747; }
+          .column h3 { margin-top: 0; margin-bottom: 10px; color: #4F5B62; }
           .column p { margin: 6px 0; }
           .column-left { border-right: 1px solid #e0e0e0; }
           .column-right { padding-left: 20px; }
@@ -379,7 +379,7 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
             }
           }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: #1D4747; color: white; padding: 15px 30px; text-align: center; }
+          .header { background: #4F5B62; color: white; padding: 15px 30px; text-align: center; }
           .content { padding: 30px; background: #f9f9f9; }
           .confirmation { margin: 20px 0; }
           .confirmation h2 { margin: 0 0 16px 0; color: #4F5B62; }
