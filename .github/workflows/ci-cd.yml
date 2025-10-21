@@ -23,22 +23,26 @@ jobs:
           
       - name: Install dependencies
         run: npm ci
+        working-directory: ./aet-ski
         
         
       - name: Run linting
         run: npm run lint
+        working-directory: ./aet-ski
         
       - name: Run unit tests
         run: npm run test:ci
+        working-directory: ./aet-ski
         
       - name: Run performance tests
         run: npm run test:performance
+        working-directory: ./aet-ski
         
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3
         if: always()
         with:
-          file: ./coverage/lcov.info
+          file: ./aet-ski/coverage/lcov.info
           flags: unittests
           name: codecov-umbrella
 
@@ -60,10 +64,12 @@ jobs:
           
       - name: Install dependencies
         run: npm ci
+        working-directory: ./aet-ski
         
         
       - name: Build application
         run: npm run build
+        working-directory: ./aet-ski
         env:
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
           NEXT_PUBLIC_SANITY_DATASET: production
@@ -75,11 +81,13 @@ jobs:
           
       - name: Run Lighthouse CI
         run: npm run lighthouse:ci
+        working-directory: ./aet-ski
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           
       - name: Setup rollback plan
         run: npm run rollback:setup
+        working-directory: ./aet-ski
           
       - name: Deploy to Ionos (Primary)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -87,7 +95,7 @@ jobs:
           server: ${{ secrets.IONOS_HOST }}
           username: ${{ secrets.IONOS_USER }}
           password: ${{ secrets.IONOS_PASS }}
-          local-dir: ./.next/
+          local-dir: ./aet-ski/.next/
           server-dir: /var/www/aet-ski/current/
           exclude: |
             **/.git*
@@ -101,7 +109,7 @@ jobs:
           server: ${{ secrets.FASTHOSTS_HOST }}
           username: ${{ secrets.FASTHOSTS_USER }}
           password: ${{ secrets.FASTHOSTS_PASS }}
-          local-dir: ./.next/
+          local-dir: ./aet-ski/.next/
           server-dir: /var/www/aet-ski/current/
           exclude: |
             **/.git*
@@ -123,12 +131,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Run security audit
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19'
+          cache: 'npm'
+
+      - name: Install dependencies (for accurate security graph)
+        run: npm ci
+        working-directory: ./aet-ski
+
+      - name: Run security audit (prod/high)
         run: npm audit --omit=dev --audit-level=high
+        working-directory: ./aet-ski
         
       - name: Run Snyk security scan
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high 
+          args: --file=aet-ski/package.json --severity-threshold=high 

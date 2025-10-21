@@ -11,16 +11,18 @@ import { PageHero } from '@/components/PageHero';
 
 // Mock Next.js Image component
 jest.mock('next/image', () => {
+  type ImgLoading = 'eager' | 'lazy';
+  type ImgFetchPriority = 'high' | 'low' | 'auto';
   return function MockImage({ src, alt, priority, loading, fetchPriority, ...props }: {
     src: string;
     alt: string;
     priority?: boolean;
-    loading?: string;
-    fetchPriority?: string;
+    loading?: ImgLoading;
+    fetchPriority?: ImgFetchPriority;
     [key: string]: unknown;
   }) {
-    const derivedLoading = (loading ?? (priority ? 'eager' : 'lazy')) as any;
-    const derivedFetch = (fetchPriority ?? (priority ? 'high' : 'low')) as any;
+    const derivedLoading: ImgLoading = loading ?? (priority ? 'eager' : 'lazy');
+    const derivedFetch: ImgFetchPriority = fetchPriority ?? (priority ? 'high' : 'low');
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
@@ -205,7 +207,6 @@ describe('Image Loading Performance Tests', () => {
     });
   });
 });
-
 
 
 
