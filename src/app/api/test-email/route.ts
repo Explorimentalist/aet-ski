@@ -27,9 +27,9 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: `${process.env.EMAIL_FROM_NAME || 'AET Ski Transfer'} <${process.env.EMAIL_FROM || 'onboarding@resend.dev'}>`,
+        from: `${process.env.EMAIL_FROM_NAME || 'AET French Alps Transfers'} <${process.env.EMAIL_FROM || 'onboarding@resend.dev'}>`,
         to: [toEmail],
-        subject: 'Test Email from AET Ski Transfer',
+        subject: 'Test Email from AET French Alps Transfers',
         html: `
           <!DOCTYPE html>
           <html>
@@ -38,16 +38,16 @@ export async function POST(request: NextRequest) {
           </head>
           <body>
             <h1>Test Email</h1>
-            <p>This is a test email from your AET Ski Transfer website.</p>
+            <p>This is a test email from your AET French Alps Transfers website.</p>
             <p>If you receive this, your Resend setup is working correctly!</p>
             <p>Sent at: ${new Date().toISOString()}</p>
           </body>
           </html>
         `,
         text: `
-Test Email from AET Ski Transfer
+Test Email from AET French Alps Transfers
 
-This is a test email from your AET Ski Transfer website.
+This is a test email from your AET French Alps Transfers website.
 
 If you receive this, your Resend setup is working correctly!
 

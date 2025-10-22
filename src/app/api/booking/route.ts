@@ -24,7 +24,7 @@ function initializeEmailServiceFromEnv(): void {
     provider,
     apiKey: process.env.EMAIL_API_KEY || '',
     fromEmail: process.env.EMAIL_FROM || 'onboarding@resend.dev',
-    fromName: process.env.EMAIL_FROM_NAME || 'AET Ski Transfer',
+    fromName: process.env.EMAIL_FROM_NAME || 'AET French Alps Transfers',
     replyTo: process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com',
   };
 
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
         provider: 'resend',
         apiKey: process.env.EMAIL_API_KEY || '',
         fromEmail: process.env.EMAIL_FROM || 'bookings@aet.ski',
-        fromName: process.env.EMAIL_FROM_NAME || 'AET Ski Transfer',
+        fromName: process.env.EMAIL_FROM_NAME || 'AET French Alps Transfers',
         replyTo: process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com',
       };
       
@@ -171,7 +171,7 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: `${process.env.EMAIL_FROM_NAME || 'AET Ski Transfer'} <${process.env.EMAIL_FROM || 'bookings@aet.ski'}>`,
+          from: `${process.env.EMAIL_FROM_NAME || 'AET French Alps Transfers'} <${process.env.EMAIL_FROM || 'bookings@aet.ski'}>`,
           // Send to HQ for quote processing
           to: [process.env.EMAIL_HQ_TO || 'hq@aet.ski'],
           subject: adminSubject,
@@ -212,10 +212,10 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: `${process.env.EMAIL_FROM_NAME || 'AET Ski Transfer'} <${process.env.EMAIL_FROM || 'bookings@aet.ski'}>`,
+          from: `${process.env.EMAIL_FROM_NAME || 'AET French Alps Transfers'} <${process.env.EMAIL_FROM || 'bookings@aet.ski'}>`,
           // Send to customer's email address (or admin in testing mode)
           to: [confirmationRecipient],
-          subject: `Writing your quote ${emailData.bookingData.passenger?.name || ''} - AET Ski Transfer`,
+          subject: `Writing your quote ${emailData.bookingData.passenger?.name || ''} - AET French Alps Transfers`,
           html: confirmationEmailHtml,
           text: confirmationEmailText,
           reply_to: emailData.bookingData.passenger?.email || 'brianoko@gmail.com',

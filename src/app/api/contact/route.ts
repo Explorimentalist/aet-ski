@@ -8,7 +8,7 @@ function initializeEmailServiceFromEnv(): void {
     provider: 'resend',
     apiKey: process.env.EMAIL_API_KEY || '',
     fromEmail: process.env.EMAIL_FROM || 'onboarding@resend.dev',
-    fromName: process.env.EMAIL_FROM_NAME || 'AET Ski Transfer',
+    fromName: process.env.EMAIL_FROM_NAME || 'AET French Alps Transfers',
     replyTo: process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com',
   };
 
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: `${process.env.EMAIL_FROM_NAME || 'AET Ski Transfer'} <${process.env.EMAIL_FROM || 'onboarding@resend.dev'}>`,
+          from: `${process.env.EMAIL_FROM_NAME || 'AET French Alps Transfers'} <${process.env.EMAIL_FROM || 'onboarding@resend.dev'}>`,
           to: [process.env.EMAIL_REPLY_TO || 'brianoko@gmail.com'],
           subject: `AET Contact submission from ${name}`,
           html: `
@@ -102,8 +102,8 @@ export async function POST(request: NextRequest) {
                 </div>
                 
                 <div class="footer">
-                  <div class="logo" role="img" aria-label="AET Ski Transfer">
-                    <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/c_scale,w_263,h_66,f_png,q_auto/v1757529485/AET_logo_golden_somvxv" alt="AET Ski Transfer" width="263" height="66" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px; max-width: 263px; height: auto;" />
+                  <div class="logo" role="img" aria-label="AET French Alps Transfers">
+                    <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/c_scale,w_263,h_66,f_png,q_auto/v1757529485/AET_logo_golden_somvxv" alt="AET French Alps Transfers" width="263" height="66" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px; max-width: 263px; height: auto;" />
                   </div>
                   <p>More than 15 years experience taking people to the French Alps</p>
                 </div>
@@ -119,12 +119,12 @@ Name: ${name}
 Email: ${email}
 Message: ${message}
 
-This message was submitted through the AET Ski Transfer website contact form.
+This message was submitted through the AET French Alps Transfers website contact form.
 
 Please respond to the customer at: ${email}
 
 ---
-AET Ski Transfer
+AET French Alps Transfers
 More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski
           `,
           reply_to: email,

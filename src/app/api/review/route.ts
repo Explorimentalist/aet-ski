@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     const apiKey = process.env.EMAIL_API_KEY || '';
     const fromEmail = process.env.EMAIL_FROM || 'onboarding@resend.dev';
-    const fromName = process.env.EMAIL_FROM_NAME || 'AET Ski Transfer';
+    const fromName = process.env.EMAIL_FROM_NAME || 'AET French Alps Transfers';
 
     let emailSent = false;
 

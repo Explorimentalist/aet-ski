@@ -4,7 +4,7 @@ const previewConfig: EmailConfig = {
   provider: 'resend',
   apiKey: 'preview-api-key',
   fromEmail: 'preview@aet.ski',
-  fromName: 'AET Ski Preview',
+  fromName: 'AET French Alps Transfers Preview',
   replyTo: 'hq@aet.ski',
 };
 

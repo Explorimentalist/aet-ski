@@ -72,7 +72,7 @@ This guide will help you set up email functionality for the AET Ski Transfer boo
    EMAIL_PROVIDER=resend
    EMAIL_API_KEY=re_your_api_key_here
    EMAIL_FROM=bookings@aet.ski
-   EMAIL_FROM_NAME=AET Ski Transfer
+   EMAIL_FROM_NAME=AET French Alps Transfers
    EMAIL_REPLY_TO=info@aet.ski
    ```
 
@@ -81,7 +81,7 @@ This guide will help you set up email functionality for the AET Ski Transfer boo
    EMAIL_PROVIDER=sendgrid
    EMAIL_API_KEY=SG.your_api_key_here
    EMAIL_FROM=bookings@aet.ski
-   EMAIL_FROM_NAME=AET Ski Transfer
+   EMAIL_FROM_NAME=AET French Alps Transfers
    EMAIL_REPLY_TO=info@aet.ski
    ```
 
@@ -90,7 +90,7 @@ This guide will help you set up email functionality for the AET Ski Transfer boo
    EMAIL_PROVIDER=mailgun
    EMAIL_API_KEY=key-your_api_key_here
    EMAIL_FROM=bookings@aet.ski
-   EMAIL_FROM_NAME=AET Ski Transfer
+   EMAIL_FROM_NAME=AET French Alps Transfers
    EMAIL_REPLY_TO=info@aet.ski
    ```
 
