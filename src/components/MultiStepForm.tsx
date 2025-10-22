@@ -445,6 +445,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = React.memo(({
       isOpen={isOpen}
       onClose={handleClose}
       coordinateWithFixedBottom={true}
+      data-testid="multi-step-form"
     >
       <FormErrorBoundary>
         <div className="relative min-h-full">

@@ -77,6 +77,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
         backdrop-blur-[24px]
         z-[60]
       "
+      data-testid="form-navigation"
       style={{
         background: 'linear-gradient(to bottom, rgba(245, 245, 245, 0.9) 0%, rgba(245, 245, 245, 0.3) 50%, transparent 100%)',
       }}

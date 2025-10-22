@@ -167,7 +167,11 @@ export const Calendar: React.FC<CalendarProps> = ({
         </button>
 
         {state.isOpen && renderPortal(
-          <div className="w-80 bg-background-secondary border border-border-secondary rounded-sm shadow-lg p-4">
+          <div 
+            data-portal-dropdown
+            data-testid="calendar-dropdown"
+            className="w-80 bg-background-secondary border border-border-secondary rounded-sm shadow-lg p-4"
+          >
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <button
@@ -178,7 +182,10 @@ export const Calendar: React.FC<CalendarProps> = ({
                 <ChevronLeft className="w-4 h-4" />
               </button>
               
-              <h3 className="text-base font-medium text-text-form">
+              <h3 
+                data-testid="calendar-month"
+                className="text-base font-medium text-text-form"
+              >
                 {currentMonth.toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',

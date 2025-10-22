@@ -14,6 +14,7 @@ export interface ModalProps {
   closeOnOverlayClick?: boolean;
   closeOnEscape?: boolean;
   coordinateWithFixedBottom?: boolean;
+  'data-testid'?: string;
 }
 
 export const Modal: React.FC<ModalProps> = React.memo(({
@@ -24,6 +25,7 @@ export const Modal: React.FC<ModalProps> = React.memo(({
   closeOnOverlayClick = true,
   closeOnEscape = true,
   coordinateWithFixedBottom = false,
+  'data-testid': dataTestId,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
@@ -109,6 +111,7 @@ export const Modal: React.FC<ModalProps> = React.memo(({
             `}
             tabIndex={-1}
             role="document"
+            data-testid={dataTestId}
             variants={motionTokens.components.modal.content}
             transition={{
               duration: motionTokens.d.medium,
