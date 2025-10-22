@@ -80,7 +80,7 @@ class ResendEmailService implements EmailService {
         body: JSON.stringify({
           from: `${this.config.fromName} <${this.config.fromEmail}>`,
           to: [data.bookingData.passenger?.email || ''],
-          subject: `Booking Confirmation - AET French Alps Transfers`,
+          subject: `Writing your quote ${data.bookingData.passenger?.name || 'Client'} - AET French Alps Transfers`,
           html: this.generateConfirmationEmailHTML(data),
           text: this.generateConfirmationEmailText(data),
           reply_to: data.bookingData.passenger?.email || this.config.replyTo,
@@ -110,7 +110,7 @@ class ResendEmailService implements EmailService {
         body: JSON.stringify({
           from: `${this.config.fromName} <${this.config.fromEmail}>`,
           to: [this.config.replyTo || this.config.fromEmail],
-          subject: `Booking Error - AET Ski Transfer`,
+          subject: `Booking Error - AET French Alps Transfers`,
           html: this.generateErrorEmailHTML(error, bookingData),
           text: this.generateErrorEmailText(error, bookingData),
         }),
@@ -189,7 +189,7 @@ class ResendEmailService implements EmailService {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="color-scheme" content="light dark">
         <meta name="supported-color-schemes" content="light dark">
-        <title>Your AET Ski Transfer Quote</title>
+        <title>Your AET French Alps Transfers Quote</title>
         <style>
           :root {
             color-scheme: light dark;
@@ -290,8 +290,8 @@ class ResendEmailService implements EmailService {
           </div>
           
           <div class="footer">
-            <div class="logo" role="img" aria-label="AET Ski Transfer">
-              <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/c_scale,w_263,h_66,f_png,q_auto/v1757529485/AET_logo_golden_somvxv" alt="AET Ski Transfer" width="263" height="66" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px; max-width: 263px; height: auto;" />
+            <div class="logo" role="img" aria-label="AET French Alps Transfers">
+              <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/c_scale,w_263,h_66,f_png,q_auto/v1757529485/AET_logo_golden_somvxv" alt="AET French Alps Transfers" width="263" height="66" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px; max-width: 263px; height: auto;" />
             </div>
             <p>More than 15 years experience taking people to the French Alps</p>
           </div>
@@ -303,11 +303,11 @@ class ResendEmailService implements EmailService {
 
   generateQuoteEmailText(data: EmailTemplateData): string {
     return `
-AET Ski Transfer - Your Transfer Quote
+AET French Alps Transfers - Your Transfer Quote
 
 Hello ${data.bookingData.passenger?.name || 'there'}!
 
-Thank you for requesting a quote for your ski transfer. Here are your booking details:
+Thank you for requesting a quote for your French Alps transfer. Here are your booking details:
 
 JOURNEY DETAILS:
 Type: ${data.bookingData.journey?.type === 'return' ? 'Return' : 'One Way'}
@@ -339,7 +339,7 @@ Best regards,
 The AET Team
 
 ---
-AET Ski Transfer
+AET French Alps Transfers
 More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski
     `;
   }
@@ -410,8 +410,8 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
           </div>
           
           <div class="footer">
-            <div class="logo" role="img" aria-label="AET Ski Transfer">
-              <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/c_scale,w_263,h_66,f_png,q_auto/v1757529485/AET_logo_golden_somvxv" alt="AET Ski Transfer" width="263" height="66" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px; max-width: 263px; height: auto;" />
+            <div class="logo" role="img" aria-label="AET French Alps Transfers">
+              <img src="https://res.cloudinary.com/dzrn3khsd/image/upload/c_scale,w_263,h_66,f_png,q_auto/v1757529485/AET_logo_golden_somvxv" alt="AET French Alps Transfers" width="263" height="66" style="display: block; margin: 0 auto; background-color: #2C4F6D; padding: 10px; max-width: 263px; height: auto;" />
             </div>
             <p>More than 15 years experience taking people to the French Alps</p>
           </div>
@@ -423,11 +423,11 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
 
   generateConfirmationEmailText(data: EmailTemplateData): string {
     return `
-Booking Confirmed! - AET Ski Transfer
+Booking Confirmed! - AET French Alps Transfers
 
 ✅ Your booking has been received!
 
-Thank you for choosing AET Ski Transfer. We've received your booking request and will process it shortly.
+Thank you for choosing AET French Alps Transfers. We've received your booking request and will process it shortly.
 
 Booking ID: ${data.quoteId}
 
@@ -443,7 +443,7 @@ Best regards,
 The AET Team
 
 ---
-AET Ski Transfer
+AET French Alps Transfers
 More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradiski
     `;
   }
@@ -454,7 +454,7 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
       <html>
       <head>
         <meta charset="utf-8">
-        <title>Booking Error - AET Ski Transfer</title>
+        <title>Booking Error - AET French Alps Transfers</title>
       </head>
       <body>
         <h1>Booking Error Alert</h1>
@@ -468,7 +468,7 @@ More than 15 years transferring people to Les 3 Vallées, Espace Killy & Paradis
 
   private generateErrorEmailText(error: string, bookingData: BookingFormData): string {
     return `
-Booking Error Alert - AET Ski Transfer
+Booking Error Alert - AET French Alps Transfers
 
 Error: ${error}
 
