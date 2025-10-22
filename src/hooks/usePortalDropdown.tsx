@@ -8,7 +8,6 @@ import type {
   PortalDropdownActions,
   UsePortalDropdownReturn,
   DropdownCoordinates,
-  PortalDropdownError,
   PortalDropdownEventHandlers,
 } from '@/types/dropdown';
 import {
@@ -24,7 +23,6 @@ import {
   PortalDropdownResizeObserver,
   supportsResizeObserver,
   isMobileDevice,
-  getDeviceOrientation,
 } from '@/utils/resizeObserver';
 
 /**
@@ -87,7 +85,6 @@ export function usePortalDropdown(
   // Enhanced resize handling with device detection
   const handleResize = useCallback(() => {
     const isMobile = isMobileDevice();
-    const orientation = getDeviceOrientation();
     
     // On mobile, recalculate immediately on orientation change
     if (isMobile) {
@@ -171,7 +168,7 @@ export function usePortalDropdown(
     const cleanupFunctions: (() => void)[] = [];
 
     // Click outside detection
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: Event) => {
       const target = event.target as Node;
       
       // Check if click is outside both trigger and dropdown
@@ -190,8 +187,8 @@ export function usePortalDropdown(
     );
 
     // Escape key handler
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+    const handleEscape = (event: Event) => {
+      if ((event as KeyboardEvent).key === 'Escape') {
         actions.close();
       }
     };
@@ -244,7 +241,7 @@ export function usePortalDropdown(
             style={{
               maxHeight: coordinates?.maxHeight,
             }}
-            ref={dropdownRef}
+            ref={dropdownRef as React.RefObject<HTMLDivElement>}
           >
             {content}
           </div>
@@ -265,7 +262,7 @@ export function usePortalDropdown(
             style={{
               maxHeight: coordinates?.maxHeight,
             }}
-            ref={dropdownRef}
+            ref={dropdownRef as React.RefObject<HTMLDivElement>}
           >
             {content}
           </div>
@@ -282,7 +279,7 @@ export function usePortalDropdown(
         <div className="relative">
           <div
             className="absolute z-50 mt-1"
-            ref={dropdownRef}
+            ref={dropdownRef as React.RefObject<HTMLDivElement>}
           >
             {content}
           </div>
@@ -301,7 +298,7 @@ export function usePortalDropdown(
             maxHeight: coordinates.maxHeight,
             pointerEvents: 'auto',
           }}
-          ref={dropdownRef}
+          ref={dropdownRef as React.RefObject<HTMLDivElement>}
         >
           {content}
         </div>
@@ -324,7 +321,7 @@ export function usePortalDropdown(
             style={{
               maxHeight: coordinates.maxHeight,
             }}
-            ref={dropdownRef}
+            ref={dropdownRef as React.RefObject<HTMLDivElement>}
           >
             {content}
           </div>

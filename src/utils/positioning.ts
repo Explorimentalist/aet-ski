@@ -4,7 +4,6 @@ import type {
   ViewportBounds, 
   ElementBounds, 
   DropdownCoordinates, 
-  DropdownPosition,
   PortalDropdownConfig 
 } from '@/types/dropdown';
 
@@ -199,7 +198,7 @@ export function isPointInElement(
 /**
  * Debounce function for resize events
  */
-export function debounce<T extends (...args: any[]) => void>(
+export function debounce<T extends (...args: unknown[]) => void>(
   func: T,
   delay: number
 ): (...args: Parameters<T>) => void {

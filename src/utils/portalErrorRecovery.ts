@@ -104,7 +104,7 @@ export function validatePortalContainer(element: HTMLElement | null): boolean {
  */
 export function createErrorContext(
   error: PortalDropdownError,
-  additionalInfo: Record<string, any> = {}
+  additionalInfo: Record<string, unknown> = {}
 ): string {
   const timestamp = new Date().toISOString();
   const context = {
@@ -166,11 +166,11 @@ export const errorRecoveryStrategies = {
  */
 export function handlePortalError(
   error: PortalDropdownError,
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 ): {
   shouldRetry: boolean;
   shouldFallback: boolean;
-  recoveryAction?: () => any;
+  recoveryAction?: () => unknown;
 } {
   const strategy = errorRecoveryStrategies[error];
   

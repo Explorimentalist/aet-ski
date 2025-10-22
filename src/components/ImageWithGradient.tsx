@@ -13,8 +13,6 @@ interface ImageWithGradientProps {
   gradientFrom?: string;
   gradientTo?: string;
   placeholder?: boolean;
-  preserveAspectRatio?: boolean;
-  mobileObjectPosition?: string;
   // Next.js Image props
   imageWidth?: number;
   imageHeight?: number;
@@ -36,8 +34,6 @@ export const ImageWithGradient: React.FC<ImageWithGradientProps> = ({
   gradientFrom = '#CFE0F6',
   gradientTo = '#F5F5F5',
   placeholder = false,
-  preserveAspectRatio = false,
-  mobileObjectPosition = 'center',
   imageWidth = 1200,
   imageHeight = 528,
   priority = false,

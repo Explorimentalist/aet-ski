@@ -30,7 +30,6 @@ const mockTriggerElement = {
   })),
 } as unknown as HTMLElement;
 
-const mockDropdownElement = document.createElement('div');
 const mockPortalContainer = document.createElement('div');
 
 // Mock ResizeObserver classes
@@ -58,8 +57,8 @@ describe('usePortalDropdown', () => {
     });
     mockedPositioning.calculateZIndex.mockReturnValue(70);
     
-    mockedResizeObserver.WindowResizeObserver = MockWindowResizeObserver as any;
-    mockedResizeObserver.PortalDropdownResizeObserver = MockPortalDropdownResizeObserver as any;
+    mockedResizeObserver.WindowResizeObserver = MockWindowResizeObserver as typeof MockWindowResizeObserver;
+    mockedResizeObserver.PortalDropdownResizeObserver = MockPortalDropdownResizeObserver as typeof MockPortalDropdownResizeObserver;
     mockedResizeObserver.supportsResizeObserver.mockReturnValue(true);
     mockedResizeObserver.isMobileDevice.mockReturnValue(false);
     mockedResizeObserver.getDeviceOrientation.mockReturnValue('landscape');

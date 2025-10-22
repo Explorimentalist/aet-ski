@@ -69,7 +69,7 @@ describe('resizeObserver utilities', () => {
     }
     
     // Mock ResizeObserver globally
-    global.ResizeObserver = MockResizeObserver as any;
+    global.ResizeObserver = MockResizeObserver as typeof ResizeObserver;
   });
 
   afterEach(() => {
@@ -99,15 +99,15 @@ describe('resizeObserver utilities', () => {
 
     it('should call callback when significant resize occurs', () => {
       const callback = jest.fn();
-      const observer = new PortalDropdownResizeObserver(callback);
+      new PortalDropdownResizeObserver(callback);
       const mockObserver = MockResizeObserver.mock.instances[0] as MockResizeObserver;
       
       const entries: ResizeObserverEntry[] = [{
         target: document.createElement('div'),
         contentRect: { width: 300, height: 200 } as DOMRectReadOnly,
-        borderBoxSize: [] as any,
-        contentBoxSize: [] as any,
-        devicePixelContentBoxSize: [] as any,
+        borderBoxSize: [] as ResizeObserverSize[],
+        contentBoxSize: [] as ResizeObserverSize[],
+        devicePixelContentBoxSize: [] as ResizeObserverSize[],
       }];
       
       mockObserver.triggerResize(entries);
@@ -121,16 +121,16 @@ describe('resizeObserver utilities', () => {
 
     it('should not call callback for insignificant changes', () => {
       const callback = jest.fn();
-      const observer = new PortalDropdownResizeObserver(callback, { threshold: 20 });
+      new PortalDropdownResizeObserver(callback, { threshold: 20 });
       const mockObserver = MockResizeObserver.mock.instances[0] as MockResizeObserver;
       
       // First resize to establish baseline
       const entries1: ResizeObserverEntry[] = [{
         target: document.createElement('div'),
         contentRect: { width: 300, height: 200 } as DOMRectReadOnly,
-        borderBoxSize: [] as any,
-        contentBoxSize: [] as any,
-        devicePixelContentBoxSize: [] as any,
+        borderBoxSize: [] as ResizeObserverSize[],
+        contentBoxSize: [] as ResizeObserverSize[],
+        devicePixelContentBoxSize: [] as ResizeObserverSize[],
       }];
       
       mockObserver.triggerResize(entries1);
@@ -141,9 +141,9 @@ describe('resizeObserver utilities', () => {
       const entries2: ResizeObserverEntry[] = [{
         target: document.createElement('div'),
         contentRect: { width: 305, height: 205 } as DOMRectReadOnly, // 5px change < 20px threshold
-        borderBoxSize: [] as any,
-        contentBoxSize: [] as any,
-        devicePixelContentBoxSize: [] as any,
+        borderBoxSize: [] as ResizeObserverSize[],
+        contentBoxSize: [] as ResizeObserverSize[],
+        devicePixelContentBoxSize: [] as ResizeObserverSize[],
       }];
       
       mockObserver.triggerResize(entries2);
@@ -250,7 +250,7 @@ describe('resizeObserver utilities', () => {
 
       it('should return false when ResizeObserver is not available', () => {
         const originalResizeObserver = global.ResizeObserver;
-        delete (global as any).ResizeObserver;
+        delete (global as Record<string, unknown>).ResizeObserver;
         
         expect(supportsResizeObserver()).toBe(false);
         
@@ -259,7 +259,7 @@ describe('resizeObserver utilities', () => {
 
       it('should return false in SSR environment', () => {
         const originalWindow = global.window;
-        delete (global as any).window;
+        delete (global as Record<string, unknown>).window;
         
         expect(supportsResizeObserver()).toBe(false);
         
@@ -310,7 +310,7 @@ describe('resizeObserver utilities', () => {
 
       it('should return portrait in SSR environment', () => {
         const originalWindow = global.window;
-        delete (global as any).window;
+        delete (global as Record<string, unknown>).window;
         
         expect(getDeviceOrientation()).toBe('portrait');
         
@@ -351,7 +351,7 @@ describe('resizeObserver utilities', () => {
 
       it('should return false in SSR environment', () => {
         const originalWindow = global.window;
-        delete (global as any).window;
+        delete (global as Record<string, unknown>).window;
         
         expect(isMobileDevice()).toBe(false);
         

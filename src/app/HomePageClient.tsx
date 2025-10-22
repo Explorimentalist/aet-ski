@@ -159,7 +159,6 @@ export default function HomePageClient() {
               deviceType="desktop"
               format="auto"
               priority={true}
-              preserveAspectRatio={true}
             />
           </div>
 

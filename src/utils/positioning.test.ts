@@ -81,7 +81,7 @@ describe('positioning utilities', () => {
 
     it('should return SSR fallback when window is undefined', () => {
       const originalWindow = global.window;
-      delete (global as any).window;
+      delete (global as Record<string, unknown>).window;
 
       const bounds = getViewportBounds();
       expect(bounds).toEqual({
@@ -305,7 +305,7 @@ describe('positioning utilities', () => {
 
     it('should return null in SSR environment', () => {
       const originalDocument = global.document;
-      delete (global as any).document;
+      delete (global as Record<string, unknown>).document;
 
       const result = getPortalContainer();
       expect(result).toBeNull();

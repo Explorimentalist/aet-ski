@@ -148,7 +148,7 @@ export const Calendar: React.FC<CalendarProps> = ({
       
       <div className="relative">
         <button
-          ref={triggerRef}
+          ref={triggerRef as React.RefObject<HTMLButtonElement>}
           type="button"
           onClick={() => !disabled && actions.toggle()}
           className={`

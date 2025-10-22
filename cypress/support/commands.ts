@@ -11,6 +11,6 @@ Cypress.Commands.add('waitForPortalDropdown', () => {
 });
 
 // Custom command to click outside any element
-Cypress.Commands.add('clickOutside', () => {
-  return cy.get('body').click(0, 0);
+Cypress.Commands.add('clickOutside', (): void => {
+  cy.get('body').click(0, 0);
 });

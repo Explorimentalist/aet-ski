@@ -91,6 +91,7 @@ describe('TimeSelector Component', () => {
 
   describe('Portal Integration', () => {
     it('calls usePortalDropdown with correct configuration', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { usePortalDropdown } = require('@/hooks/usePortalDropdown');
       
       render(React.createElement(TimeSelector, {
@@ -110,6 +111,7 @@ describe('TimeSelector Component', () => {
     });
 
     it('disables portal when disablePortal is true', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { usePortalDropdown } = require('@/hooks/usePortalDropdown');
       
       render(React.createElement(TimeSelector, {
@@ -447,6 +449,7 @@ describe('TimeSelector Component', () => {
     });
 
     it('verifies portal dropdown integration through mock calls', () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { usePortalDropdown } = require('@/hooks/usePortalDropdown');
       
       render(React.createElement(TimeSelector, defaultProps));

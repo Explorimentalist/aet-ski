@@ -89,7 +89,7 @@ describe('portalErrorRecovery utilities', () => {
           maxRetries: 1,
           logErrors: true 
         });
-      } catch (error) {
+      } catch {
         // Expected to fail
       }
       
@@ -107,7 +107,7 @@ describe('portalErrorRecovery utilities', () => {
           maxRetries: 1,
           logErrors: false 
         });
-      } catch (error) {
+      } catch {
         // Expected to fail
       }
       
@@ -151,7 +151,7 @@ describe('portalErrorRecovery utilities', () => {
 
     it('should return null in SSR environment', () => {
       const originalDocument = global.document;
-      delete (global as any).document;
+      delete (global as Record<string, unknown>).document;
       
       const result = safeGetPortalContainer();
       
@@ -258,8 +258,8 @@ describe('portalErrorRecovery utilities', () => {
       const originalNavigator = global.navigator;
       const originalWindow = global.window;
       
-      delete (global as any).navigator;
-      delete (global as any).window;
+      delete (global as Record<string, unknown>).navigator;
+      delete (global as Record<string, unknown>).window;
       
       const context = createErrorContext('TRIGGER_ELEMENT_NOT_FOUND');
       const parsed = JSON.parse(context);
@@ -346,7 +346,7 @@ describe('portalErrorRecovery utilities', () => {
     });
 
     it('should handle unknown errors gracefully', () => {
-      const result = handlePortalError('UNKNOWN_ERROR' as any);
+      const result = handlePortalError('UNKNOWN_ERROR' as never);
       
       expect(result).toMatchObject({
         shouldRetry: false,

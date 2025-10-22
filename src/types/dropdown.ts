@@ -104,9 +104,9 @@ export interface UsePortalDropdownReturn {
   /** Available actions */
   actions: PortalDropdownActions;
   /** Ref to attach to trigger element */
-  triggerRef: React.RefObject<HTMLElement>;
+  triggerRef: React.RefObject<HTMLElement | null>;
   /** Ref to attach to dropdown content */
-  dropdownRef: React.RefObject<HTMLElement>;
+  dropdownRef: React.RefObject<HTMLElement | null>;
   /** Portal render function for dropdown content */
   renderPortal: (content: React.ReactNode) => React.ReactPortal | React.ReactNode;
 }
