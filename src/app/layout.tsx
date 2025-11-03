@@ -94,6 +94,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Performance: preconnect to Cloudinary for faster image fetches */}
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
         <LocalBusinessSchema />
         {/* TODO: Add Google Analytics when you have the tracking ID */}
         {/* <Script src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID" />

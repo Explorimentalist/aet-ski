@@ -29,6 +29,14 @@ export const CardImage: React.FC<CardImageProps> = ({
   className,
   variant = 'grid',
 }) => {
+  // Lightweight shimmer placeholder for improved perceived performance
+  const shimmer = (w: number, h: number) =>
+    `\n      <svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">\n        <defs>\n          <linearGradient id="g">\n            <stop stop-color="#f6f7f8" offset="20%"/>\n            <stop stop-color="#edeef1" offset="50%"/>\n            <stop stop-color="#f6f7f8" offset="70%"/>\n          </linearGradient>\n        </defs>\n        <rect width="${w}" height="${h}" fill="#f6f7f8"/>\n        <rect id="r" width="${w}" height="${h}" fill="url(#g)"/>\n        <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1.2s" repeatCount="indefinite"  />\n      </svg>`;
+  const toBase64 = (str: string) =>
+    typeof window === 'undefined'
+      ? Buffer.from(str).toString('base64')
+      : window.btoa(str);
+
   // Build an optimized Cloudinary URL when a public id is provided.
   const imageUrl = React.useMemo(() => {
     if (!imagePublicId) return undefined;
@@ -74,6 +82,9 @@ export const CardImage: React.FC<CardImageProps> = ({
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 300px"
             priority={false}
+            loading="lazy"
+            placeholder="blur"
+            blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(600, 200))}`}
           />
         ) : null}
 

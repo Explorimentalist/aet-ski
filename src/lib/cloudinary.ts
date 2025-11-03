@@ -43,9 +43,42 @@ export function getOptimizedImageUrl(publicId: string, options: {
     crop = 'scale'
   } = options;
   
-  // Handle fallback URLs (if publicId is already a full URL)
+  // If a full Cloudinary URL is provided, inject transformations right after
+  // the "/image/upload/" segment when no transformations are present yet.
+  // This allows callers to pass either public IDs or fully-qualified URLs.
   if (publicId.startsWith('http')) {
-    return publicId;
+    try {
+      const isCloudinary = /https?:\/\/res\.cloudinary\.com\//.test(publicId);
+      if (isCloudinary) {
+        const TRANSFORM_PREFIX = '/image/upload/';
+        const idx = publicId.indexOf(TRANSFORM_PREFIX);
+        if (idx !== -1) {
+          const before = publicId.slice(0, idx + TRANSFORM_PREFIX.length);
+          const after = publicId.slice(idx + TRANSFORM_PREFIX.length);
+          // If the next segment starts with 'v' we have no transforms yet.
+          const nextSeg = after.split('/')[0] || '';
+          const hasTransforms = nextSeg && !/^v\d+/.test(nextSeg);
+
+          const transformations: string[] = [];
+          if (width) transformations.push(`w_${width}`);
+          if (height) transformations.push(`h_${height}`);
+          if (crop) transformations.push(`c_${crop}`);
+          transformations.push(`f_${format}`);
+          transformations.push(`q_${quality}`);
+          transformations.push('fl_progressive');
+          transformations.push('fl_immutable_cache');
+
+          if (!hasTransforms && transformations.length) {
+            return `${before}${transformations.join(',')}/${after}`;
+          }
+        }
+      }
+      // Non-Cloudinary or already-transformed URLs are returned as-is
+      return publicId;
+    } catch {
+      // In case of any parsing issues, fall back to the original URL
+      return publicId;
+    }
   }
   
   let url = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload`;

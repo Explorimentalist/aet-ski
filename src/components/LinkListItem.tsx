@@ -130,7 +130,7 @@ export const LinkListItem: React.FC<LinkListItemProps> = ({
         {/* Description (if provided) - Full width, appears below on all devices */}
         {description && (
           <div className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-12 mt-lg">
-            <p className="font-body font-medium text-base text-text-primary leading-relaxed tracking-normal">
+            <p className="font-body font-medium text-base text-text-primary leading-relaxed tracking-normal max-w-sm">
               {description}
             </p>
           </div>
