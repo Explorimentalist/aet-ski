@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     try {
       if (!apiKey) throw new Error('Missing EMAIL_API_KEY');
 
-      const toRecipients = ['hq@aet.ski', 'brianoko@gmail.com'];
+      const toRecipients = ['feedback@aet.ski', 'brianoko@gmail.com'];
       const subject = `New AET Review (${r}★) from ${name}`;
 
       const html = `
