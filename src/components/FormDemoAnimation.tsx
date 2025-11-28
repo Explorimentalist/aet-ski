@@ -36,9 +36,13 @@ type DemoTarget =
   | 'passenger-notes'
   | 'navigation-next';
 
+type BookingFormPatch = {
+  [K in keyof BookingFormData]?: BookingFormData[K] extends object ? Partial<BookingFormData[K]> : BookingFormData[K];
+};
+
 type DemoAction =
   | { type: 'pause'; delay: number; label?: string }
-  | { type: 'set'; delay: number; label?: string; target?: DemoTarget; patch: Partial<BookingFormData>; markStep?: number }
+  | { type: 'set'; delay: number; label?: string; target?: DemoTarget; patch: BookingFormPatch; markStep?: number }
   | { type: 'type'; delay: number; label?: string; target?: DemoTarget; path: string[]; value: string; formatter?: (value: string) => unknown; markStep?: number }
   | { type: 'next'; delay: number; label?: string; target?: DemoTarget }
   | { type: 'submit'; delay: number; label?: string; target?: DemoTarget };
@@ -65,7 +69,7 @@ interface PointerMotion {
 
 const totalSteps = 6;
 
-const initialData: Partial<BookingFormData> = {
+const initialData: BookingFormPatch = {
   journey: { type: 'one-way', collectionPoint: '', destinationPoint: '' },
   dates: {
     collectionDate: null,
@@ -112,27 +116,31 @@ const focusTarget = async (resolver: () => HTMLElement | null) => {
 };
 
 const mergeFormData = (
-  base: Partial<BookingFormData>,
-  patch: Partial<BookingFormData>
-): Partial<BookingFormData> => {
-  const result: Partial<BookingFormData> = { ...base };
+  base: BookingFormPatch,
+  patch: BookingFormPatch
+): BookingFormPatch => {
+  const result: BookingFormPatch = { ...base };
 
-  (Object.keys(patch) as Array<keyof BookingFormData>).forEach(key => {
+  const mergeSection = <K extends keyof BookingFormPatch>(
+    currentValue: BookingFormPatch[K],
+    patchValue: BookingFormPatch[K]
+  ): BookingFormPatch[K] => {
+    if (isPlainObject(currentValue) && isPlainObject(patchValue)) {
+      return {
+        ...(currentValue as Record<string, unknown>),
+        ...(patchValue as Record<string, unknown>),
+      } as BookingFormPatch[K];
+    }
+    return patchValue;
+  };
+
+  (Object.keys(patch) as Array<keyof BookingFormPatch>).forEach(key => {
     const patchValue = patch[key];
     const currentValue = result[key];
 
-    if (isPlainObject(patchValue)) {
-      const mergedValue = isPlainObject(currentValue)
-        ? {
-            ...(currentValue as Record<string, unknown>),
-            ...(patchValue as Record<string, unknown>),
-          }
-        : { ...(patchValue as Record<string, unknown>) };
+    if (patchValue === undefined) return;
 
-      result[key] = mergedValue as BookingFormData[typeof key];
-    } else {
-      result[key] = patchValue as BookingFormData[typeof key];
-    }
+    result[key] = mergeSection(currentValue, patchValue);
   });
 
   return result;
@@ -188,7 +196,7 @@ const waitForElement = async (resolver: () => HTMLElement | null, attempts = 12,
 };
 
 export const FormDemoAnimation: React.FC = () => {
-  const [formData, setFormData] = useState<Partial<BookingFormData>>(initialData);
+  const [formData, setFormData] = useState<BookingFormPatch>(initialData);
   const [currentStep, setCurrentStep] = useState(1);
   const [stepValidationStates, setStepValidationStates] = useState<Record<number, boolean>>({ 1: false });
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -205,13 +213,13 @@ export const FormDemoAnimation: React.FC = () => {
     touched,
   }), [currentStep, stepValidationStates, touched]);
 
-  const updateFormData = useCallback((patch: Partial<BookingFormData>) => {
+  const updateFormData = useCallback((patch: BookingFormPatch) => {
     setFormData(prev => mergeFormData(prev, patch));
   }, []);
 
   const setFieldValue = useCallback((path: string[], value: unknown) => {
     setFormData(prev => {
-      const clone: Record<string, unknown> = Array.isArray(prev) ? [...(prev as unknown[])] as unknown[] : { ...prev };
+      const clone: Record<string, unknown> = { ...(prev as Record<string, unknown>) };
       let cursor: Record<string, unknown> = clone;
 
       path.forEach((segment, index) => {
@@ -226,7 +234,7 @@ export const FormDemoAnimation: React.FC = () => {
         cursor = nextValue;
       });
 
-      return clone as Partial<BookingFormData>;
+      return clone as BookingFormPatch;
     });
   }, []);
 
@@ -422,7 +430,11 @@ export const FormDemoAnimation: React.FC = () => {
         }
         const focusResolver = action.target ? resolveTarget(action.target) : undefined;
         if (action.target) {
-          await clickWithAction(runId, () => focusResolver ? focusTarget(focusResolver) : undefined);
+          await clickWithAction(runId, async () => {
+            if (focusResolver) {
+              await focusTarget(focusResolver);
+            }
+          });
         } else {
           await clickWithAction(runId);
         }
