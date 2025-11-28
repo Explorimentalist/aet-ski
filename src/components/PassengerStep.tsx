@@ -21,11 +21,11 @@ export const PassengerStep: React.FC<PassengerStepComponentProps> = React.memo((
   markFieldAsTouched,
   onValidationChange,
 }) => {
-  const passengerData = useMemo(() => data.passenger || {
-    name: '',
-    email: '',
-    phone: '+44 ',
-  }, [data.passenger]);
+  const passengerData = useMemo(() => ({
+    name: data.passenger?.name ?? '',
+    email: data.passenger?.email ?? '',
+    phone: data.passenger?.phone ?? '+44 ',
+  }), [data.passenger]);
 
   // Handle name change
   const handleNameChange = useCallback((value: string) => {

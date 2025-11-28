@@ -20,13 +20,13 @@ export const LuggageStep: React.FC<LuggageStepComponentProps> = React.memo(({
   validation,
   onValidationChange,
 }) => {
-  const luggageData = useMemo(() => data.luggage || {
-    skis: 0,
-    snowboards: 0,
-    suitcases: 0,
-    prams: 0,
-    extraItems: [],
-  }, [data.luggage]);
+  const luggageData = useMemo(() => ({
+    skis: data.luggage?.skis ?? 0,
+    snowboards: data.luggage?.snowboards ?? 0,
+    suitcases: data.luggage?.suitcases ?? 0,
+    prams: data.luggage?.prams ?? 0,
+    extraItems: data.luggage?.extraItems ?? [],
+  }), [data.luggage]);
 
   const peopleData = useMemo(() => data.people || {
     adults: 1,

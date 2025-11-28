@@ -19,10 +19,10 @@ export const PeopleStep: React.FC<PeopleStepComponentProps> = React.memo(({
   validation,
   onValidationChange,
 }) => {
-  const peopleData = useMemo(() => data.people || {
-    adults: 1,
-    children: 0,
-  }, [data.people]);
+  const peopleData = useMemo(() => ({
+    adults: data.people?.adults ?? 1,
+    children: data.people?.children ?? 0,
+  }), [data.people]);
 
   // Handle adults count change
   const handleAdultsChange = useCallback((value: number) => {
