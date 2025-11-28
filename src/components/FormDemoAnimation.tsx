@@ -117,17 +117,21 @@ const mergeFormData = (
 ): Partial<BookingFormData> => {
   const result: Partial<BookingFormData> = { ...base };
 
-  Object.entries(patch).forEach(([key, value]) => {
-    if (isPlainObject(value)) {
-      const currentValue = isPlainObject(result[key as keyof BookingFormData])
-        ? (result[key as keyof BookingFormData] as Record<string, unknown>)
-        : {};
-      result[key as keyof BookingFormData] = {
-        ...currentValue,
-        ...value,
-      } as BookingFormData[keyof BookingFormData];
+  (Object.keys(patch) as Array<keyof BookingFormData>).forEach(key => {
+    const patchValue = patch[key];
+    const currentValue = result[key];
+
+    if (isPlainObject(patchValue)) {
+      const mergedValue = isPlainObject(currentValue)
+        ? {
+            ...(currentValue as Record<string, unknown>),
+            ...(patchValue as Record<string, unknown>),
+          }
+        : { ...(patchValue as Record<string, unknown>) };
+
+      result[key] = mergedValue as BookingFormData[typeof key];
     } else {
-      result[key as keyof BookingFormData] = value as BookingFormData[keyof BookingFormData];
+      result[key] = patchValue as BookingFormData[typeof key];
     }
   });
 
@@ -665,12 +669,12 @@ export const FormDemoAnimation: React.FC = () => {
     handleNext,
     handlePrevious,
     handleSubmit,
-    handleStepValidationChange,
     currentStepValidationChange,
     markFieldAsTouched,
     showSuccess,
     updateFormData,
     validation,
+    handleGoHome,
   ]);
 
   return (
