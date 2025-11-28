@@ -36,9 +36,7 @@ type DemoTarget =
   | 'passenger-notes'
   | 'navigation-next';
 
-type BookingFormPatch = {
-  [K in keyof BookingFormData]?: BookingFormData[K] extends object ? Partial<BookingFormData[K]> : BookingFormData[K];
-};
+type BookingFormPatch = Partial<BookingFormData>;
 
 type DemoAction =
   | { type: 'pause'; delay: number; label?: string }
@@ -119,20 +117,7 @@ const mergeFormData = (
   base: BookingFormPatch,
   patch: BookingFormPatch
 ): BookingFormPatch => {
-  const result: BookingFormPatch = { ...base };
-
-  const mergeSection = <K extends keyof BookingFormPatch>(
-    currentValue: BookingFormPatch[K],
-    patchValue: BookingFormPatch[K]
-  ): BookingFormPatch[K] => {
-    if (isPlainObject(currentValue) && isPlainObject(patchValue)) {
-      return {
-        ...(currentValue as Record<string, unknown>),
-        ...(patchValue as Record<string, unknown>),
-      } as BookingFormPatch[K];
-    }
-    return patchValue;
-  };
+  const result: Record<string, unknown> = { ...base };
 
   (Object.keys(patch) as Array<keyof BookingFormPatch>).forEach(key => {
     const patchValue = patch[key];
@@ -140,10 +125,17 @@ const mergeFormData = (
 
     if (patchValue === undefined) return;
 
-    result[key] = mergeSection(currentValue, patchValue);
+    if (isPlainObject(currentValue) && isPlainObject(patchValue)) {
+      result[key] = {
+        ...(currentValue as Record<string, unknown>),
+        ...(patchValue as Record<string, unknown>),
+      };
+    } else {
+      result[key] = patchValue;
+    }
   });
 
-  return result;
+  return result as BookingFormPatch;
 };
 
 const resolveTarget = (target: DemoTarget): (() => HTMLElement | null) => {
@@ -478,21 +470,21 @@ export const FormDemoAnimation: React.FC = () => {
         target: 'journey-type-return',
         delay: 900,
         label: 'Return transfer selected',
-        patch: { journey: { type: 'return' } },
+        patch: { journey: { type: 'return' } } as BookingFormPatch,
       },
       {
         type: 'set',
         target: 'journey-collection',
         delay: 1100,
         label: 'Pickup: Geneva Airport',
-        patch: { journey: { collectionPoint: 'geneva-airport' } },
+        patch: { journey: { collectionPoint: 'geneva-airport' } } as BookingFormPatch,
       },
       {
         type: 'set',
         target: 'journey-destination',
         delay: 1100,
         label: 'Destination: Val d’Isère',
-        patch: { journey: { destinationPoint: 'val-disere' } },
+        patch: { journey: { destinationPoint: 'val-disere' } } as BookingFormPatch,
         markStep: 1,
       },
       { type: 'next', target: 'navigation-next', delay: 900, label: 'Move to dates' },
@@ -501,28 +493,28 @@ export const FormDemoAnimation: React.FC = () => {
         target: 'dates-collection-date',
         delay: 1000,
         label: 'Select collection date',
-        patch: { dates: { collectionDate, isCollectionFlexible: false } },
+        patch: { dates: { collectionDate, collectionTime: '', isCollectionFlexible: false, isReturnFlexible: false } } as BookingFormPatch,
       },
       {
         type: 'set',
         target: 'dates-collection-time',
         delay: 800,
         label: 'Add arrival time',
-        patch: { dates: { collectionTime: '09:30' } },
+        patch: { dates: { collectionTime: '09:30' } } as BookingFormPatch,
       },
       {
         type: 'set',
         target: 'dates-return-date',
         delay: 1000,
         label: 'Select return date',
-        patch: { dates: { returnDate, isReturnFlexible: false } },
+        patch: { dates: { returnDate, isReturnFlexible: false } } as BookingFormPatch,
       },
       {
         type: 'set',
         target: 'dates-return-time',
         delay: 800,
         label: 'Add departure time',
-        patch: { dates: { returnTime: '17:00' } },
+        patch: { dates: { returnTime: '17:00' } } as BookingFormPatch,
         markStep: 2,
       },
       { type: 'next', target: 'navigation-next', delay: 900, label: 'Move to passengers' },
@@ -531,14 +523,14 @@ export const FormDemoAnimation: React.FC = () => {
         target: 'people-adults',
         delay: 700,
         label: '2 adults travelling',
-        patch: { people: { adults: 2 } },
+        patch: { people: { adults: 2 } } as BookingFormPatch,
       },
       {
         type: 'set',
         target: 'people-children',
         delay: 700,
         label: '1 child added',
-        patch: { people: { adults: 2, children: 1 } },
+        patch: { people: { adults: 2, children: 1 } } as BookingFormPatch,
         markStep: 3,
       },
       { type: 'next', target: 'navigation-next', delay: 900, label: 'Move to luggage' },
@@ -547,21 +539,21 @@ export const FormDemoAnimation: React.FC = () => {
         target: 'luggage-suitcases',
         delay: 650,
         label: 'Add 3 suitcases',
-        patch: { luggage: { suitcases: 3 } },
+        patch: { luggage: { suitcases: 3 } } as BookingFormPatch,
       },
       {
         type: 'set',
         target: 'luggage-skis',
         delay: 650,
         label: 'Add 2 pairs of skis',
-        patch: { luggage: { skis: 2 } },
+        patch: { luggage: { skis: 2 } } as BookingFormPatch,
       },
       {
         type: 'set',
         target: 'luggage-snowboards',
         delay: 650,
         label: 'Add 1 snowboard',
-        patch: { luggage: { snowboards: 1 } },
+        patch: { luggage: { snowboards: 1 } } as BookingFormPatch,
       },
       {
         type: 'type',

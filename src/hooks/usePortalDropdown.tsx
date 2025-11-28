@@ -223,9 +223,10 @@ export function usePortalDropdown(
       cleanupFunctions.forEach(cleanup => cleanup());
       cleanupFunctionsRef.current = [];
       
-      // Unobserve trigger element
-      if (elementResizeObserverRef.current && triggerRef.current) {
-        elementResizeObserverRef.current.unobserve(triggerRef.current);
+      // Unobserve trigger element - capture current ref value to avoid stale reference
+      const currentTrigger = triggerRef.current;
+      if (elementResizeObserverRef.current && currentTrigger) {
+        elementResizeObserverRef.current.unobserve(currentTrigger);
       }
     };
   }, [isOpen, actions, calculatePosition]);
