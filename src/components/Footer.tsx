@@ -97,10 +97,10 @@ export const Footer: React.FC<FooterProps> = ({ onQuoteClick }) => {
           }
         }}
       >
-        <Grid container className="py-20 tablet:py-24 h-full flex items-center" data-animate="true">
+        <Grid container className="py-10 tablet:py-20 desktop:py-24 pb-20 tablet:pb-12 h-full flex items-center" data-animate="true">
         {/* Navigation Links - Using our grid system */}
-        <motion.div 
-          className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-12 mb-16"
+        <motion.div
+          className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-12 mb-8 tablet:mb-16"
           variants={motionTokens.patterns.entrance}
           transition={{
             duration: motionTokens.d.medium,
@@ -140,8 +140,8 @@ export const Footer: React.FC<FooterProps> = ({ onQuoteClick }) => {
         {/* Logo and Text Container - Using our grid system */}
         <Grid className="col-mobile-4 tablet:col-tablet-8 desktop:col-desktop-12">
           {/* Logo - Using grid system for responsive layout */}
-          <motion.div 
-            className="col-mobile-4 tablet:col-tablet-4 desktop:col-desktop-3 desktop:col-start-10 order-1 tablet:order-2 flex justify-center tablet:justify-end mb-12 tablet:mb-0"
+          <motion.div
+            className="col-mobile-4 tablet:col-tablet-4 desktop:col-desktop-3 desktop:col-start-10 order-1 tablet:order-2 flex justify-center tablet:justify-end mb-6 tablet:mb-0"
             variants={motionTokens.patterns.entrance}
             transition={{
               duration: motionTokens.d.long,
@@ -183,7 +183,7 @@ export const Footer: React.FC<FooterProps> = ({ onQuoteClick }) => {
           </motion.div>
 
           {/* Text Content - Using grid system for responsive layout */}
-          <motion.div 
+          <motion.div
             className="col-mobile-4 tablet:col-tablet-4 desktop:col-desktop-6 order-2 tablet:order-1"
             variants={motionTokens.patterns.entrance}
             transition={{
@@ -202,7 +202,22 @@ export const Footer: React.FC<FooterProps> = ({ onQuoteClick }) => {
             </div>
           </motion.div>
         </Grid>
+
         </Grid>
+
+        {/* Design Credit - Positioned at the bottom */}
+        <motion.div
+          className="absolute bottom-4 tablet:bottom-6 left-0 right-0 w-full px-4"
+          variants={motionTokens.patterns.entrance}
+          transition={{
+            duration: motionTokens.d.medium,
+            ease: motionTokens.e.brand
+          }}
+        >
+          <p className="text-[#D9D9D9] text-xs leading-relaxed tracking-[-0.011em] text-center">
+            Design by Explorimentalist - www.hey-oko.com
+          </p>
+        </motion.div>
       </motion.div>
         </footer>
       </div>
