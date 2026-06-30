@@ -29,7 +29,7 @@ export const termsType = defineType({
               type: 'slug',
               options: {
                 source: 'title',
-                maxLength: 50,
+                maxLength: 96,
               },
               validation: (rule) => rule.required(),
               description: 'URL-friendly identifier (auto-generated from title)',
@@ -82,7 +82,23 @@ export const termsType = defineType({
           },
         },
       ],
-      validation: (rule) => rule.required().min(1),
+      validation: (rule) =>
+        rule.required().min(1).custom((sections) => {
+          const values = (sections ?? []) as Array<{
+            id?: {current?: string}
+            number?: number
+          }>
+          const ids = values.map((section) => section.id?.current).filter(Boolean)
+          const numbers = values.map((section) => section.number).filter(Boolean)
+
+          if (new Set(ids).size !== ids.length) {
+            return 'Every section must have a unique Section ID.'
+          }
+          if (new Set(numbers).size !== numbers.length) {
+            return 'Every section must have a unique Section Number.'
+          }
+          return true
+        }),
       description: 'All sections of the terms and conditions. Drag to reorder.',
       options: {
         layout: 'grid',
@@ -90,19 +106,12 @@ export const termsType = defineType({
       },
     }),
     defineField({
-      name: 'lastUpdated',
-      title: 'Last Updated',
-      type: 'datetime',
-      description: 'When these terms were last updated',
-      initialValue: () => new Date().toISOString(),
-      readOnly: true,
-    }),
-    defineField({
       name: 'version',
       title: 'Version',
       type: 'string',
       description: 'Version number of these terms (e.g., "1.0", "2.1")',
       initialValue: '1.0',
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'notes',
@@ -115,7 +124,7 @@ export const termsType = defineType({
   preview: {
     select: {
       title: 'title',
-      lastUpdated: 'lastUpdated',
+      lastUpdated: '_updatedAt',
       sectionCount: 'sections',
     },
     prepare(selection) {

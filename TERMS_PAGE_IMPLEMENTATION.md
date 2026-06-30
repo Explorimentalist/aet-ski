@@ -1,314 +1,81 @@
-# Terms and Conditions Page Implementation
+# Terms and Conditions: CMS and Delivery
 
-## Overview
+## Content ownership
 
-This document outlines the implementation of the Terms and Conditions page for the AET Ski website, featuring a responsive side navigation component that adapts from desktop to mobile layouts.
+The published Terms and Conditions live in the Sanity `production` dataset as one
+singleton document:
 
-## Components Created
+- Schema type: `terms`
+- Document ID: `terms`
+- Studio location: `/studio` → **Terms and Conditions**
+- Public page: `/terms`
 
-### 1. SideNavigation Component (`src/components/SideNavigation.tsx`)
+The Studio intentionally removes create, duplicate, delete, and unpublish actions for
+this document. Editors update its sections and press **Publish**. There is no second
+Terms document to choose from.
 
-A responsive navigation component that provides:
-- **Desktop**: Sticky side navigation with numbered sections (scrolls for 84px, then becomes fixed)
-- **Mobile**: Accordion-style dropdown navigation
-- **Tablet**: Responsive layout that adapts between desktop and mobile
+## Delivery architecture
 
-#### Features:
-- **GSAP-powered sticky behavior**: Smooth transitions between scroll states with no jumping
-- **Boundary-aware**: Sticky behavior ends exactly at the download button
-- **Width consistency**: Maintains consistent width during position transitions
-- **Performance optimized**: Uses GSAP ScrollTrigger for smooth animations
-- **Responsive**: Disabled on mobile devices with window resize handling
-- **Mobile navigation**: Fixed navigation on mobile devices
-- **Scroll spy functionality**: Automatically highlights active navigation items while scrolling
-- **Smart scroll anchoring**: Sections are positioned in the middle of viewport when clicked
-- Smooth scrolling to sections
-- Active state management
-- Hover effects and transitions
-- Accessibility compliant
-- TypeScript support
+`src/app/terms/page.tsx` is a dynamic server-rendered page. On every request it calls
+`getPublishedTerms()` in `src/lib/terms.ts`, which:
 
-#### Props:
-```typescript
-interface SideNavigationProps {
-  items: NavigationItem[];
-  onItemClick: (id: string) => void;
-  className?: string;
-}
+1. Selects the exact published document with `_id == "terms"`.
+2. Bypasses the Sanity CDN.
+3. disables the Next.js data cache.
+4. validates that all required fields and at least one active section exist.
+5. passes the same validated data to the page and browser-side PDF generator.
 
-interface NavigationItem {
-  id: string;
-  number: string;
-  title: string;
-  isActive?: boolean;
-}
+This means a newly published edit appears on the next `/terms` request and in the PDF
+generated from that page. Browser CORS configuration is no longer involved.
+
+The implementation deliberately does not contain fallback legal wording. If current
+published content cannot be loaded or is invalid, the route displays an unavailable
+state rather than silently serving obsolete contractual terms.
+
+## Why updates previously failed
+
+The old page fetched Sanity directly from the visitor's browser. Sanity rejected both
+production origins with `403 CORS Origin not allowed`. The page caught the error and
+quietly displayed a hardcoded copy of the Terms. The PDF used that same hardcoded
+state, so both surfaces appeared healthy but remained stale.
+
+The old GROQ query also used `*[_type == "terms"][0]`, so creating multiple documents
+made the selected document undefined. An editor could publish one document while the
+website happened to read another.
+
+## Editing checklist
+
+1. Open `/studio`.
+2. Select **Terms and Conditions**.
+3. Edit section content, title, ordering, active state, or version.
+4. Ensure every Section ID and Section Number is unique.
+5. Press **Publish**.
+6. Reload `/terms`.
+7. Generate the PDF from the page and confirm the same revision is present.
+
+`lastUpdated` comes from Sanity's system `_updatedAt` value; editors do not maintain it.
+
+## Migration and recovery
+
+The idempotent migration command copies the newest legacy Terms document to the
+canonical singleton without changing legal wording:
+
+```bash
+npm run migrate:terms-singleton
 ```
 
-### 2. Terms Page (`src/app/terms/page.tsx`)
+It requires `SANITY_API_TOKEN` in `.env.local`. It also normalizes duplicate section
+slugs so page navigation anchors remain unique. If the singleton already exists, the
+script exits without overwriting it.
 
-The main Terms and Conditions page featuring:
-- **Fixed Navigation**: Site navigation is fixed at the top with proper spacing
-- **Sticky Side Navigation**: GSAP-powered sticky behavior with 84px trigger offset
-- **Responsive grid layout**: (4/8 columns on desktop, 3/5 on tablet, full width on mobile)
-- **All 11 sections** of AET's terms and conditions
-- **Download PDF button** (placeholder for future implementation)
-- **Smooth scrolling navigation** with side navigation component
-- **Footer integration** with proper links and company information
-- **Clean header** without white background, matching the page background
+## Verification
 
-### 3. Sticky Navigation Hook (`src/hooks/useStickyNavigation.ts`)
+Run:
 
-A custom hook that provides:
-- **GSAP ScrollTrigger integration** for smooth sticky behavior
-- **Boundary detection** that ends sticky behavior at the download button
-- **Width consistency** during position transitions to prevent layout shifts
-- **Responsive behavior** (disabled on mobile devices) with window resize handling
-- **Performance optimizations** with fast scroll end and overlap prevention
-- **Cleanup handling** for proper memory management
-- **Mobile navigation support** with fixed positioning on all devices
-
-### 4. Scroll Spy Implementation
-
-The Terms page includes:
-- **Intersection Observer API** for efficient scroll detection
-- **Smart threshold detection** that triggers when sections are in the middle of viewport
-- **Automatic active state updates** for navigation items
-- **Proper cleanup** to prevent memory leaks
-
-## Design System Integration
-
-### New Tokens Added
-
-#### Layout Tokens:
-```json
-{
-  "layout": {
-    "component": {
-      "sideNavigation": {
-        "desktop": {
-          "width": "409px",
-          "columns": 4
-        },
-        "tablet": {
-          "columns": 3
-        },
-        "mobile": {
-          "height": "auto"
-        },
-        "padding": "32px 28px",
-        "gap": "28px",
-        "itemGap": "16px",
-        "itemPadding": "0px",
-        "itemGapHorizontal": "8px"
-      }
-    },
-    "span": {
-      "sideNavigation": {
-        "mobile": 4,
-        "tablet": 3,
-        "desktop": 4
-      },
-      "content": {
-        "mobile": 4,
-        "tablet": 5,
-        "desktop": 6
-      }
-    }
-  }
-}
+```bash
+npm test -- --runInBand src/lib/terms.test.ts
+npm run build
 ```
 
-#### Component Definition:
-```json
-{
-  "components": {
-    "sideNavigation": {
-      "default": {
-        "consumes": [
-          "color.background.secondary",
-          "color.text.primary",
-          "color.text.secondary",
-          "borderRadius.md",
-          "typography.fontFamily.body",
-          "typography.fontWeight.bold",
-          "typography.fontWeight.medium",
-          "typography.fontSize.lg",
-          "typography.fontSize.base",
-          "typography.lineHeight.relaxed",
-          "typography.letterSpacing.button",
-          "layout.component.sideNavigation.padding",
-          "layout.component.sideNavigation.gap",
-          "layout.component.sideNavigation.itemGap",
-          "layout.component.sideNavigation.itemPadding",
-          "layout.component.sideNavigation.itemGapHorizontal",
-          "elevation.md",
-          "animation.duration.fast",
-          "animation.easing.easeInOut"
-        ]
-      }
-    }
-  }
-}
-```
-
-## Responsive Behavior
-
-### Desktop (≥1024px)
-- Side navigation: 4 columns, fixed position
-- Content: 6 columns, scrollable
-- Navigation items: Horizontal layout with numbers and titles
-
-### Tablet (768px - 1023px)
-- Side navigation: 3 columns
-- Content: 5 columns
-- Same navigation behavior as desktop
-
-### Mobile (<768px)
-- Side navigation: Full width, accordion style
-- Content: Full width, below navigation
-- Navigation: Dropdown with current selection displayed
-
-## Content Structure
-
-The page contains 11 sections of AET's terms and conditions:
-
-1. **Definitions** - Key terms and definitions
-2. **Bookings and reservations** - Booking process and requirements
-3. **Cancellations/Refunds/Credits** - Cancellation policies and refunds
-4. **Data security and privacy** - Data handling and privacy
-5. **Flight Delays, Cancellations and Diversions** - Flight-related policies
-6. **Property and Baggage** - Luggage and property policies
-7. **Baby, Child, and Booster Seats** - Child seat requirements
-8. **Failure to provide confirmed Services due to reasons out of AET's control** - Force majeure situations
-9. **Failure to provide confirmed Services due to reasons within AET's control** - Service failures
-10. **Damage and Soiling of Vehicles** - Vehicle damage policies
-11. **Refusal of Carriage** - Passenger conduct and refusal policies
-
-## Technical Implementation
-
-### Key Features:
-- **TypeScript**: Fully typed components and interfaces
-- **Responsive Design**: Mobile-first approach with Tailwind CSS
-- **Accessibility**: Proper ARIA labels and keyboard navigation
-- **Performance**: Optimized rendering with React hooks
-- **SEO**: Semantic HTML structure
-
-### File Structure:
-```
-src/
-├── app/
-│   └── terms/
-│       └── page.tsx          # Main terms page with navigation and footer
-├── components/
-│   ├── SideNavigation.tsx    # Side navigation component
-│   ├── Navigation.tsx        # Fixed site navigation
-│   └── Footer.tsx            # Site footer
-├── hooks/
-│   └── useStickyNavigation.ts # GSAP-powered sticky navigation hook
-└── tokens.json              # Updated design tokens
-```
-
-## Integration Points
-
-### Footer Integration:
-The footer already contains a link to `/terms` for "Terms & Conditions", so no additional integration is needed.
-
-### Navigation:
-The side navigation component can be reused in other pages that require similar navigation patterns.
-
-## Future Enhancements
-
-### PDF Download:
-The download button is currently a placeholder. Future implementation should:
-- Generate PDF from the terms content
-- Include proper formatting and styling
-- Handle download progress and errors
-
-### Analytics:
-Consider adding analytics tracking for:
-- Section navigation usage
-- PDF downloads
-- Time spent on page
-
-### SEO Optimization:
-- Add meta tags for better search engine visibility
-- Implement structured data for legal documents
-- Add breadcrumb navigation
-
-## Testing
-
-### Manual Testing Checklist:
-- [x] Page loads correctly at `/terms`
-- [x] **Fixed navigation displays at the top on all devices**:
-  - [x] Desktop navigation fixed at top
-  - [x] Mobile navigation fixed at top
-  - [x] Proper spacing for both mobile and desktop
-- [x] Side navigation displays on desktop
-- [x] **Sticky navigation behavior works correctly**:
-  - [x] Scrolls normally for first 84px
-  - [x] Becomes fixed after 84px scroll
-  - [x] **No jumping during transitions**
-  - [x] **Ends sticky behavior at download button**
-  - [x] **Maintains consistent width during transitions**
-  - [x] Smooth transitions between states
-- [x] **Scroll anchoring works correctly**:
-  - [x] Section numbers are visible when clicked
-  - [x] Sections are positioned in middle of viewport
-  - [x] Proper offset accounts for fixed header
-- [x] **Scroll spy functionality works**:
-  - [x] Navigation items highlight while scrolling
-  - [x] Active state updates automatically
-  - [x] Intersection Observer works efficiently
-- [x] Accordion navigation works on mobile
-- [x] Smooth scrolling to sections
-- [x] Active state updates correctly
-- [x] Responsive breakpoints work
-- [x] Download button is present
-- [x] Footer displays correctly with all links
-- [x] Header has no white background
-- [x] **Window resize handling works correctly**
-
-### Automated Testing:
-- TypeScript compilation passes
-- ESLint passes (no errors in terms page)
-- Page is accessible via HTTP 200
-
-## Browser Support
-
-The implementation uses modern CSS features and should work in:
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-
-## Performance Considerations
-
-- Components are optimized for React 18
-- CSS uses Tailwind's purge optimization
-- Images and assets are optimized via Next.js
-- Lazy loading implemented for better performance
-
-## Accessibility
-
-- Proper heading hierarchy (h1, h2)
-- Keyboard navigation support
-- Screen reader friendly
-- High contrast ratios
-- Focus indicators
-
-## Maintenance
-
-### Updating Content:
-To update the terms and conditions content, modify the `termsSections` array in `src/app/terms/page.tsx`.
-
-### Styling Changes:
-Use the design tokens in `tokens.json` for consistent styling across the application.
-
-### Adding New Sections:
-1. Add new section to `termsSections` array
-2. Update navigation items automatically
-3. Ensure proper ID for anchor links
-
-## Conclusion
-
-The Terms and Conditions page implementation provides a professional, accessible, and responsive solution that matches the AET brand guidelines and provides an excellent user experience across all devices. 
+The focused tests cover validation, section ordering, duplicate anchor protection, and
+the fail-closed behavior that prevents stale legal fallback content from returning.

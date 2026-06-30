@@ -19,6 +19,16 @@ export default defineConfig({
   apiVersion: '2025-01-29',
   // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema,
+  document: {
+    actions: (previousActions, context) =>
+      context.schemaType === 'terms'
+        ? previousActions.filter(
+            ({action}) => !['delete', 'duplicate', 'unpublish'].includes(action ?? ''),
+          )
+        : previousActions,
+    newDocumentOptions: (previousOptions) =>
+      previousOptions.filter(({templateId}) => templateId !== 'terms'),
+  },
   plugins: [
     structureTool({structure}),
     // Vision is for querying with GROQ from inside the Studio
