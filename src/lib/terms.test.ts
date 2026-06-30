@@ -13,14 +13,12 @@ const validDocument = {
       number: 2,
       title: 'Bookings',
       content: 'Published booking terms.',
-      isActive: true,
     },
     {
       id: 'definitions',
       number: 1,
       title: 'Definitions',
       content: 'Published definitions.',
-      isActive: true,
     },
   ],
 };
@@ -51,8 +49,8 @@ describe('parseTermsDocument', () => {
     expect(() =>
       parseTermsDocument({
         ...validDocument,
-        sections: validDocument.sections.map((section) => ({ ...section, isActive: false })),
+        sections: [],
       }),
-    ).toThrow('invalid or no active sections');
+    ).toThrow('invalid or no sections');
   });
 });

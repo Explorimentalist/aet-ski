@@ -56,26 +56,17 @@ export const termsType = defineType({
               description: 'The full content of this section',
               rows: 10,
             },
-            {
-              name: 'isActive',
-              title: 'Active',
-              type: 'boolean',
-              description: 'Whether this section should be displayed on the website',
-              initialValue: true,
-            },
           ],
           preview: {
             select: {
               title: 'title',
               number: 'number',
               content: 'content',
-              isActive: 'isActive',
             },
             prepare(selection) {
-              const { title, number, content, isActive } = selection
-              const status = isActive ? '✅' : '❌'
+              const { title, number, content } = selection
               return {
-                title: `${status} ${number}. ${title}`,
+                title: `${number}. ${title}`,
                 subtitle: content ? `${content.substring(0, 80)}...` : 'No content',
               }
             },
@@ -130,11 +121,10 @@ export const termsType = defineType({
     prepare(selection) {
       const { title, lastUpdated, sectionCount } = selection
       const date = lastUpdated ? new Date(lastUpdated).toLocaleDateString() : 'No date'
-      const activeSections = sectionCount ? sectionCount.filter((s: Record<string, unknown>) => s.isActive).length : 0
       const totalSections = sectionCount ? sectionCount.length : 0
       return {
         title: title || 'Terms and Conditions',
-        subtitle: `${activeSections}/${totalSections} sections • Updated: ${date}`,
+        subtitle: `${totalSections} sections • Updated: ${date}`,
         media: () => '📋',
       }
     },

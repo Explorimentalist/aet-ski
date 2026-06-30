@@ -3,7 +3,6 @@ export interface TermsSection {
   number: number;
   title: string;
   content: string;
-  isActive: boolean;
 }
 
 export interface TermsData {

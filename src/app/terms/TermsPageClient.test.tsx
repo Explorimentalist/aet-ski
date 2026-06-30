@@ -32,34 +32,37 @@ const termsData: TermsData = {
   version: '1.0',
   sections: [
     {
+      id: 'cancellations-refunds-credits',
+      number: 3,
+      title: 'Cancellations/Refunds/Credits',
+      content: 'Cancellations must be e-mailed to admin@aet.ski.',
+    },
+    {
       id: 'flight-delays',
       number: 5,
       title: 'Flight delays',
       content: 'Waiting time is charged at 60€ per hour.',
-      isActive: true,
-    },
-    {
-      id: 'retired-policy',
-      number: 6,
-      title: 'Retired policy',
-      content: 'This text must not be displayed or downloaded.',
-      isActive: false,
     },
   ],
 }
 
 describe('TermsPageClient', () => {
-  it('uses the same active published content for the page and PDF', async () => {
+  it('uses every published section for both the page and PDF', async () => {
     render(<TermsPageClient termsData={termsData} />)
 
     expect(screen.getByText('Waiting time is charged at 60€ per hour.')).toBeInTheDocument()
-    expect(screen.queryByText('This text must not be displayed or downloaded.')).not.toBeInTheDocument()
+    expect(screen.getByText('Cancellations must be e-mailed to admin@aet.ski.')).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', {name: 'Download T&Cs in PDF'}))
 
     await waitFor(() =>
       expect(PDFGenerator.generateTermsPDF).toHaveBeenCalledWith(
         [
+          {
+            number: '3',
+            title: 'Cancellations/Refunds/Credits',
+            content: 'Cancellations must be e-mailed to admin@aet.ski.',
+          },
           {
             number: '5',
             title: 'Flight delays',

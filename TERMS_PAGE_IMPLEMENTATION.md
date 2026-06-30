@@ -22,11 +22,16 @@ Terms document to choose from.
 1. Selects the exact published document with `_id == "terms"`.
 2. Bypasses the Sanity CDN.
 3. disables the Next.js data cache.
-4. validates that all required fields and at least one active section exist.
+4. validates that all required fields and at least one section exist.
 5. passes the same validated data to the page and browser-side PDF generator.
 
 This means a newly published edit appears on the next `/terms` request and in the PDF
 generated from that page. Browser CORS configuration is no longer involved.
+
+Every section in the published document is displayed and included in the PDF. Legal
+terms are published atomically: Sanity's document-level **Publish** action is the
+visibility control. There is deliberately no per-section Active switch, because it can
+silently remove a numbered contractual clause while leaving the document published.
 
 The implementation deliberately does not contain fallback legal wording. If current
 published content cannot be loaded or is invalid, the route displays an unavailable
@@ -47,11 +52,13 @@ website happened to read another.
 
 1. Open `/studio`.
 2. Select **Terms and Conditions**.
-3. Edit section content, title, ordering, active state, or version.
+3. Edit section content, title, ordering, or version.
 4. Ensure every Section ID and Section Number is unique.
-5. Press **Publish**.
-6. Reload `/terms`.
-7. Generate the PDF from the page and confirm the same revision is present.
+5. Remove a section from the array only when that clause should no longer form part of
+   the Terms.
+6. Press **Publish**.
+7. Reload `/terms`.
+8. Generate the PDF from the page and confirm the same revision is present.
 
 `lastUpdated` comes from Sanity's system `_updatedAt` value; editors do not maintain it.
 

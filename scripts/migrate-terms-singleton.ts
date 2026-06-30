@@ -24,7 +24,7 @@ interface TermsDocument {
     number: number
     title: string
     content: string
-    isActive: boolean
+    isActive?: boolean
   }>
   version: string
   notes?: string

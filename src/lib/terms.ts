@@ -13,8 +13,7 @@ export const publishedTermsQuery = `
       "id": id.current,
       number,
       title,
-      content,
-      isActive
+      content
     }
   }
 `;
@@ -39,8 +38,7 @@ function isTermsSection(value: unknown): value is TermsSection {
     typeof section.title === 'string' &&
     section.title.length > 0 &&
     typeof section.content === 'string' &&
-    section.content.length > 0 &&
-    typeof section.isActive === 'boolean'
+    section.content.length > 0
   );
 }
 
@@ -60,8 +58,8 @@ export function parseTermsDocument(document: RawTermsDocument | null): TermsData
   }
 
   const sections = document.sections.filter(isTermsSection);
-  if (sections.length !== document.sections.length || !sections.some((section) => section.isActive)) {
-    throw new Error('The published Terms and Conditions document has invalid or no active sections.');
+  if (sections.length !== document.sections.length || sections.length === 0) {
+    throw new Error('The published Terms and Conditions document has invalid or no sections.');
   }
 
   const seenIds = new Set<string>();

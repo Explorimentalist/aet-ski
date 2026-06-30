@@ -23,7 +23,6 @@ export default function TermsPageClient({ termsData }: TermsPageClientProps) {
     title: string;
     isActive?: boolean;
   }>>(() => termsData.sections
-    .filter((section) => section.isActive)
     .map((section, index) => ({
       id: section.id,
       number: section.number.toString(),
@@ -55,9 +54,7 @@ export default function TermsPageClient({ termsData }: TermsPageClientProps) {
       });
     }, observerOptions);
 
-    // Observe all active section elements
-    const activeSections = termsData.sections.filter(section => section.isActive);
-    activeSections.forEach(section => {
+    termsData.sections.forEach(section => {
       const element = document.getElementById(section.id);
       if (element) {
         observer.observe(element);
@@ -98,11 +95,8 @@ export default function TermsPageClient({ termsData }: TermsPageClientProps) {
     try {
       setIsDownloading(true);
 
-      // Get only active sections for PDF
-      const activeSections = termsData.sections.filter(section => section.isActive);
-      
       // Convert to format expected by PDFGenerator
-      const pdfSections = activeSections.map(section => ({
+      const pdfSections = termsData.sections.map(section => ({
         number: section.number.toString(),
         title: section.title,
         content: section.content
@@ -139,9 +133,6 @@ export default function TermsPageClient({ termsData }: TermsPageClientProps) {
     // The MultiStepForm will show the success page, and user can close it
   }, []);
 
-  // Get active sections for display
-  const activeSections = termsData.sections.filter(section => section.isActive);
-
   return (
     <>
       {/* Fixed Navigation */}
@@ -175,7 +166,7 @@ export default function TermsPageClient({ termsData }: TermsPageClientProps) {
             {/* Content */}
             <div className="lg:col-start-7 lg:col-span-6">
               <div className="space-y-12">
-                {activeSections.map((section, index) => (
+                {termsData.sections.map((section, index) => (
                   <section 
                     key={`${section.number}-${section.id || index}`}
                     id={section.id}
